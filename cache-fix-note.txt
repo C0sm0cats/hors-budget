@@ -1,0 +1,1 @@
+Static assets are versioned in index.html to force GitHub Pages/browser cache refresh for the Rodolphe and dialogue polish fixes.
