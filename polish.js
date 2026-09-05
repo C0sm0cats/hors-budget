@@ -14,7 +14,7 @@
 
   const worldmark=document.createElement('div');worldmark.className='inetum-worldmark';worldmark.textContent='INETUM';document.body.append(worldmark);
   const tags=[];
-  const ensureTag=(i,type)=>{if(!tags[i]){const el=document.createElement('div');el.className='projectile-tag';document.body.append(el);tags[i]=el;}const el=tags[i];el.className='projectile-tag '+type;el.textContent=type==='cr'?'CR':'DOSSIER';el.hidden=false;return el;};
+  const ensureTag=(i,type)=>{if(!tags[i]){const el=document.createElement('div');el.className='projectile-tag';document.body.append(el);tags[i]=el;}const el=tags[i];el.className='projectile-tag '+type;el.textContent=type==='cr'?'CR':'DOSSIER';el.hidden=false;el.style.transform=type==='cr'?'translate(-50%,-50%) rotate(-4deg)':'translate(-50%,-50%) rotate(8deg)';return el;};
   const hideTagsFrom=i=>{for(let n=i;n<tags.length;n++)tags[n].hidden=true;};
 
   const levelCopy=[
@@ -22,7 +22,7 @@
     ['NIVEAU 2','LA DIRECTION','Ici, même les décisions ont besoin d’une réunion.'],
     ['NIVEAU 3','ROOFTOP DU SÉMINAIRE','Dernier atelier : reprendre le budget.']
   ];
-  let lastLevel=-1,lastPhase='title',bossIntroSeen=false,cinemaTimer=null;
+  let lastLevel=-1,bossIntroSeen=false,cinemaTimer=null;
 
   function cinematic(kind,small,strong,em,duration=1050,freeze=true){
     if(cinemaTimer)clearTimeout(cinemaTimer);
@@ -67,7 +67,6 @@
     worldmark.style.left=mark.x+'px';worldmark.style.top=mark.y+'px';
     worldmark.hidden=mark.x<0||mark.x>innerWidth||mark.y<0||mark.y>innerHeight;
 
-    lastPhase=s.phase;
     requestAnimationFrame(update);
   }
   requestAnimationFrame(update);
