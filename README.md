@@ -4,6 +4,10 @@
 
 Petit jeu d’arcade satirique en 3D, dans l’univers fictif de MUTINE. Kévin traverse l’open space, la direction et le rooftop du séminaire pour délivrer Charline. Rodolphe, le directeur, défend son budget à coups de dossiers.
 
+## Jouer directement
+
+**[Lancer Hors Budget dans le navigateur](https://c0sm0cats.github.io/hors-budget/)** — aucun téléchargement ni installation.
+
 ## Jouer hors ligne
 
 Téléchargez le dépôt avec **Code → Download ZIP**, décompressez-le, puis ouvrez **index.html** par double-clic.
