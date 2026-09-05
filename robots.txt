@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://c0sm0cats.github.io/hors-budget/sitemap.xml
