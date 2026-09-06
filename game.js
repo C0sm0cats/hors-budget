@@ -122,7 +122,7 @@ function createRenderer(){
   }
   if(level===0){
     // Wall-mounted whiteboard: real scene depth, behind colleagues and ladders.
-    const x=2,y=4.65,w=4.1,h=1.7;
+    const x=2,y=4.65,w=3.5,h=1.7;
     world.box(x,y,-1.3,w+.14,h+.14,.09,'#a7b6ba');
     world.box(x,y-h/2-.07,-1.14,w+.2,.09,.28,'#889ea5');
     world.box(x+w*.34,y-h/2-.005,-1.08,.42,.055,.06,'#c03936');
