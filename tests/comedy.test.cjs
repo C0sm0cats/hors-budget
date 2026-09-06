@@ -91,3 +91,19 @@ test('descending a ladder is not reported as a fall', () => {
   assert.equal(g.run('s.player.floor'), 0);
   assert.equal(g.run('s.comedy.line'), '');
 });
+test('stun captions vary on subsequent hits and stay stable during the same stun', () => {
+  const g = game();
+  g.run(`const s=Arcade.state,e={kind:'hugo',type:'junior',floor:0,x:-6.8,
+    y:surface(0,-6.8),lo:-10,hi:10,direction:1,speed:0,stun:0,cooldown:99,walk:0,rewarded:false};s.enemies=[e];`);
+  let previous;
+  for (let i=0; i<6; i++) {
+    g.run('e.stun=0;s.player.shootIn=0;Arcade.fire()');
+    g.step(35);
+    const caption = g.run('STUN_MESSAGES[e.stunLine]');
+    assert.equal(typeof caption, 'string');
+    assert.notEqual(caption, previous);
+    g.step(20);
+    assert.equal(g.run('STUN_MESSAGES[e.stunLine]'), caption);
+    previous = caption;
+  }
+});
