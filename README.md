@@ -36,6 +36,9 @@ Des commandes tactiles sont disponibles sur petit écran.
 - Tirs à ricochet, combos et boss final : renvoyez les dossiers de Rodolphe lorsqu’il annonce « Bénéfices records ».
 - Chronos par zone, médailles et défis : Sans PowerPoint, Zéro réunion, Café uniquement, Sans une égratignure.
 - Présentation arcade avec intros de niveaux, barre de vie du boss et finale « Budget débloqué ».
+- Gags en action : fauteuils de luxe livrés après un refus, réactions aux tirs ratés, chutes, cafés et ricochets.
+- Rare miracle : une vraie augmentation de 3 %, suivie de deux secondes d’applaudissements, projectiles compris.
+- Dialogues ambiants limités à deux bulles sans chevauchement ; les réactions aux actions sont prioritaires.
 
 Scores et palmarès sont stockés uniquement dans le navigateur (`localStorage`), lorsqu’il l’autorise. Ils ne sont pas synchronisés entre navigateurs ou appareils.
 
@@ -46,3 +49,7 @@ Le jeu reste volontairement sans dépendance : `index.html` porte la structure, 
 Le rendu adapte automatiquement certains effets aux appareils plus modestes et respecte `prefers-reduced-motion` pour limiter les animations non essentielles.
 
 Personnages et situations fictifs ; satire des clichés du conseil informatique.
+
+### Tests de développement
+
+Facultatif, avec Node.js : `node --test tests/comedy.test.cjs`. Ces tests exécutent la logique réelle des tirs, des chutes et du miracle avec des interfaces de rendu simulées. Node.js n’est pas nécessaire pour jouer.
