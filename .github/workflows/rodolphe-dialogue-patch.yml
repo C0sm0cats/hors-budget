@@ -1,0 +1,55 @@
+name: Rodolphe dialogue patch
+on:
+  push:
+    branches: [rodolphe-dialogue-pass]
+permissions:
+  contents: write
+jobs:
+  patch:
+    if: github.actor != 'github-actions[bot]'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: rodolphe-dialogue-pass
+      - name: Patch dialogue presentation
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+
+          p=Path('polish.js')
+          s=p.read_text()
+          old="'Le prochain atelier s’appelle “alignement”. On n’est déjà plus alignés.']};"
+          new="'Le prochain atelier s’appelle “alignement”. On n’est déjà plus alignés.'],rodolphe:['Une augmentation ? J’ai justement un budget pour un séminaire.','Les caisses sont vides. Le budget mobilier, lui, va très bien.','On ne dit pas non. On dit « à revoir au prochain exercice ».','Votre engagement est notre meilleure enveloppe budgétaire.','J’ai demandé un effort collectif. Surtout au collectif.','Le budget est gelé. Sauf pour les priorités que je viens d’inventer.','La reconnaissance n’est pas imposable. Profitez-en.','On va benchmarker votre augmentation avec zéro.','Je vous écoute. Le budget, beaucoup moins.','Bonne nouvelle : on maintient le baby-foot.','La marge progresse. Merci de ne pas faire le lien.','On reparle salaire après le prochain séminaire. Ou celui d’après.']};"
+          if old not in s: raise SystemExit('banter anchor not found')
+          s=s.replace(old,new,1)
+
+          old2="    if(s.comedy.lineTime>0){const b=bubbleFor('kevin','kevin');b.el.textContent=s.comedy.line;b.until=0;b.next=now+10000;if(placeBubble(b,renderer.project(p.x,p.y+2.25,.9)))accept(b);}\n"
+          new2="    if(s.comedy.delivery>0){const scene=deliveryScene(s.comedy.delivery);if(scene.stage==='refusal'||scene.stage==='order'){const b=bubbleFor('rodolphe-scene','rodolphe');b.el.textContent=scene.text.replace(/^RODOLPHE\\s*:\\s*/, '');b.until=now+250;b.next=now+15000;if(placeBubble(b,renderer.project(s.boss.x,s.boss.y+2.75,.55)))accept(b);}}\n    if(s.comedy.lineTime>0){const b=bubbleFor('kevin','kevin');b.el.textContent=s.comedy.line;b.until=0;b.next=now+10000;if(placeBubble(b,renderer.project(p.x,p.y+2.25,.9)))accept(b);}\n"
+          if old2 not in s: raise SystemExit('scene anchor not found')
+          s=s.replace(old2,new2,1)
+
+          old3="    if(s.comedy.lineTime<=0)candidates.unshift({id:'kevin',cls:'kevin',pool:banter.kevin,pos:renderer.project(p.x,p.y+2.25,.9)});\n    if(p.floor>=3)candidates.push({id:'charline',cls:'charline',pool:banter.charline,pos:renderer.project(s.princess.x,s.princess.y+2.35,.4)});\n"
+          new3="    if(s.comedy.lineTime<=0)candidates.unshift({id:'kevin',cls:'kevin',pool:banter.kevin,pos:renderer.project(p.x,p.y+2.25,.9)});\n    if(s.boss.hp>0&&s.comedy.delivery<=0)candidates.unshift({id:'rodolphe',cls:'rodolphe',pool:banter.rodolphe,pos:renderer.project(s.boss.x,s.boss.y+2.75,.55)});\n    if(p.floor>=3)candidates.push({id:'charline',cls:'charline',pool:banter.charline,pos:renderer.project(s.princess.x,s.princess.y+2.35,.4)});\n"
+          if old3 not in s: raise SystemExit('candidate anchor not found')
+          s=s.replace(old3,new3,1)
+          p.write_text(s)
+
+          p=Path('polish.css')
+          s=p.read_text()
+          anchor=".actor-bubble.charline::after{border-top-color:#492e47f5}"
+          repl=anchor+".actor-bubble.rodolphe{border-color:#f0b69ebb;background:#4a2e2af5}.actor-bubble.rodolphe::after{border-top-color:#4a2e2af5}"
+          if anchor not in s: raise SystemExit('css anchor not found')
+          p.write_text(s.replace(anchor,repl,1))
+
+          p=Path('index.html')
+          s=p.read_text().replace('polish.css?v=12','polish.css?v=13',1).replace('polish.js?v=16','polish.js?v=17',1)
+          p.write_text(s)
+
+          Path('.github/workflows/rodolphe-dialogue-patch.yml').unlink()
+          PY
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add game.js polish.js polish.css index.html .github/workflows/rodolphe-dialogue-patch.yml
+          git commit -m "Add Rodolphe dialogue and scripted speech bubbles"
+          git push origin HEAD:rodolphe-dialogue-pass
