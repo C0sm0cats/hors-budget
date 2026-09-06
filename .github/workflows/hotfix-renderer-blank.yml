@@ -1,0 +1,32 @@
+name: Hotfix renderer blank screen
+on:
+  push:
+    branches: [hotfix-renderer-blank]
+jobs:
+  patch:
+    permissions:
+      contents: write
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - run: |
+          python - <<'PY'
+          from pathlib import Path
+          p=Path('game.js')
+          s=p.read_text()
+          old="}}for(let i=0;i<18;i++){"
+          if s.count(old)!=1: raise SystemExit(f'unexpected marker count: {s.count(old)}')
+          p.write_text(s.replace(old,"}for(let i=0;i<18;i++){",1))
+          i=Path('index.html')
+          h=i.read_text()
+          if 'game.js?v=28' not in h: raise SystemExit('unexpected game cache version')
+          i.write_text(h.replace('game.js?v=28','game.js?v=29',1))
+          PY
+          node --check game.js
+          git config user.name github-actions[bot]
+          git config user.email 41898282+github-actions[bot]@users.noreply.github.com
+          git add game.js index.html
+          git rm .github/workflows/hotfix-renderer-blank.yml
+          git commit -m "Fix renderer scope regression"
+          git push
+          git push origin --delete reposition-office-decor place-office-decor-cleanly || true
