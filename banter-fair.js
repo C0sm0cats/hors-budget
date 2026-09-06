@@ -44,14 +44,14 @@
 
   function loop(now){
     const s=window.Arcade?.state;
-    if(!s||!window.renderer){requestAnimationFrame(loop);return;}
+    if(!s||typeof renderer==='undefined'){requestAnimationFrame(loop);return;}
     if(s!==lastState){lastState=s;reset(now);}
     hideAll();
     if(s.phase!=='playing'||s.comedy?.miracle>0){requestAnimationFrame(loop);return;}
 
     const p=s.player,visible=[],limit=s.comedy?.delivery>0?1:2;
-    if(s.comedy?.delivery>0&&typeof window.deliveryScene==='function'){
-      const scene=window.deliveryScene(s.comedy.delivery);
+    if(s.comedy?.delivery>0&&typeof deliveryScene==='function'){
+      const scene=deliveryScene(s.comedy.delivery);
       if(scene.stage==='refusal'||scene.stage==='order')showForced('rodolphe-scene','rodolphe',scene.text.replace(/^RODOLPHE\s*:\s*/,''),renderer.project(s.boss.x,s.boss.y+2.75,.55),now,visible);
     }
     if(visible.length<limit&&s.comedy?.lineTime>0&&s.comedy.line){
