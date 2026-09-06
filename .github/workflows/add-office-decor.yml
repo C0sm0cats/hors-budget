@@ -1,0 +1,55 @@
+name: Add office decor
+on:
+  push:
+    branches: [add-office-decor]
+jobs:
+  patch:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+      - name: Add babyfoot and coffee machine
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          p=Path('game.js')
+          s=p.read_text()
+          anchor="}for(let i=0;i<18;i++){const x=-28+i*3.4,h=4+(i*7%13)*.7;"
+          if anchor not in s:
+              raise SystemExit('decor anchor not found')
+          insert="""}if(level===0){
+            {const x=4.9,y=surface(0,x),z=-.55;
+             world.box(x,y+.72,z,2.25,.22,1.15,'#294e44');
+             world.box(x,y+.84,z,2.05,.12,.95,'#4f8f68');
+             world.box(x-1.02,y+.35,z-.42,.13,.72,.13,'#8b6849');world.box(x+1.02,y+.35,z-.42,.13,.72,.13,'#8b6849');
+             world.box(x-1.02,y+.35,z+.42,.13,.72,.13,'#8b6849');world.box(x+1.02,y+.35,z+.42,.13,.72,.13,'#8b6849');
+             for(const rz of [-.32,0,.32]){world.box(x,y+.91,z+rz,2.65,.045,.045,'#c9c5b7');for(const px of [-.68,0,.68])world.box(x+px,y+.98,z+rz,.12,.24,.12,px===0?'#f0d06f':(rz===0?'#d65f57':'#e9e6d4'));}
+             for(const sx of [-1.38,1.38])for(const rz of [-.32,0,.32])world.box(x+sx,y+.91,z+rz,.18,.09,.09,'#d6b06b');
+             world.box(x,y+.96,z,1.65,.025,.035,'#e8e1c7');}
+            {const x=-7.7,y=surface(0,x),z=-.72;
+             world.box(x,y+.86,z,.9,1.72,.62,'#313b42');
+             world.box(x,y+1.45,z+.325,.7,.34,.035,'#20272c');
+             world.box(x,y+1.45,z+.35,.48,.18,.025,'#77b8a4');
+             world.box(x-.22,y+1.12,z+.35,.11,.11,.025,'#e8d66d');world.box(x+.02,y+1.12,z+.35,.11,.11,.025,'#c6dbe5');world.box(x+.26,y+1.12,z+.35,.11,.11,.025,'#c6dbe5');
+             world.box(x,y+.79,z+.35,.48,.48,.025,'#151b1e');
+             world.box(x,y+.61,z+.37,.34,.06,.16,'#727c80');
+             world.box(x,y+.55,z+.49,.18,.22,.18,'#ece5d2');
+             world.box(x,y+.37,z+.36,.58,.08,.28,'#1b2226');
+             world.cylinder(x,y+1.79,z,.29,.16,'#5f4632',12,0);}
+          }for(let i=0;i<18;i++){const x=-28+i*3.4,h=4+(i*7%13)*.7;"""
+          s=s.replace(anchor,insert,1)
+          p.write_text(s)
+          i=Path('index.html')
+          h=i.read_text()
+          if 'game.js?v=26' not in h: raise SystemExit('game.js v26 not found')
+          i.write_text(h.replace('game.js?v=26','game.js?v=27',1))
+          PY
+      - name: Commit decor
+        run: |
+          git config user.name github-actions[bot]
+          git config user.email 41898282+github-actions[bot]@users.noreply.github.com
+          git rm .github/workflows/add-office-decor.yml
+          git add game.js index.html
+          git commit -m "Add babyfoot and coffee machine decor"
+          git push
