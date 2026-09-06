@@ -9,15 +9,20 @@ jobs:
       contents: write
     steps:
       - uses: actions/checkout@v4
-      - name: Inspect Basile union render block
+      - name: Inspect Basile union render blocks
         run: |
           python - <<'PY'
           from pathlib import Path
           s=Path('game.js').read_text()
           needle="e.type==='union'"
-          i=s.find(needle)
-          print('INDEX',i)
-          print(s[max(0,i-500):i+900])
-          if i<0: raise SystemExit('union block not found')
+          pos=[]; start=0
+          while True:
+              i=s.find(needle,start)
+              if i<0: break
+              pos.append(i); start=i+1
+          print('POSITIONS',pos)
+          for i in pos:
+              print('\n---',i,'---\n')
+              print(s[max(0,i-350):i+650])
           raise SystemExit('inspection complete')
           PY
