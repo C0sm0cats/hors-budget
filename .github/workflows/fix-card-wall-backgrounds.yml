@@ -1,0 +1,37 @@
+name: Fix card wall backgrounds
+on:
+  push:
+    branches: [fix-card-wall-backgrounds]
+permissions:
+  contents: write
+jobs:
+  patch:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: fix-card-wall-backgrounds
+      - name: Remove windows from card rows
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          import re
+          p=Path('game.js')
+          s=p.read_text()
+          pat=r"if\(level<2\)for\(let x=-9;x<=9;x\+=3\)for\(let i=0;i<4;i\+\+\)\{world\.box\(x,1\.35\+i\*3,-1\.45,2\.25,1\.65,\.05,\(Math\.round\(x\)\+i\)%3===0\?theme\.window:theme\.wall\);world\.box\(x,1\.35\+i\*3,-1\.39,\.05,1\.65,\.04,'#203f57'\);world\.box\(x,1\.35\+i\*3,-1\.39,2\.25,\.045,\.04,'#203f57'\);\}"
+          repl="""if(level<2){const cardRows=INETUM_DECOR[level]||[];for(let x=-9;x<=9;x+=3)for(let i=0;i<4;i++){const cy=1.35+i*3,rowHasCard=cardRows.some(d=>Math.abs(d.y-cy)<1.05);world.box(x,cy,-1.45,2.25,1.65,.05,rowHasCard?theme.wall:((Math.round(x)+i)%3===0?theme.window:theme.wall));if(!rowHasCard){world.box(x,cy,-1.39,.05,1.65,.04,'#203f57');world.box(x,cy,-1.39,2.25,.045,.04,'#203f57');}}}"""
+          s2,n=re.subn(pat,repl,s,count=1)
+          if n!=1: raise SystemExit(f'window grid block replacement count={n}')
+          p.write_text(s2)
+          i=Path('index.html');t=i.read_text()
+          if 'game.js?v=23' not in t: raise SystemExit('game cache tag v23 not found')
+          i.write_text(t.replace('game.js?v=23','game.js?v=24',1))
+          Path('.github/workflows/fix-card-wall-backgrounds.yml').unlink()
+          PY
+      - name: Commit fix
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -A
+          git commit -m "Keep Inetum card rows on solid walls"
+          git push
