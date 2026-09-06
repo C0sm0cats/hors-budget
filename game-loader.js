@@ -6,15 +6,10 @@
   src=src.replace("basile:{name:'Basile',shirt:'#9b79a6',hair:'#573c31',skin:'#bf8d69',beard:true","basile:{name:'Basile',shirt:'#9b79a6',hair:'#1d1715',skin:'#8b5b3e',beard:true");
   src=src.replace("const LEVELS=", "CAST.julien={name:'Julien',shirt:'#365b78',hair:'#49362d',skin:'#dfad86',tie:'#79b9c7'};\nconst LEVELS=");
 
-  // Le graphe marge/salaires appartient au tableau de Julien, pas à celui de Kévin.
   src=src.replace(/      \/\/ Petit graphe au feutre bleu : marge en hausse, salaires à plat\.[\s\S]*?      c\.restore\(\);\n/, '');
-  // Tableau Kévin plus compact, déplacé à gauche juste après la pancarte cooptation.
-  src=src.replace("const x=2,y=4.65,w=3.5,h=1.7;","const x=1.05,y=4.65,w=2.3,h=1.7;");
-  // Tips congés raccourcis et agrandis pour rester lisibles malgré le tableau plus étroit.
-  src=src.replace("write('Congés -',64,40,1.4);","write('Congés - Tips',46,40,1.65);");
-  src=src.replace("['Il faut privilégier les CP','puis RS puis RE car les CP',\n       'ne peuvent pas être reportés','au delà du 31 Mai'].forEach((text,i)=>write(text,64,104+i*50,1.3));","['Poser les CP tôt','Éviter les ponts','Pas de report après le 31 Mai','Anticiper avec le manager'].forEach((text,i)=>write(text,46,104+i*50,1.48));");
-  src=src.replace("write('- Kévin',64,330,1.2);","write('- Kévin',46,330,1.4);");
-  // Supprime l'ancien bureau générique sous le bureau dédié de Kévin.
+  // Le tableau de Kévin laisse désormais une vraie respiration après la pancarte Cooptation.
+  src=src.replace("const x=2,y=4.65,w=3.5,h=1.7;","const x=.8,y=4.65,w=2.7,h=1.7;");
+  // L'ancien texte reste derrière l'overlay propre et lisible ; on garde la géométrie du tableau uniquement.
   src=src.replace("for(let floor=0;floor<4;floor++)for(const x of [-5,2,6]){const y=surface(floor,x);","for(let floor=0;floor<4;floor++)for(const x of [-5,2,6]){const y=surface(floor,x);if(level===0&&floor===1&&x===2)continue;");
 
   const rollDef=" function roll(mesh,x,y,z,r,depth,spin,hex='#f0dbaf'){const col=rgb(hex),side=rgb('#d0ae7b');for(let i=0;i<14;i++){const a=i*Math.PI/7+spin,b=(i+1)*Math.PI/7+spin,p=[x+Math.cos(a)*r,y+Math.sin(a)*r,z-depth/2],q=[x+Math.cos(b)*r,y+Math.sin(b)*r,z-depth/2],P=[p[0],p[1],z+depth/2],Q=[q[0],q[1],z+depth/2];mesh.quad(p,q,Q,P,[Math.cos((a+b)/2),Math.sin((a+b)/2),0],i%4===0?rgb('#d27b73'):side);mesh.tri([x,y,z+depth/2],P,Q,[0,0,1],col);}const dx=Math.cos(spin)*r*.65,dy=Math.sin(spin)*r*.65;line(mesh,x-dx,y-dy,x+dx,y+dy,z+depth/2+.012,.08,'#bd7164');}";
@@ -25,13 +20,21 @@
   const decorDef=`
  function officePlant(mesh,x,y,z,kind=0,scale=1){const pot=kind===2?'#7c6a58':kind===1?'#9b7657':'#80644f',dark='#31583f',mid='#477b54',light='#5f9462';mesh.cylinder(x,y+.18*scale,z,.22*scale,.36*scale,pot,8,.17*scale);mesh.cylinder(x,y+.37*scale,z,.15*scale,.05*scale,'#2b332a',8);if(kind===0){mesh.box(x,y+.82*scale,z,.055*scale,.95*scale,.055*scale,'#586b45');const leaves=[[-.28,.66,-.02,.5],[-.18,.92,.03,-.55],[.22,.74,.02,-.42],[.3,1.02,-.03,.58],[-.05,1.18,.02,.18]];for(const [dx,dy,dz,a] of leaves)mesh.box(x+dx*scale,y+dy*scale,z+dz*scale,.42*scale,.16*scale,.07*scale,dy>1?light:mid,a);}else if(kind===1){const leaves=[[-.28,.55,-.02,-.7],[-.16,.76,.02,-.35],[0,.91,0,.05],[.18,.73,.02,.35],[.3,.56,-.01,.68],[0,1.08,.01,0]];for(const [dx,dy,dz,a] of leaves)mesh.box(x+dx*scale,y+dy*scale,z+dz*scale,.18*scale,.55*scale,.055*scale,dy>.9?light:mid,a);}else{mesh.box(x,y+.72*scale,z,.05*scale,.68*scale,.05*scale,'#5e6849');const crowns=[[-.2,.73,.02,.28],[.2,.74,-.02,-.28],[-.12,.98,0,-.6],[.13,1.02,.02,.6],[0,1.18,-.01,0]];for(const [dx,dy,dz,a] of crowns){mesh.box(x+dx*scale,y+dy*scale,z+dz*scale,.4*scale,.22*scale,.1*scale,dy>1.1?light:dark,a);mesh.box(x+dx*.55*scale,y+(dy+.05)*scale,z+(dz+.02)*scale,.28*scale,.14*scale,.08*scale,mid,-a*.7);}}}
  function officeDesk(mesh,x,y,z,screen='#82c3cc'){
-   mesh.box(x,y+.38,z,2.55,.12,1.0,'#6d5140');mesh.box(x-1.0,y-.02,z,.12,.8,.72,'#493a32');mesh.box(x+1.0,y-.02,z,.12,.8,.72,'#493a32');mesh.box(x,y-.08,z,.72,.58,.55,'#614536');
-   mesh.box(x+.34,y+.79,z+.48,1.16,.74,.12,'#203540');mesh.box(x+.34,y+.79,z+.55,.96,.54,.03,screen);mesh.box(x+.34,y+.46,z+.43,.10,.31,.10,'#344b58');mesh.box(x+.34,y+.30,z+.39,.52,.06,.30,'#344b58');
-   for(let i=0;i<3;i++)mesh.box(x-.64,y+.49+i*.055,z+.43,.48,.05,.28,i===0?'#d7caa8':i===1?'#b86c69':'#e5dfc5');
-   mesh.cylinder(x-.12,y+.52,z+.48,.11,.22,'#e6dfc9',8,.09);officePlant(mesh,x+.98,y+.47,z+.42,1,.34);
+   // Grand bureau lisible comme sur le mockup : plateau bois, caisson central, deux pieds.
+   mesh.box(x,y+.38,z,3.05,.13,1.02,'#76513b');mesh.box(x-1.22,y-.02,z,.14,.82,.74,'#493a32');mesh.box(x+1.22,y-.02,z,.14,.82,.74,'#493a32');mesh.box(x,y-.08,z,.78,.60,.56,'#614536');
+   // Écran principal nettement plus présent, légèrement décalé à droite.
+   mesh.box(x+.34,y+.84,z+.50,1.34,.82,.13,'#1d3440');mesh.box(x+.34,y+.84,z+.58,1.12,.60,.035,screen);mesh.box(x+.34,y+.48,z+.44,.12,.34,.11,'#344b58');mesh.box(x+.34,y+.31,z+.40,.58,.07,.32,'#344b58');
+   // Livres/dossiers, mug et pot à crayons.
+   for(let i=0;i<3;i++)mesh.box(x-.76,y+.49+i*.06,z+.44,.55,.055,.30,i===0?'#c86b67':i===1?'#e6dfc5':'#a8b980');
+   mesh.cylinder(x-.20,y+.53,z+.50,.12,.24,'#e7dfc8',8,.10);mesh.cylinder(x+.93,y+.52,z+.47,.13,.24,'#8899a1',7,.10);
+   officePlant(mesh,x+1.28,y+.47,z+.43,1,.34);
  }
- function kevinOffice(mesh){const x=1.05,y=surface(1,x),z=-.72;officeDesk(mesh,x,y,z,'#78bcc8');}
- function julienOffice(mesh){const x=6.05,y=surface(1,x),z=-.72;officeDesk(mesh,x,y,z,'#8ed0d7');const wy=y+1.54,wz=-1.05;mesh.box(x,wy,wz,2.82,1.10,.07,'#f0f1eb');mesh.box(x,wy+.57,wz+.01,2.96,.055,.1,'#68757b');mesh.box(x,wy-.57,wz+.01,2.96,.055,.1,'#68757b');mesh.box(x-1.45,wy,wz+.01,.055,1.16,.1,'#68757b');mesh.box(x+1.45,wy,wz+.01,.055,1.16,.1,'#68757b');}
+ function kevinOffice(mesh){const x=1.20,y=surface(1,x),z=-.72;officeDesk(mesh,x,y,z,'#78bcc8');}
+ function julienOffice(mesh){
+   const deskX=5.95,y=surface(1,deskX),z=-.72;officeDesk(mesh,deskX,y,z,'#8ed0d7');
+   // Tableau plus grand, placé à gauche de la plaque comme dans le mockup.
+   const bx=5.0,wy=y+1.58,wz=-1.05;mesh.box(bx,wy,wz,3.55,1.28,.07,'#f0f1eb');mesh.box(bx,wy+.66,wz+.01,3.70,.06,.10,'#68757b');mesh.box(bx,wy-.66,wz+.01,3.70,.06,.10,'#68757b');mesh.box(bx-1.82,wy,wz+.01,.06,1.34,.10,'#68757b');mesh.box(bx+1.82,wy,wz+.01,.06,1.34,.10,'#68757b');
+ }
  `;
   if(!src.includes(personAnchor))throw new Error('Point insertion décor introuvable');src=src.replace(personAnchor,decorDef+'\n'+personAnchor);
   const plantAnchor='for(const m of Arcade.state.mechanisms){';
