@@ -51,8 +51,12 @@
 
     const p=s.player,visible=[],limit=s.comedy?.delivery>0?1:2;
     if(s.comedy?.delivery>0&&typeof deliveryScene==='function'){
-      const scene=deliveryScene(s.comedy.delivery);
-      if(scene.stage==='refusal'||scene.stage==='order')showForced('rodolphe-scene','rodolphe',scene.text.replace(/^RODOLPHE\s*:\s*/,''),renderer.project(s.boss.x,s.boss.y+2.75,.55),now,visible);
+      const scene=deliveryScene(s.comedy.delivery),t=scene.t;
+      const visitorX=s.boss.x+4.6-Math.max(0,Math.min(1,t/1.5))*2.2+(scene.stage==='delivery'?Math.max(0,Math.min(1,(t-8)/1.2))*1.8:0);
+      const visitorPos=renderer.project(visitorX,s.boss.y+2.05,.45);
+      if(scene.stage==='request')showForced('raise-request','employee','Chef, j’ai une demande d’augmentation pour un de mes salariés.',visitorPos,now,visible);
+      else if(scene.stage==='refusal'||scene.stage==='order')showForced('rodolphe-scene','rodolphe',scene.text.replace(/^RODOLPHE\s*:\s*/,''),renderer.project(s.boss.x,s.boss.y+2.75,.55),now,visible);
+      else if(scene.stage==='delivery'&&t>=10.1)showForced('raise-after','employee','Ils sont beaux vos fauteuils, chef. Presque 3 % chacun ?',visitorPos,now,visible);
     }
     if(visible.length<limit&&s.comedy?.lineTime>0&&s.comedy.line){
       showForced('kevin-script','kevin',s.comedy.line,renderer.project(p.x,p.y+2.25,.9),now,visible);
