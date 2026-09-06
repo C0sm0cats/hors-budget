@@ -55,6 +55,8 @@
   function updateMain(now,s){
     for(const speaker of ['kevin','charline','rodolphe']){
       const b=main[speaker],pos=mainPos(s,speaker);
+      // Pendant la scène des fauteuils, seules les répliques scénarisées de Rodolphe ont le droit de s'afficher.
+      if(speaker==='rodolphe'&&s?.comedy?.delivery>0){b.el.hidden=true;b.until=0;b.next=Math.max(b.next,now+1800);continue;}
       if(!s||s.phase!=='playing'||!onscreen(pos)){b.el.hidden=true;continue;}
       if(now>=b.next){const pool=pools[speaker];b.last=pick(pool,b.last);b.el.textContent=pool[b.last];b.until=now+8500;b.next=b.until+4500+Math.random()*3500;}
       if(now<b.until){
