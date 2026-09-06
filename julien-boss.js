@@ -14,17 +14,66 @@
     "Les compétences sont disponibles. Les budgets clients un peu moins.",
     "Le plan de charge est plein. Principalement de plans de charge."
   ];
-  const el=document.createElement('div');el.className='actor-bubble julien';el.hidden=true;document.body.append(el);
-  const name=document.createElement('div');name.className='rodolphe-name-fix';name.textContent='JULIEN · DIRECTEUR TECHNOLOGIES SERVICES PAYS DE LA LOIRE';name.hidden=true;document.body.append(name);
-  let next=performance.now()+1800,until=0,last=-1;
+  const states=new WeakMap();
+  const X=6.65;
+  function state(s){
+    let b=states.get(s);
+    if(!b){b={hp:3,flash:0,nextAttack:performance.now()+2400,lastNow:performance.now()};states.set(s,b);}
+    return b;
+  }
+  const defeated=s=>state(s).hp<=0;
+  globalThis.JulienBoss={x:X,state,defeated};
+
+  const style=document.createElement('style');
+  style.textContent=`
+    .julien-name{position:fixed;z-index:34;transform:translate(-50%,-100%);padding:4px 7px;border-radius:5px;background:#142c3eee;color:#bfe8f2;font:900 10px/1.15 system-ui;text-align:center;pointer-events:none;white-space:nowrap;text-shadow:0 1px #0008}
+    .julien-name small{display:block;margin-top:2px;color:#e7dba9;font-size:8px;letter-spacing:.03em}
+    .julien-board-copy{position:fixed;z-index:12;transform:translate(-50%,-50%);width:176px;color:#26373d;font:900 10px/1.2 system-ui;text-align:left;pointer-events:none;text-shadow:0 1px #fff8}
+    .julien-board-copy strong{display:block;font-size:12px;letter-spacing:.04em}.julien-board-copy b{display:block;margin-top:3px;color:#327047}.julien-board-copy span{display:block;margin-top:2px;font-size:9px;color:#8b3f43}
+  `;
+  document.head.append(style);
+
+  const bubble=document.createElement('div');bubble.className='actor-bubble julien';bubble.hidden=true;document.body.append(bubble);
+  const name=document.createElement('div');name.className='julien-name';name.hidden=true;document.body.append(name);
+  const board=document.createElement('div');board.className='julien-board-copy';board.innerHTML='<strong>INTERCONTRAT · SIMULATION</strong><span>12 % → 9 % → 6 % → 3 %</span><b>OBJECTIF : 0 %</b>';board.hidden=true;document.body.append(board);
+
+  let nextLine=performance.now()+1600,until=0,last=-1;
   function pick(){let i=Math.floor(Math.random()*lines.length);if(i===last)i=(i+1)%lines.length;last=i;return lines[i];}
+  function onscreen(p){return p&&Number.isFinite(p.x)&&Number.isFinite(p.y)&&p.x>=0&&p.x<=innerWidth&&p.y>=0&&p.y<=innerHeight;}
+
+  function bossTick(s,now){
+    const b=state(s),dt=Math.min(.05,Math.max(0,(now-b.lastNow)/1000));b.lastNow=now;b.flash=Math.max(0,b.flash-dt);
+    const y=surface(4,X);
+    for(const paper of s.papers){
+      if(paper.life<=0||paper.julienHit)continue;
+      if(Math.abs(paper.x-X)<.58&&Math.abs(paper.y-(y+.78))<.72){
+        paper.julienHit=true;paper.life=0;b.hp=Math.max(0,b.hp-1);b.flash=.34;s.score+=250;
+        s.floaters.push({x:X,y:y+2.15,text:b.hp>0?'CR VALIDÉ · '+b.hp+' / 3':'JULIEN EN ALIGNEMENT STRATÉGIQUE',life:1.5,color:'#d5f382'});
+        if(b.hp<=0){s.gate=2.6;s.hostile=s.hostile.filter(h=>h.julien!==true);}
+      }
+    }
+    if(b.hp>0&&now>=b.nextAttack&&s.phase==='playing'&&s.player.floor>=3){
+      b.nextAttack=now+2100+Math.random()*900;
+      s.hostile.push({x:X-.45,y:y+.82,vx:-3.4,life:5,kind:'kpi',julien:true});
+    }
+  }
+
   function loop(now){
     let s=null;try{s=Arcade?.state;}catch{}
-    if(!s||!renderer||s.level!==1||s.phase!=='playing'){el.hidden=true;name.hidden=true;requestAnimationFrame(loop);return;}
-    const x=4.72,y=surface(3,x),pos=renderer.project(x,y+2.35,.4),label=renderer.project(x,y+2.85,.4);
-    if(label&&label.x>=0&&label.x<=innerWidth){name.style.left=label.x+'px';name.style.top=label.y+'px';name.hidden=false;}else name.hidden=true;
-    if(now>=next){el.textContent=pick();until=now+8500;next=until+4500+Math.random()*3500;}
-    if(now<until&&pos&&pos.x>=0&&pos.x<=innerWidth&&pos.y>=-100&&pos.y<=innerHeight){el.style.left=Math.max(125,Math.min(innerWidth-125,pos.x))+'px';el.style.top=Math.max(120,Math.min(innerHeight-35,pos.y))+'px';el.hidden=false;}else el.hidden=true;
+    if(!s||!renderer||s.level!==1){bubble.hidden=true;name.hidden=true;board.hidden=true;requestAnimationFrame(loop);return;}
+
+    const officeX=6.2,officeY=surface(3,officeX)+1.72,boardPos=renderer.project(officeX,officeY,-1.02);
+    if(onscreen(boardPos)){board.style.left=boardPos.x+'px';board.style.top=boardPos.y+'px';board.hidden=false;}else board.hidden=true;
+
+    if(s.phase!=='playing'){bubble.hidden=true;name.hidden=true;requestAnimationFrame(loop);return;}
+    bossTick(s,now);
+    const b=state(s),y=surface(4,X),head=renderer.project(X,y+2.55,.35),talk=renderer.project(X,y+2.1,.35);
+    if(onscreen(head)&&b.hp>0){name.innerHTML='JULIEN · '+('◆'.repeat(b.hp))+'<small>DIRECTEUR TECHNOLOGIES SERVICES · PAYS DE LA LOIRE</small>';name.style.left=head.x+'px';name.style.top=head.y+'px';name.hidden=false;}else name.hidden=true;
+
+    if(b.hp>0&&now>=nextLine){bubble.textContent=pick();until=now+7600;nextLine=until+4200+Math.random()*3200;}
+    if(b.hp>0&&now<until&&onscreen(talk)){bubble.style.left=Math.max(125,Math.min(innerWidth-125,talk.x))+'px';bubble.style.top=Math.max(120,Math.min(innerHeight-35,talk.y))+'px';bubble.hidden=false;}else bubble.hidden=true;
+
+    if(b.hp>0&&s.player.floor===4&&Math.abs(s.player.x-s.princess.x)<1.8){const banner=document.getElementById('banner');if(banner)banner.textContent='JULIEN BLOQUE CHARLINE · 3 CR POUR PASSER';}
     requestAnimationFrame(loop);
   }
   requestAnimationFrame(loop);
