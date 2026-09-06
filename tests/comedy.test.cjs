@@ -42,12 +42,26 @@ test('a normal jump is not a fall; a long drop triggers the mobility line', () =
   g.step(65);
   assert.equal(g.run('Arcade.state.comedy.line'), 'Mobilité interne validée.');
 });
-test('the luxury delivery follows a refusal, only once per level', () => {
+test('the refusal scene waits for the player, runs in order and respects pause', () => {
   const g = game();
   g.run('Arcade.state.levelTime=5;Arcade.spawnBarrel()');
-  assert.equal(g.run('Arcade.state.comedy.delivery'), 7);
-  g.run('Arcade.state.comedy.delivery=0;Arcade.spawnBarrel()');
   assert.equal(g.run('Arcade.state.comedy.delivery'), 0);
+  g.run(`const s=Arcade.state;s.barrels=[];s.player.floor=3;s.player.x=-7;
+    s.player.y=surface(3,-7);s.player.invulnerable=100;`);
+  g.step(1);
+  assert.equal(g.run('deliveryScene(s.comedy.delivery).stage'), 'request');
+  g.step(230);
+  assert.equal(g.run('deliveryScene(s.comedy.delivery).stage'), 'refusal');
+  const before=g.run('s.comedy.delivery');g.run('Arcade.pause()');g.step(300);
+  assert.equal(g.run('s.comedy.delivery'), before);
+  g.run('Arcade.pause()');g.step(270);
+  assert.equal(g.run('deliveryScene(s.comedy.delivery).stage'), 'order');
+  g.step(225);
+  assert.equal(g.run('deliveryScene(s.comedy.delivery).stage'), 'delivery');
+  g.step(400);
+  assert.equal(g.run('s.comedy.delivery'), 0);
+  g.step(90);assert.equal(g.run('s.comedy.delivery'), 0);
+  g.run('Arcade.start()');assert.equal(g.run('Arcade.state.comedy.delivered'), false);
 });
 test('the miracle freezes combat and bonuses, respects pause, resumes and cannot repeat', () => {
   const g = game();
