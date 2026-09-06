@@ -122,7 +122,7 @@ function createRenderer(){
   }
   if(level===0){
     // Wall-mounted whiteboard: real scene depth, behind colleagues and ladders.
-    const x=2,y=4.65,w=4.7,h=1.7;
+    const x=2,y=4.65,w=4.1,h=1.7;
     world.box(x,y,-1.3,w+.14,h+.14,.09,'#a7b6ba');
     world.box(x,y-h/2-.07,-1.14,w+.2,.09,.28,'#889ea5');
     world.box(x+w*.34,y-h/2-.005,-1.08,.42,.055,.06,'#c03936');
@@ -172,10 +172,10 @@ function createRenderer(){
           c.restore();cursor+=size*(base==='m'?20:base==='i'||base==='l'?12:18);
         }
       };
-      write('Congés -',64,32,1.5);
+      write('Congés -',64,40,1.4);
       ['Il faut privilégier les CP','puis RS puis RE car les CP',
-       'ne peuvent pas être reportés','au delà du 31 Mai'].forEach((text,i)=>write(text,64,92+i*47,1.3875));
-      write('- Kévin',64,H-58,1.3);
+       'ne peuvent pas être reportés','au delà du 31 Mai'].forEach((text,i)=>write(text,64,104+i*50,1.3));
+      write('- Kévin',64,330,1.2);
 
     });
   }
