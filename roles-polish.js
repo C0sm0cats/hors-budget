@@ -56,9 +56,11 @@
 
   function syncSafe(){
     let s=null;try{s=Arcade?.state;}catch{}
-    const visible=s&&s.level===2&&s.boss&&renderer&&!['help','records','paused','won','lost'].includes(s.phase);
+    const visible=s&&s.boss&&renderer&&!['help','records','paused','won','lost','title'].includes(s.phase);
     if(!visible){safe.hidden=true;requestAnimationFrame(syncSafe);return;}
-    const x=s.boss.x-1.55,y=s.boss.y+.72,z=.36;
+    // Le coffre reste volontairement au dernier étage, côté gauche, dans les 3 niveaux.
+    // Aux niveaux 1 et 2 il est près de Rodolphe ; au niveau 3 il reste à gauche même si le boss passe à droite.
+    const x=-7.35,y=surface(4,x)+.72,z=.36;
     const pos=renderer.project(x,y,z),left=renderer.project(x-.45,y,z),right=renderer.project(x+.45,y,z);
     if(!pos||!Number.isFinite(pos.x)||pos.x<-80||pos.x>innerWidth+80||pos.y<-80||pos.y>innerHeight+80){safe.hidden=true;requestAnimationFrame(syncSafe);return;}
     const scale=Math.max(.55,Math.min(1.45,Math.abs(right.x-left.x)/55));
