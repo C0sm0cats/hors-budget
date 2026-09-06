@@ -1,0 +1,48 @@
+name: Remove INETUM worldmark
+on:
+  push:
+    branches: [remove-inetum-worldmark]
+    paths: ['.github/workflows/remove-inetum-worldmark.yml']
+permissions:
+  contents: write
+jobs:
+  patch:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: remove-inetum-worldmark
+      - name: Remove decorative worldmark
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+
+          p=Path('polish.js')
+          s=p.read_text()
+          old="  const worldmark=document.createElement('div');worldmark.className='inetum-worldmark';worldmark.textContent='INETUM';document.body.append(worldmark);\n"
+          if old not in s:
+              raise SystemExit('worldmark creation not found')
+          s=s.replace(old,'',1)
+          old2="hideTagsFrom(i);const mark=renderer.project(-4,13.6,-1.08);worldmark.style.left=mark.x+'px';worldmark.style.top=mark.y+'px';worldmark.hidden=mark.x<0||mark.x>innerWidth||mark.y<0||mark.y>innerHeight;updateBanter(s,performance.now());"
+          new2="hideTagsFrom(i);updateBanter(s,performance.now());"
+          if old2 not in s:
+              raise SystemExit('worldmark update not found')
+          s=s.replace(old2,new2,1)
+          p.write_text(s)
+
+          p=Path('index.html')
+          s=p.read_text()
+          old='<script src="polish.js?v=17"></script>'
+          new='<script src="polish.js?v=18"></script>'
+          if old not in s:
+              raise SystemExit('polish cache version not found')
+          p.write_text(s.replace(old,new,1))
+          PY
+      - name: Commit patch and remove workflow
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git rm .github/workflows/remove-inetum-worldmark.yml
+          git add polish.js index.html
+          git commit -m "Remove decorative INETUM worldmark"
+          git push
