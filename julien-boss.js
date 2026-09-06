@@ -20,16 +20,21 @@
   const defeated=s=>state(s).hp<=0;
   globalThis.JulienBoss={x:X,state,defeated};
 
-  const bubble=document.createElement('div');bubble.className='actor-bubble julien';bubble.hidden=true;document.body.append(bubble);
-  let nextLine=performance.now()+450,until=0,last=-1;
+  const bubble=document.createElement('div');
+  bubble.className='actor-bubble julien';
+  bubble.hidden=true;
+  bubble.style.zIndex='58';
+  document.body.append(bubble);
+
+  let nextLine=performance.now()+250,until=0,last=-1;
   function pick(){let i=Math.floor(Math.random()*lines.length);if(i===last)i=(i+1)%lines.length;last=i;return lines[i];}
-  function visible(p){return p&&Number.isFinite(p.x)&&Number.isFinite(p.y)&&p.x>-80&&p.x<innerWidth+80&&p.y>-180&&p.y<innerHeight+80;}
+  function validPoint(p){return p&&Number.isFinite(p.x)&&Number.isFinite(p.y);}
 
   function hitBoss(s,b){
     if(b.hp<=0)return;
     b.hp=Math.max(0,b.hp-1);b.flash=.34;s.score+=500;
     s.floaters.push({x:X,y:surface(4,X)+2.15,text:b.hp>0?'KPI RETOURNÉ':'JULIEN EN ALIGNEMENT STRATÉGIQUE',life:1.5,color:'#d5f382'});
-    if(b.hp<=0){s.gate=2.6;s.hostile=s.hostile.filter(h=>h.julien!==true);}
+    if(b.hp<=0){s.gate=2.6;s.hostile=s.hostile.filter(h=>h.julien!==true);bubble.hidden=true;}
   }
 
   function bossTick(s,now){
@@ -48,14 +53,26 @@
     let s=null;try{s=Arcade?.state;}catch{}
     if(!s||!renderer||s.level!==1||s.phase!=='playing'){bubble.hidden=true;requestAnimationFrame(loop);return;}
     bossTick(s,now);
-    const b=state(s),y=surface(4,X),talk=renderer.project(X,y+2.05,.35);
-    if(b.hp>0&&now>=nextLine){bubble.textContent=pick();until=now+8500;nextLine=until+4200+Math.random()*3200;}
-    if(b.hp>0&&now<until&&visible(talk)){
-      bubble.style.left=Math.max(125,Math.min(innerWidth-125,talk.x))+'px';
-      bubble.style.top=Math.max(145,Math.min(innerHeight-35,talk.y))+'px';
+    const b=state(s),y=surface(4,X),talk=renderer.project(X,y+2.0,.35);
+
+    if(b.hp>0&&now>=nextLine){
+      bubble.textContent=pick();
+      until=now+9000;
+      nextLine=until+3200+Math.random()*2400;
+    }
+
+    // Contrairement à l'ancienne version, on ne rejette plus la bulle quand Julien est
+    // légèrement au-dessus de la caméra : on la borne à l'écran comme pour les autres rôles principaux.
+    if(b.hp>0&&now<until&&validPoint(talk)){
+      bubble.style.left=Math.max(130,Math.min(innerWidth-130,talk.x))+'px';
+      bubble.style.top=Math.max(132,Math.min(innerHeight-42,talk.y))+'px';
       bubble.hidden=false;
     }else bubble.hidden=true;
-    if(b.hp>0&&s.player.floor===4&&Math.abs(s.player.x-s.princess.x)<2.2){const banner=document.getElementById('banner');if(banner)banner.textContent='JULIEN BLOQUE CHARLINE · RENVOIE SES KPI AVEC X';}
+
+    if(b.hp>0&&s.player.floor===4&&Math.abs(s.player.x-s.princess.x)<2.2){
+      const banner=document.getElementById('banner');
+      if(banner)banner.textContent='JULIEN BLOQUE CHARLINE · RENVOIE SES KPI AVEC X';
+    }
     requestAnimationFrame(loop);
   }
   requestAnimationFrame(loop);
