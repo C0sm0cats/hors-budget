@@ -43,7 +43,7 @@
   }
 
   function loop(now){
-    const s=window.Arcade?.state;
+    const s=typeof Arcade!=='undefined'?Arcade.state:null;
     if(!s||typeof renderer==='undefined'){requestAnimationFrame(loop);return;}
     if(s!==lastState){lastState=s;reset(now);}
     hideAll();
