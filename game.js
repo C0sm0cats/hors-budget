@@ -42,7 +42,7 @@ const INETUM_DECOR=[
   {x:5.25,y:10.42,w:2.55,h:.68,title:'GCOMP',sub:'CV',accent:'#f59bbd',a:'#3d2e43',b:'#59435d'}
  ],
  [
-  {x:0,y:7.25,w:8.8,h:1.18,title:'POWER UP',sub:'RÉACTIVONS NOTRE PUISSANCE COLLECTIVE POUR FAIRE DE LA FRANCE LE MOTEUR DE CROISSANCE DU GROUPE',accent:'#d6f382',a:'#142b41',b:'#285269',kind:'hero'},
+  {x:0,y:7.75,w:8.8,h:1.18,title:'POWER UP',sub:'RÉACTIVONS NOTRE PUISSANCE COLLECTIVE POUR FAIRE DE LA FRANCE LE MOTEUR DE CROISSANCE DU GROUPE',accent:'#d6f382',a:'#142b41',b:'#285269',kind:'hero'},
   {x:-6.2,y:10.42,w:3.5,h:.72,title:"LET'S CONNECT FRANCE",sub:'COMMUNAUTÉ · ÉCHANGES',accent:'#f1c75b',a:'#3b3142',b:'#5a4858'},
   {x:0,y:10.42,w:3.55,h:.72,title:'DO YOU SPEAK GEN AI?',sub:'IA · ACCULTURATION',accent:'#8fd7e8',a:'#23364e',b:'#315c79'},
   {x:6.05,y:10.42,w:4.15,h:.72,title:'GLOBAL SERVICE CENTER',sub:'01 78 91 96 51',accent:'#f59bbd',a:'#3d2f42',b:'#60465c'}
