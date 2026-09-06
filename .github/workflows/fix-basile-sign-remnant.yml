@@ -1,0 +1,37 @@
+name: Fix Basile sign remnant
+on:
+  push:
+    branches: [fix-basile-sign-remnant]
+jobs:
+  patch:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+      - name: Remove Basile board and pole only
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          p=Path('game.js')
+          s=p.read_text()
+          old="if(e.stun<=0){if(e.type==='union'){moving.box(ex,e.y+.95,.85,.96,.42,.065,'#ac7d52');moving.box(ex,e.y+.48,.83,.07,.82,.07,'#7b573e');}else moving.box(ex,e.y+.82,.85,.7,.48,.065,'#d9cfb2');}"
+          new="if(e.stun<=0&&e.type!=='union')moving.box(ex,e.y+.82,.85,.7,.48,.065,'#d9cfb2');"
+          if old not in s:
+              raise SystemExit('Basile union-board render block not found')
+          s=s.replace(old,new,1)
+          p.write_text(s)
+          i=Path('index.html')
+          h=i.read_text()
+          if 'game.js?v=24' not in h:
+              raise SystemExit('Expected game.js?v=24 not found')
+          i.write_text(h.replace('game.js?v=24','game.js?v=25',1))
+          PY
+      - name: Commit fix
+        run: |
+          git config user.name github-actions[bot]
+          git config user.email 41898282+github-actions[bot]@users.noreply.github.com
+          git rm .github/workflows/fix-basile-sign-remnant.yml
+          git add game.js index.html
+          git commit -m "Remove Basile sign board remnant"
+          git push
