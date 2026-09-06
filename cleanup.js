@@ -45,7 +45,7 @@
       glasses.hidden=!visible;
       if(name)name.hidden=!visible||s.phase==='title';
       if(visible){
-        const rowing=!s.boss.active&&Math.floor(s.visual/6)%2===1;
+        const rowing=!(s.comedy?.miracle>0)&&!s.boss.active&&Math.floor(s.visual/6)%2===1;
         const bossX=s.boss.x-(s.boss.recoil>0?.24*(s.boss.recoil/.28):0);
         const drawX=bossX+(rowing?Math.sin(s.visual*6)*.18:0);
         const bounce=rowing&&!reduced.matches?Math.abs(Math.sin(s.visual*7))*.48:0;
