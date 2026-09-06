@@ -39,6 +39,42 @@
   if(!src.includes(rollDef))throw new Error('Signature du rendu tonneau introuvable');
   src=src.replace(rollDef,esnDef);
 
+  // Quelques plantes seulement, avec plusieurs silhouettes, toujours en retrait du gameplay.
+  const personAnchor=' function person(mesh,kind,x,y,z,options={})';
+  const plantDef=`
+ function officePlant(mesh,x,y,z,kind=0,scale=1){
+   const pot=kind===2?'#7c6a58':kind===1?'#9b7657':'#80644f',dark='#31583f',mid='#477b54',light='#5f9462';
+   mesh.cylinder(x,y+.18*scale,z,.22*scale,.36*scale,pot,8,.17*scale);
+   mesh.cylinder(x,y+.37*scale,z,.15*scale,.05*scale,'#2b332a',8);
+   if(kind===0){
+     mesh.box(x,y+.82*scale,z,.055*scale,.95*scale,.055*scale,'#586b45');
+     const leaves=[[-.28,.66,-.02,.5],[-.18,.92,.03,-.55],[.22,.74,.02,-.42],[.3,1.02,-.03,.58],[-.05,1.18,.02,.18]];
+     for(const [dx,dy,dz,a] of leaves)mesh.box(x+dx*scale,y+dy*scale,z+dz*scale,.42*scale,.16*scale,.07*scale,dy>1?light:mid,a);
+   }else if(kind===1){
+     const leaves=[[-.28,.55,-.02,-.7],[-.16,.76,.02,-.35],[0,.91,0,.05],[.18,.73,.02,.35],[.3,.56,-.01,.68],[0,1.08,.01,0]];
+     for(const [dx,dy,dz,a] of leaves){mesh.box(x+dx*scale,y+dy*scale,z+dz*scale,.18*scale,.55*scale,.055*scale,dy>.9?light:mid,a);}
+   }else{
+     mesh.box(x,y+.72*scale,z,.05*scale,.68*scale,.05*scale,'#5e6849');
+     const crowns=[[-.2,.73,.02,.28],[.2,.74,-.02,-.28],[-.12,.98,0,-.6],[.13,1.02,.02,.6],[0,1.18,-.01,0]];
+     for(const [dx,dy,dz,a] of crowns){mesh.box(x+dx*scale,y+dy*scale,z+dz*scale,.4*scale,.22*scale,.1*scale,dy>1.1?light:dark,a);mesh.box(x+dx*.55*scale,y+(dy+.05)*scale,z+(dz+.02)*scale,.28*scale,.14*scale,.08*scale,mid,-a*.7);}
+   }
+ }`;
+  if(!src.includes(personAnchor))throw new Error('Point d’insertion des plantes introuvable');
+  src=src.replace(personAnchor,plantDef+'\n'+personAnchor);
+
+  const plantAnchor='for(const m of Arcade.state.mechanisms){';
+  const plantCalls=`
+  // Plantes décoratives placées dans des zones visuellement calmes, sans bloquer les passages.
+  const plantLayouts=[
+    [[-8.15,0,0,.92],[7.55,2,1,.82],[-7.85,3,2,.9]],
+    [[-7.05,0,2,.86],[7.85,1,0,.9],[-1.85,3,1,.8]],
+    [[-8.3,0,1,.88],[8.2,1,2,.82],[-7.6,3,0,.9]]
+  ];
+  for(const [px,pf,pk,ps] of plantLayouts[level])officePlant(world,px,surface(pf,px),-.72,pk,ps);
+  `;
+  if(!src.includes(plantAnchor))throw new Error('Point d’insertion du décor végétal introuvable');
+  src=src.replace(plantAnchor,plantCalls+plantAnchor);
+
   const decorative="if(!s.boss.active)for(let i=0;i<3;i++)roll(moving,-9.35+i*.38,s.boss.y+.27,-.47,.21,.35,0);";
   const moving="for(const b of s.barrels)roll(moving,b.x,b.y,.65,b.r,.48,b.spin);";
   if(!src.includes(decorative)||!src.includes(moving))throw new Error('Appel de rendu tonneau introuvable');
