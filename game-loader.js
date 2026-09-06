@@ -7,9 +7,7 @@
   src=src.replace("const LEVELS=", "CAST.julien={name:'Julien',shirt:'#365b78',hair:'#49362d',skin:'#dfad86',tie:'#79b9c7'};\nconst LEVELS=");
 
   src=src.replace(/      \/\/ Petit graphe au feutre bleu : marge en hausse, salaires à plat\.[\s\S]*?      c\.restore\(\);\n/, '');
-  // Le tableau de Kévin laisse désormais une vraie respiration après la pancarte Cooptation.
   src=src.replace("const x=2,y=4.65,w=3.5,h=1.7;","const x=.8,y=4.65,w=2.7,h=1.7;");
-  // L'ancien texte reste derrière l'overlay propre et lisible ; on garde la géométrie du tableau uniquement.
   src=src.replace("for(let floor=0;floor<4;floor++)for(const x of [-5,2,6]){const y=surface(floor,x);","for(let floor=0;floor<4;floor++)for(const x of [-5,2,6]){const y=surface(floor,x);if(level===0&&floor===1&&x===2)continue;");
 
   const rollDef=" function roll(mesh,x,y,z,r,depth,spin,hex='#f0dbaf'){const col=rgb(hex),side=rgb('#d0ae7b');for(let i=0;i<14;i++){const a=i*Math.PI/7+spin,b=(i+1)*Math.PI/7+spin,p=[x+Math.cos(a)*r,y+Math.sin(a)*r,z-depth/2],q=[x+Math.cos(b)*r,y+Math.sin(b)*r,z-depth/2],P=[p[0],p[1],z+depth/2],Q=[q[0],q[1],z+depth/2];mesh.quad(p,q,Q,P,[Math.cos((a+b)/2),Math.sin((a+b)/2),0],i%4===0?rgb('#d27b73'):side);mesh.tri([x,y,z+depth/2],P,Q,[0,0,1],col);}const dx=Math.cos(spin)*r*.65,dy=Math.sin(spin)*r*.65;line(mesh,x-dx,y-dy,x+dx,y+dy,z+depth/2+.012,.08,'#bd7164');}";
@@ -19,40 +17,37 @@
   const personAnchor=' function person(mesh,kind,x,y,z,options={})';
   const decorDef=`
  function officePlant(mesh,x,y,z,kind=0,scale=1){const pot=kind===2?'#7c6a58':kind===1?'#9b7657':'#80644f',dark='#31583f',mid='#477b54',light='#5f9462';mesh.cylinder(x,y+.18*scale,z,.22*scale,.36*scale,pot,8,.17*scale);mesh.cylinder(x,y+.37*scale,z,.15*scale,.05*scale,'#2b332a',8);if(kind===0){mesh.box(x,y+.82*scale,z,.055*scale,.95*scale,.055*scale,'#586b45');const leaves=[[-.28,.66,-.02,.5],[-.18,.92,.03,-.55],[.22,.74,.02,-.42],[.3,1.02,-.03,.58],[-.05,1.18,.02,.18]];for(const [dx,dy,dz,a] of leaves)mesh.box(x+dx*scale,y+dy*scale,z+dz*scale,.42*scale,.16*scale,.07*scale,dy>1?light:mid,a);}else if(kind===1){const leaves=[[-.28,.55,-.02,-.7],[-.16,.76,.02,-.35],[0,.91,0,.05],[.18,.73,.02,.35],[.3,.56,-.01,.68],[0,1.08,.01,0]];for(const [dx,dy,dz,a] of leaves)mesh.box(x+dx*scale,y+dy*scale,z+dz*scale,.18*scale,.55*scale,.055*scale,dy>.9?light:mid,a);}else{mesh.box(x,y+.72*scale,z,.05*scale,.68*scale,.05*scale,'#5e6849');const crowns=[[-.2,.73,.02,.28],[.2,.74,-.02,-.28],[-.12,.98,0,-.6],[.13,1.02,.02,.6],[0,1.18,-.01,0]];for(const [dx,dy,dz,a] of crowns){mesh.box(x+dx*scale,y+dy*scale,z+dz*scale,.4*scale,.22*scale,.1*scale,dy>1.1?light:dark,a);mesh.box(x+dx*.55*scale,y+(dy+.05)*scale,z+(dz+.02)*scale,.28*scale,.14*scale,.08*scale,mid,-a*.7);}}}
- function officeDesk(mesh,x,y,z,screen='#82c3cc'){
-   // Grand bureau lisible comme sur le mockup : plateau bois, caisson central, deux pieds.
-   mesh.box(x,y+.38,z,3.05,.13,1.02,'#76513b');mesh.box(x-1.22,y-.02,z,.14,.82,.74,'#493a32');mesh.box(x+1.22,y-.02,z,.14,.82,.74,'#493a32');mesh.box(x,y-.08,z,.78,.60,.56,'#614536');
-   // Écran principal nettement plus présent, légèrement décalé à droite.
-   mesh.box(x+.34,y+.84,z+.50,1.34,.82,.13,'#1d3440');mesh.box(x+.34,y+.84,z+.58,1.12,.60,.035,screen);mesh.box(x+.34,y+.48,z+.44,.12,.34,.11,'#344b58');mesh.box(x+.34,y+.31,z+.40,.58,.07,.32,'#344b58');
-   // Livres/dossiers, mug et pot à crayons.
-   for(let i=0;i<3;i++)mesh.box(x-.76,y+.49+i*.06,z+.44,.55,.055,.30,i===0?'#c86b67':i===1?'#e6dfc5':'#a8b980');
-   mesh.cylinder(x-.20,y+.53,z+.50,.12,.24,'#e7dfc8',8,.10);mesh.cylinder(x+.93,y+.52,z+.47,.13,.24,'#8899a1',7,.10);
-   officePlant(mesh,x+1.28,y+.47,z+.43,1,.34);
- }
+ function officeDesk(mesh,x,y,z,screen='#82c3cc'){mesh.box(x,y+.38,z,3.05,.13,1.02,'#76513b');mesh.box(x-1.22,y-.02,z,.14,.82,.74,'#493a32');mesh.box(x+1.22,y-.02,z,.14,.82,.74,'#493a32');mesh.box(x,y-.08,z,.78,.60,.56,'#614536');mesh.box(x+.34,y+.84,z+.50,1.34,.82,.13,'#1d3440');mesh.box(x+.34,y+.84,z+.58,1.12,.60,.035,screen);mesh.box(x+.34,y+.48,z+.44,.12,.34,.11,'#344b58');mesh.box(x+.34,y+.31,z+.40,.58,.07,.32,'#344b58');for(let i=0;i<3;i++)mesh.box(x-.76,y+.49+i*.06,z+.44,.55,.055,.30,i===0?'#c86b67':i===1?'#e6dfc5':'#a8b980');mesh.cylinder(x-.20,y+.53,z+.50,.12,.24,'#e7dfc8',8,.10);mesh.cylinder(x+.93,y+.52,z+.47,.13,.24,'#8899a1',7,.10);officePlant(mesh,x+1.28,y+.47,z+.43,1,.34);}
  function kevinOffice(mesh){const x=1.20,y=surface(1,x),z=-.72;officeDesk(mesh,x,y,z,'#78bcc8');}
- function julienOffice(mesh){
-   const deskX=5.95,y=surface(1,deskX),z=-.72;officeDesk(mesh,deskX,y,z,'#8ed0d7');
-   // Tableau plus grand, placé à gauche de la plaque comme dans le mockup.
-   const bx=5.0,wy=y+1.58,wz=-1.05;mesh.box(bx,wy,wz,3.55,1.28,.07,'#f0f1eb');mesh.box(bx,wy+.66,wz+.01,3.70,.06,.10,'#68757b');mesh.box(bx,wy-.66,wz+.01,3.70,.06,.10,'#68757b');mesh.box(bx-1.82,wy,wz+.01,.06,1.34,.10,'#68757b');mesh.box(bx+1.82,wy,wz+.01,.06,1.34,.10,'#68757b');
- }
+ function julienOffice(mesh){const deskX=5.95,y=surface(1,deskX),z=-.72;officeDesk(mesh,deskX,y,z,'#8ed0d7');const bx=5.0,wy=y+1.58,wz=-1.05;mesh.box(bx,wy,wz,3.55,1.28,.07,'#f0f1eb');mesh.box(bx,wy+.66,wz+.01,3.70,.06,.10,'#68757b');mesh.box(bx,wy-.66,wz+.01,3.70,.06,.10,'#68757b');mesh.box(bx-1.82,wy,wz+.01,.06,1.34,.10,'#68757b');mesh.box(bx+1.82,wy,wz+.01,.06,1.34,.10,'#68757b');}
  `;
   if(!src.includes(personAnchor))throw new Error('Point insertion décor introuvable');src=src.replace(personAnchor,decorDef+'\n'+personAnchor);
   const plantAnchor='for(const m of Arcade.state.mechanisms){';
-  const plantCalls=`const plantLayouts=[[[-8.15,0,0,.92],[7.55,2,1,.82],[-7.85,3,2,.9]],[[-7.05,0,2,.86],[3.8,1,0,.78],[-1.85,3,1,.8]],[[-8.3,0,1,.88],[8.2,1,2,.82],[-7.6,3,0,.9]]];for(const [px,pf,pk,ps] of plantLayouts[level])officePlant(world,px,surface(pf,px),-.72,pk,ps);if(level===0)kevinOffice(world);if(level===1)julienOffice(world);`;
+  const plantCalls=`
+  const plantLayouts=[[[-8.15,0,0,.92],[7.55,2,1,.82],[-7.85,3,2,.9]],[[-7.05,0,2,.86],[3.8,1,0,.78],[-1.85,3,1,.8]],[[-8.3,0,1,.88],[8.2,1,2,.82],[-7.6,3,0,.9]]];
+  for(const [px,pf,pk,ps] of plantLayouts[level])officePlant(world,px,surface(pf,px),-.72,pk,ps);
+  const handwritten='700 1px "Comic Sans MS","Segoe Print",cursive';
+  const plaque=(x,y,z,w,title,sub)=>{world.box(x,y,z-.04,w+.08,.58,.08,'#c7a86a');sign(x,y,z,w,.5,(c,W,H)=>{c.fillStyle='#213a49';c.fillRect(0,0,W,H);c.strokeStyle='#c7a86a';c.lineWidth=Math.max(3,H*.045);c.strokeRect(3,3,W-6,H-6);c.textAlign='center';c.textBaseline='middle';c.fillStyle='#f3e3b8';c.font='900 '+H*.31+'px system-ui';c.fillText(title,W/2,H*.37,W*.9);c.fillStyle='#b9dce5';c.font='800 '+H*.18+'px system-ui';c.fillText(sub,W/2,H*.69,W*.92);});};
+  if(level===0){
+    kevinOffice(world);
+    // Tableau Kévin : vraie texture du monde 3D, mêmes proportions de texte que celui de Julien.
+    sign(.8,4.65,-1.17,2.58,1.58,(c,W,H)=>{c.fillStyle='#f7f6ee';c.fillRect(0,0,W,H);c.textBaseline='middle';c.textAlign='left';c.lineCap='round';c.lineJoin='round';const font=(s,b=700)=>b+' '+(H*s)+'px "Comic Sans MS","Segoe Print",cursive';c.fillStyle='#2f4650';c.font=font(.115);c.fillText('Congés - Tips',W*.09,H*.18,W*.78);c.strokeStyle='#2f4650';c.lineWidth=Math.max(2,H*.009);c.beginPath();c.moveTo(W*.09,H*.23);c.lineTo(W*.58,H*.22);c.stroke();c.fillStyle='#bd3f49';c.font=font(.085);['• Poser les CP tôt','• Éviter les ponts','• Pas de report après le 31/05','• Anticiper avec le manager'].forEach((t,i)=>c.fillText(t,W*.11,H*(.39+i*.145),W*.82));c.font=font(.08);c.fillText('— Kévin',W*.67,H*.88,W*.27);c.strokeStyle='#bd3f49';c.lineWidth=Math.max(2,H*.01);c.beginPath();c.arc(W*.51,H*.88,H*.055,0,Math.PI);c.stroke();c.beginPath();c.arc(W*.48,H*.845,H*.007,0,Math.PI*2);c.arc(W*.54,H*.845,H*.007,0,Math.PI*2);c.fillStyle='#bd3f49';c.fill();});
+    plaque(3.45,4.72,-1.13,1.55,'KÉVIN','DIRECTEUR DE PROJETS');
+  }
+  if(level===1){
+    julienOffice(world);
+    const jy=surface(1,5.95)+1.58;
+    sign(5.0,jy,-1.0,3.42,1.16,(c,W,H)=>{c.fillStyle='#f7f6ee';c.fillRect(0,0,W,H);c.textBaseline='middle';c.textAlign='left';c.lineCap='round';c.lineJoin='round';const font=(s,b=700)=>b+' '+(H*s)+'px "Comic Sans MS","Segoe Print",cursive';c.fillStyle='#29434a';c.font=font(.115);c.fillText('INTERCONTRAT',W*.045,H*.14,W*.40);c.strokeStyle='#53666c';c.lineWidth=Math.max(2,H*.008);c.beginPath();c.moveTo(W*.055,H*.68);c.lineTo(W*.43,H*.68);c.moveTo(W*.055,H*.68);c.lineTo(W*.055,H*.27);c.stroke();c.strokeStyle='#c94b55';c.lineWidth=Math.max(3,H*.018);c.beginPath();c.moveTo(W*.085,H*.33);c.bezierCurveTo(W*.16,H*.36,W*.25,H*.45,W*.31,H*.53);c.bezierCurveTo(W*.35,H*.58,W*.39,H*.63,W*.42,H*.65);c.stroke();c.fillStyle='#8b3f43';c.font=font(.065);[['12 %',.07,.25],['9 %',.17,.36],['6 %',.27,.48],['3 %',.36,.59]].forEach(a=>c.fillText(a[0],W*a[1],H*a[2]));c.fillStyle='#327047';c.fillText('0 %',W*.42,H*.75);c.font=font(.075);c.fillText('objectif : 0 %',W*.07,H*.82,W*.32);c.fillStyle='#287aa6';c.font=font(.11);c.fillText('MARGE / SALAIRES',W*.53,H*.14,W*.42);c.strokeStyle='#53666c';c.lineWidth=Math.max(2,H*.008);c.beginPath();c.moveTo(W*.54,H*.68);c.lineTo(W*.94,H*.68);c.moveTo(W*.54,H*.68);c.lineTo(W*.54,H*.27);c.stroke();c.strokeStyle='#287aa6';c.lineWidth=Math.max(3,H*.018);c.beginPath();c.moveTo(W*.57,H*.61);c.lineTo(W*.66,H*.53);c.lineTo(W*.75,H*.44);c.lineTo(W*.84,H*.35);c.lineTo(W*.93,H*.26);c.stroke();c.strokeStyle='#b05b9b';c.beginPath();c.moveTo(W*.57,H*.58);c.lineTo(W*.93,H*.58);c.stroke();c.fillStyle='#287aa6';c.font=font(.06);c.fillText('marge ↑',W*.84,H*.22,W*.12);c.fillStyle='#9b467f';c.fillText('salaires →',W*.80,H*.53,W*.16);c.fillStyle='#287aa6';c.font=font(.078);c.fillText('— Julien',W*.75,H*.80,W*.18);c.fillStyle='#53666c';c.font=font(.06);c.fillText('« capacité immédiatement disponible »',W*.05,H*.94,W*.55);});
+    plaque(7.75,jy,-.98,1.72,'JULIEN','DTS · PAYS DE LA LOIRE');
+  }
+  `;
   if(!src.includes(plantAnchor))throw new Error('Point insertion décor végétal introuvable');src=src.replace(plantAnchor,plantCalls+plantAnchor);
 
   const gateAnchor="if(p.floor===4&&p.grounded&&Math.abs(p.x-s.princess.x)<.85){if(s.level<2){";
-  if(!src.includes(gateAnchor))throw new Error('Point de contrôle Charline introuvable');
-  src=src.replace(gateAnchor,"if(p.floor===4&&p.grounded&&Math.abs(p.x-s.princess.x)<.85){if(s.level===1&&globalThis.JulienBoss&&!globalThis.JulienBoss.defeated(s)){notice('JULIEN BLOQUE L’ACCÈS · RENVOIE SES KPI AVEC X.',1.5);}else if(s.level<2){");
-
-  const julienDrawAnchor="const celebrating=s.phase==='won'||s.phase==='transition',charlineX=";
-  if(!src.includes(julienDrawAnchor))throw new Error('Point de rendu Julien introuvable');
-  src=src.replace(julienDrawAnchor,"if(s.level===1&&globalThis.JulienBoss){const jb=globalThis.JulienBoss.state(s),jx=globalThis.JulienBoss.x,jy=surface(4,jx);if(jb.hp>0&&(!jb.flash||Math.floor(s.visual*18)%2===0))person(moving,'julien',jx,jy,.25,{facing:-1,attack:jb.flash>0});}const celebrating=s.phase==='won'||s.phase==='transition',charlineX=");
-
+  if(!src.includes(gateAnchor))throw new Error('Point de contrôle Charline introuvable');src=src.replace(gateAnchor,"if(p.floor===4&&p.grounded&&Math.abs(p.x-s.princess.x)<.85){if(s.level===1&&globalThis.JulienBoss&&!globalThis.JulienBoss.defeated(s)){notice('JULIEN BLOQUE L’ACCÈS · RENVOIE SES KPI AVEC X.',1.5);}else if(s.level<2){");
+  const julienDrawAnchor="const celebrating=s.phase==='won'||s.phase==='transition',charlineX=";if(!src.includes(julienDrawAnchor))throw new Error('Point de rendu Julien introuvable');src=src.replace(julienDrawAnchor,"if(s.level===1&&globalThis.JulienBoss){const jb=globalThis.JulienBoss.state(s),jx=globalThis.JulienBoss.x,jy=surface(4,jx);if(jb.hp>0&&(!jb.flash||Math.floor(s.visual*18)%2===0))person(moving,'julien',jx,jy,.25,{facing:-1,attack:jb.flash>0});}const celebrating=s.phase==='won'||s.phase==='transition',charlineX=");
   src=src.replace("if(h.kind==='boss'&&!h.reflected){h.reflected=true;h.vx=8;h.life=3;", "if((h.kind==='boss'||h.julien)&&!h.reflected){h.reflected=true;h.vx=8;h.life=3;");
-  const rodLabel="label('RODOLPHE',s.boss.x,s.boss.y+2.05,'#f0b69e',10);";
-  if(src.includes(rodLabel))src=src.replace(rodLabel,rodLabel+"if(s.level===1&&globalThis.JulienBoss&&!globalThis.JulienBoss.defeated(s))label('JULIEN',globalThis.JulienBoss.x,surface(4,globalThis.JulienBoss.x)+2.05,'#bfe8f2',10);");
-
+  const rodLabel="label('RODOLPHE',s.boss.x,s.boss.y+2.05,'#f0b69e',10);";if(src.includes(rodLabel))src=src.replace(rodLabel,rodLabel+"if(s.level===1&&globalThis.JulienBoss&&!globalThis.JulienBoss.defeated(s))label('JULIEN',globalThis.JulienBoss.x,surface(4,globalThis.JulienBoss.x)+2.05,'#bfe8f2',10);");
   const decorative="if(!s.boss.active)for(let i=0;i<3;i++)roll(moving,-9.35+i*.38,s.boss.y+.27,-.47,.21,.35,0);",moving="for(const b of s.barrels)roll(moving,b.x,b.y,.65,b.r,.48,b.spin);";if(!src.includes(decorative)||!src.includes(moving))throw new Error('Appel tonneau introuvable');src=src.replace(decorative,"if(!s.boss.active)for(let i=0;i<3;i++)esnObstacle(moving,-9.35+i*.55,s.boss.y+.38,-.47,s.level,false);");src=src.replace(moving,"for(const b of s.barrels)esnObstacle(moving,b.x,b.y,.65,s.level,true);");
   src+=`\nObject.defineProperties(globalThis,{Arcade:{configurable:true,get:()=>Arcade},renderer:{configurable:true,get:()=>renderer,set:value=>{renderer=value;}},surface:{configurable:true,get:()=>surface},deliveryScene:{configurable:true,get:()=>deliveryScene,set:value=>{deliveryScene=value;}},cap:{configurable:true,get:()=>cap}});`;
   (0,eval)(src+'\n//# sourceURL=game.js');
