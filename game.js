@@ -209,6 +209,21 @@ for(const d of INETUM_DECOR[level]){const z=d.z??-1.32;world.box(d.x,d.y,z-.055,
        'ne peuvent pas être reportés','au delà du 31 Mai'].forEach((text,i)=>write(text,64,104+i*50,1.3));
       write('- Kévin',64,330,1.2);
 
+      // Petit graphe au feutre bleu : marge en hausse, salaires à plat.
+      const gx=W*.64,gy=H*.70,gw=W*.27,gh=H*.20;
+      c.save();
+      c.strokeStyle='#287aa6';c.fillStyle='#287aa6';c.lineCap='round';c.lineJoin='round';
+      c.lineWidth=Math.max(4,H*.012);
+      c.beginPath();c.moveTo(gx,gy);c.lineTo(gx,gy-gh);c.moveTo(gx,gy);c.lineTo(gx+gw,gy);c.stroke();
+      c.font='800 '+Math.max(18,H*.052)+'px system-ui';c.textAlign='left';c.textBaseline='middle';
+      c.fillText('MARGE',gx+gw*.05,gy-gh*.88);
+      c.beginPath();c.moveTo(gx+gw*.08,gy-gh*.18);c.lineTo(gx+gw*.30,gy-gh*.31);c.lineTo(gx+gw*.47,gy-gh*.45);c.lineTo(gx+gw*.68,gy-gh*.61);c.lineTo(gx+gw*.90,gy-gh*.82);c.stroke();
+      c.beginPath();c.moveTo(gx+gw*.90,gy-gh*.82);c.lineTo(gx+gw*.82,gy-gh*.80);c.moveTo(gx+gw*.90,gy-gh*.82);c.lineTo(gx+gw*.87,gy-gh*.70);c.stroke();
+      c.strokeStyle='#b05b9b';c.fillStyle='#b05b9b';c.lineWidth=Math.max(4,H*.011);
+      c.beginPath();c.moveTo(gx+gw*.08,gy-gh*.12);c.lineTo(gx+gw*.90,gy-gh*.13);c.stroke();
+      c.font='800 '+Math.max(17,H*.047)+'px system-ui';c.fillText('SALAIRES',gx+gw*.27,gy+H*.055);
+      c.restore();
+
     });
   }
   world.upload();}
