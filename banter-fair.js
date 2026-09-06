@@ -72,7 +72,7 @@
     if(s.boss?.hp>0&&s.comedy?.delivery<=0){
       const pos=renderer.project(s.boss.x,s.boss.y+2.75,.55);if(onscreen(pos))candidates.push({id:'rodolphe',cls:'rodolphe',pool:pools.rodolphe,pos});
     }
-    if(p.floor>=3&&s.princess){
+    if(s.princess){
       const pos=renderer.project(s.princess.x,s.princess.y+2.35,.4);if(onscreen(pos))candidates.push({id:'charline',cls:'charline',pool:pools.charline,pos});
     }
 
