@@ -12,14 +12,14 @@
   const style=document.createElement('style');
   style.textContent='.actor-bubble.kevin:not(.core-banter),.actor-bubble.charline:not(.core-banter),.actor-bubble.rodolphe:not(.core-banter){display:none!important}.core-banter{position:fixed!important;left:50%!important;top:auto!important;bottom:72px!important;transform:translateX(-50%)!important;max-width:min(520px,calc(100vw - 40px))!important;z-index:30!important;pointer-events:none}.core-banter::before{content:attr(data-speaker);display:block;font-size:10px;font-weight:900;letter-spacing:.12em;margin-bottom:4px;opacity:.72}';
   document.head.append(style);
-  const bubble=document.createElement('div');bubble.className='actor-bubble core-banter kevin';bubble.hidden=true;document.body.append(bubble);
+  const bubble=document.createElement('div');bubble.className='actor-bubble fair-bubble core-banter kevin';bubble.hidden=true;document.body.append(bubble);
   let speakerIndex=0,nextAt=0;
   const pick=(speaker)=>{const pool=pools[speaker];let i=Math.floor(Math.random()*pool.length);if(pool.length>1&&i===last[speaker])i=(i+1+Math.floor(Math.random()*(pool.length-1)))%pool.length;last[speaker]=i;return pool[i];};
   function update(now){
     let state=null;try{state=Arcade?.state;}catch{}
     const active=state&&state.phase==='playing'&&!(state.comedy?.miracle>0);
     if(!active){bubble.hidden=true;nextAt=0;requestAnimationFrame(update);return;}
-    if(!nextAt||now>=nextAt){const speaker=speakers[speakerIndex++%speakers.length];bubble.className='actor-bubble core-banter '+speaker;bubble.dataset.speaker=labels[speaker];bubble.textContent=pick(speaker);bubble.hidden=false;nextAt=now+6500;}
+    if(!nextAt||now>=nextAt){const speaker=speakers[speakerIndex++%speakers.length];bubble.className='actor-bubble fair-bubble core-banter '+speaker;bubble.dataset.speaker=labels[speaker];bubble.textContent=pick(speaker);bubble.hidden=false;nextAt=now+6500;}
     requestAnimationFrame(update);
   }
   requestAnimationFrame(update);
