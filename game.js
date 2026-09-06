@@ -122,22 +122,61 @@ function createRenderer(){
   }
   if(level===0){
     // Wall-mounted whiteboard: real scene depth, behind colleagues and ladders.
-    const x=0,y=4.65,w=9.4,h=1.7;
+    const x=2,y=4.65,w=4.7,h=1.7;
     world.box(x,y,-1.3,w+.14,h+.14,.09,'#a7b6ba');
     world.box(x,y-h/2-.07,-1.14,w+.2,.09,.28,'#889ea5');
-    world.box(x+3.45,y-h/2-.005,-1.08,.42,.055,.06,'#c03936');
+    world.box(x+w*.34,y-h/2-.005,-1.08,.42,.055,.06,'#c03936');
     sign(x,y,-1.24,w,h,(c,W,H)=>{
       c.fillStyle='#f7f7ef';c.fillRect(0,0,W,H);
-      c.fillStyle='#b52d32';c.textBaseline='middle';
-      const pen='"Segoe Print", "Comic Sans MS", sans-serif';
-      c.font='bold 35px '+pen;c.fillText('Congés -',28,32);
-      c.strokeStyle='#b52d32';c.lineWidth=2.5;c.beginPath();c.moveTo(28,53);c.lineTo(205,51);c.stroke();
-      c.font='italic 29px '+pen;
-      const lines=['Il faut privilégier les CP puis RS puis RE',
-        'car les CP ne peuvent pas être reportés au delà du 31 Mai'];
-      lines.forEach((text,i)=>c.fillText(text,28,86+i*39,W-56));
-      c.save();c.translate(W-175,32);c.rotate(-.045);
-      c.font='italic 30px '+pen;c.fillText('— Kévin',0,0);c.restore();
+      // Pen strokes, not a system font: identical handwritten lettering offline on every OS.
+      const strokes={
+        a:'M11 9 Q3 4 2 13 Q1 24 10 18 L12 7 L11 20',
+        c:'M12 9 Q5 4 2 12 Q0 22 11 19',
+        d:'M11 9 Q3 5 2 13 Q0 23 10 18 L14 0 L11 20',
+        e:'M2 14 Q14 14 11 8 Q7 4 3 10 Q-1 23 12 18',
+        f:'M3 24 L7 4 Q10 -3 14 2 M1 10 L12 9',
+        g:'M12 9 Q4 4 2 13 Q1 23 11 17 M13 7 L9 26 Q5 31 1 26',
+        i:'M6 8 L4 18 Q4 22 9 18 M7 2 L7.5 2.5',
+        l:'M3 17 Q14 2 9 0 Q5 -1 3 15 Q2 23 10 18',
+        m:'M1 20 L3 8 L3 15 Q9 3 9 10 L8 20 Q14 4 16 9 L15 20',
+        n:'M1 20 L3 8 L3 15 Q11 3 12 10 L10 20',
+        o:'M10 8 Q2 4 1 14 Q0 23 9 19 Q16 10 10 8 Z',
+        p:'M0 27 L4 8 M3 12 Q11 3 13 10 Q15 20 3 19',
+        r:'M2 20 L4 8 L4 14 Q10 4 14 9',
+        s:'M12 8 Q4 5 3 10 Q2 13 9 14 Q16 21 1 20',
+        t:'M8 2 L5 17 Q4 23 12 18 M1 9 L14 8',
+        u:'M3 8 L1 17 Q2 25 11 15 M13 8 L10 20',
+        v:'M2 8 L5 20 Q12 14 14 7',
+        C:'M15 3 Q5 -2 2 10 Q-1 24 13 18',
+        I:'M3 1 L15 0 M10 1 L6 20 M0 21 L13 20',
+        K:'M4 0 L1 20 M16 0 L3 12 L14 21',
+        M:'M0 20 L4 0 L9 14 L17 0 L16 20',
+        P:'M1 21 L4 1 Q19 -2 16 7 Q15 12 3 11',
+        R:'M1 21 L4 1 Q19 -2 16 7 Q15 12 3 11 M8 11 L15 21',
+        E:'M17 0 L5 1 L1 20 L14 20 M4 10 L13 9',
+        S:'M16 2 Q5 -3 3 5 Q1 10 11 11 Q23 22 1 20',
+        '3':'M2 2 Q18 -2 12 8 L7 11 Q20 9 13 18 Q7 24 0 19',
+        '1':'M2 6 L9 0 L5 21 M0 21 L12 21',
+        '-':'M2 12 L14 11'
+      };
+      const write=(text,x,y,size)=>{
+        let cursor=x;
+        for(const [i,ch] of [...text].entries()){
+          if(ch===' '){cursor+=size*10;continue;}
+          const base=ch.normalize('NFD')[0],path=strokes[base];
+          c.save();c.translate(cursor,y+Math.sin(i*2.1)*1.3);c.scale(size,size);
+          c.rotate(Math.sin(i*1.7)*.025);c.strokeStyle='#b52d32';
+          c.lineWidth=2.1+Math.sin(i)*.16;c.lineCap='round';c.lineJoin='round';
+          c.stroke(new Path2D(path));
+          if(ch!==base)c.stroke(new Path2D(ch==='ê'?'M4 3 L8 -1 L12 3':ch==='à'?'M5 -1 L9 3':'M6 3 L11 -1'));
+          c.restore();cursor+=size*(base==='m'?20:base==='i'||base==='l'?12:18);
+        }
+      };
+      write('Congés -',38,20,2);
+      ['Il faut privilégier les CP','puis RS puis RE car les CP',
+       'ne peuvent pas être reportés','au delà du 31 Mai'].forEach((text,i)=>write(text,38,85+i*53,1.85));
+      write('- Kévin',38,H-50,1.9);
+
     });
   }
   world.upload();}
