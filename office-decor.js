@@ -91,7 +91,10 @@ const glyphs={
   function kevinBoard(c,W,H){
     paper(c,W,H,560);
     pen(c,'Congés – Tips'.replace('–','—'),90,35,3,ink,800);
-    ['Poser les CP tôt','Éviter les ponts','Pas de report au-delà du 31/05','Anticiper avec le manager'].forEach((t,i)=>pen(c,'• '+t,55,147+i*73,2.35,red,890));
+    ['Poser les CP tôt','Éviter les ponts','Pas de report au-delà du 31/05','Anticiper avec le manager'].forEach((t,i)=>pen(c,'• '+t,55,112+i*47,1.8,red,890));
+    ['Il faut privilégier les CP puis RS puis RE',
+     'car les CP ne peuvent pas être reportés',
+     'au delà du 31 Mai'].forEach((text,i)=>pen(c,text,55,323+i*39,1.45,blue,890));
     pen(c,'— Kévin',705,455,2.4,red,250);
     c.strokeStyle=red;c.lineWidth=6;c.lineCap='round';c.beginPath();c.arc(196,474,29,.12,Math.PI-.12);c.stroke();
     c.beginPath();c.moveTo(180,453);c.lineTo(181,455);c.moveTo(211,453);c.lineTo(212,455);c.stroke();
