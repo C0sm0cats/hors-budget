@@ -9,20 +9,28 @@ jobs:
       contents: write
     steps:
       - uses: actions/checkout@v4
-      - name: Inspect Basile union render blocks
+      - name: Remove Basile board and pole only
         run: |
           python - <<'PY'
           from pathlib import Path
-          s=Path('game.js').read_text()
-          needle="e.type==='union'"
-          pos=[]; start=0
-          while True:
-              i=s.find(needle,start)
-              if i<0: break
-              pos.append(i); start=i+1
-          print('POSITIONS',pos)
-          for i in pos:
-              print('\n---',i,'---\n')
-              print(s[max(0,i-350):i+650])
-          raise SystemExit('inspection complete')
+          p=Path('game.js')
+          s=p.read_text()
+          old="if(e.stun<=0){if(e.type==='union'){moving.box(ex,e.y+.95,.85,.96,.42,.065,'#ac7d52');moving.box(ex,e.y+.4,.8,.045,.85,.045,'#ac7d52');}else moving.box(ex+e.direction*.32,e.y+.63,.7,.3,.38,.035,e.type==='senior'?'#dcadd0':'#eee1c3');}"
+          new="if(e.stun<=0&&e.type!=='union')moving.box(ex+e.direction*.32,e.y+.63,.7,.3,.38,.035,e.type==='senior'?'#dcadd0':'#eee1c3');"
+          if old not in s:
+              raise SystemExit('Current Basile board/pole render block not found')
+          p.write_text(s.replace(old,new,1))
+          i=Path('index.html')
+          h=i.read_text()
+          if 'game.js?v=24' not in h:
+              raise SystemExit('Expected game.js?v=24 not found')
+          i.write_text(h.replace('game.js?v=24','game.js?v=25',1))
           PY
+      - name: Commit fix
+        run: |
+          git config user.name github-actions[bot]
+          git config user.email 41898282+github-actions[bot]@users.noreply.github.com
+          git rm .github/workflows/fix-basile-sign-remnant.yml
+          git add game.js index.html
+          git commit -m "Remove Basile sign board and pole remnant"
+          git push
