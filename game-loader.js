@@ -81,5 +81,15 @@
   src=src.replace(decorative,"if(!s.boss.active)for(let i=0;i<3;i++)esnObstacle(moving,-9.35+i*.55,s.boss.y+.38,-.47,s.level,false);");
   src=src.replace(moving,"for(const b of s.barrels)esnObstacle(moving,b.x,b.y,.65,s.level,true);");
 
+  // game.js était auparavant chargé comme un script classique. L'eval indirect isole ses let/const :
+  // republie explicitement les API utilisées par les scripts de polish/banter avec des getters vivants.
+  src+=`\nObject.defineProperties(globalThis,{
+    Arcade:{configurable:true,get:()=>Arcade},
+    renderer:{configurable:true,get:()=>renderer,set:value=>{renderer=value;}},
+    surface:{configurable:true,get:()=>surface},
+    deliveryScene:{configurable:true,get:()=>deliveryScene,set:value=>{deliveryScene=value;}},
+    cap:{configurable:true,get:()=>cap}
+  });`;
+
   (0,eval)(src+'\n//# sourceURL=game.js');
 })();
