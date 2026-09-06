@@ -6,6 +6,20 @@
   document.head.append(style);
 
   const pools={
+    julien:[
+    "L’intercontrat baisse. J’ai surtout changé l’échelle du graphique.",
+    "La courbe est rouge, mais le commentaire est vert.",
+    "On n’a pas trop d’intercontrat. On a de la capacité immédiatement disponible.",
+    "J’ai demandé un plan d’action. On m’a envoyé un tableau de suivi.",
+    "Le staffing est sous contrôle. Il manque juste les missions.",
+    "Le taux d’activité remonte dès qu’on retire les gens qui ne facturent pas.",
+    "Ce n’est pas un bench. C’est un vivier de compétences.",
+    "Le graphique descend. Heureusement, l’objectif aussi.",
+    "On va industrialiser la sortie d’intercontrat. Première étape : une réunion.",
+    "J’ai trois courbes et quatre couleurs. Le problème est donc documenté.",
+    "Les compétences sont disponibles. Les budgets clients un peu moins.",
+    "Le plan de charge est plein. Principalement de plans de charge."
+  ],
     hugo:['Le client voulait un senior. Le commercial a dit oui, puis il m’a appelé.','Mon TJM a pris 12 %. Mon salaire a pris connaissance de l’information.','Je suis “expert” depuis que le commercial a modifié mon CV.','J’ai trois managers. Aucun ne sait sur quel projet je suis.','On m’a vendu autonome. Je cherche encore les accès.','La mission est “longue durée”. Mon badge expire vendredi.'],
     nora:['Le client m’appelle référente. Ma fiche de paie reste plus modeste.','J’ai changé de mission. Mon salaire, lui, est très fidèle.','La revalorisation arrive après le prochain comité. Le comité aussi, apparemment.','Le client me facture senior. Ma fiche de paie n’a pas reçu le mémo.','On m’a proposé de devenir manager. J’ai demandé combien. Fin de la discussion.','Mon variable est tellement motivant que personne ne sait comment il se calcule.'],
     basile:['Le variable est surtout variable au moment de le verser.','On est une grande famille. Une famille qui facture mes heures au client.','La NAO commence dès qu’on retrouve le budget. Le budget est porté disparu.','Ils ont remplacé l’augmentation par un webinar bien-être.','Bonne nouvelle : le panier repas a gagné 14 centimes. Mon loyer est rassuré.','J’ai demandé l’inflation. On m’a proposé une formation LinkedIn.'],
@@ -15,9 +29,9 @@
     rodolphe:['Une augmentation ? J’ai justement un budget pour un séminaire.','Les caisses sont vides. Le budget mobilier, lui, va très bien.','On ne dit pas non. On dit « à revoir au prochain exercice ».','Votre engagement est notre meilleure enveloppe budgétaire.','J’ai demandé un effort collectif. Surtout au collectif.','Le budget est gelé. Sauf pour les priorités que je viens d’inventer.','La reconnaissance n’est pas imposable. Profitez-en.','On va benchmarker votre augmentation avec zéro.','Je vous écoute. Le budget, beaucoup moins.','Bonne nouvelle : on maintient le baby-foot.','La marge progresse. Merci de ne pas faire le lien.','On reparle salaire après le prochain séminaire. Ou celui d’après.']
   };
 
-  const labels={kevin:'KÉVIN',charline:'CHARLINE',rodolphe:'RODOLPHE'};
+  const labels={julien:'JULIEN',kevin:'KÉVIN',charline:'CHARLINE',rodolphe:'RODOLPHE'};
   const main={};
-  for(const [i,speaker] of ['kevin','charline','rodolphe'].entries()){
+  for(const [i,speaker] of ['julien','kevin','charline','rodolphe'].entries()){
     const el=document.createElement('div');
     el.className='actor-bubble fair-bubble main-banter '+speaker;
     el.dataset.speaker=labels[speaker];
@@ -40,12 +54,13 @@
 
   function reset(now){
     for(const b of bubbles.values()){b.el.hidden=true;b.until=0;b.next=now+1800+Math.random()*3500;b.lastShown=-Math.random()*5000;}
-    ['kevin','charline','rodolphe'].forEach((speaker,i)=>{const b=main[speaker];b.el.hidden=true;b.until=0;b.next=now+1200+i*2200;b.last=-1;});
+    ['julien','kevin','charline','rodolphe'].forEach((speaker,i)=>{const b=main[speaker];b.el.hidden=true;b.until=0;b.next=now+1200+i*2200;b.last=-1;});
   }
 
   function showForced(id,cls,text,pos,now,visible){const b=make(id,cls);b.el.textContent=text;b.until=now+250;b.next=now+12000;b.lastShown=now;if(!place(b,pos))return false;const r=b.el.getBoundingClientRect();if(visible.some(v=>r.left<v.right+8&&r.right>v.left-8&&r.top<v.bottom+8&&r.bottom>v.top-8)){b.el.hidden=true;return false;}visible.push(r);return true;}
 
   function mainPos(s,speaker){
+    if(speaker==='julien'){const boss=globalThis.JulienBoss;return s.level===1&&boss&&!boss.defeated(s)?renderer.project(boss.x,surface(4,boss.x)+2,.35):null;}
     if(speaker==='kevin')return renderer.project(s.player.x,s.player.y+2.25,.9);
     if(speaker==='charline'&&s.princess)return renderer.project(s.princess.x,s.princess.y+2.35,.4);
     if(speaker==='rodolphe'&&s.boss)return renderer.project(s.boss.x,s.boss.y+2.75,.55);
@@ -53,15 +68,25 @@
   }
 
   function updateMain(now,s){
-    for(const speaker of ['kevin','charline','rodolphe']){
+    const occupied=[];
+    const hudBottom=document.querySelector('.hud')?.getBoundingClientRect().bottom||80;
+    for(const speaker of ['julien','kevin','charline','rodolphe']){
       const b=main[speaker],pos=mainPos(s,speaker);
       if(speaker==='rodolphe'&&s?.comedy?.delivery>0){b.el.hidden=true;b.until=0;b.next=Math.max(b.next,now+1800);continue;}
       if(!s||s.phase!=='playing'||!onscreen(pos)){b.el.hidden=true;continue;}
       if(now>=b.next){const pool=pools[speaker];b.last=pick(pool,b.last);b.el.textContent=pool[b.last];b.until=now+8500;b.next=b.until+4500+Math.random()*3500;}
       if(now<b.until){
-        b.el.style.left=Math.max(125,Math.min(innerWidth-125,pos.x))+'px';
-        b.el.style.top=Math.max(120,Math.min(innerHeight-35,pos.y))+'px';
         b.el.hidden=false;
+        const rect=b.el.getBoundingClientRect(),margin=8;
+        let placed=false;
+        for(const [dx,dy] of [[0,0],[0,rect.height+18],[-rect.width-12,0],[rect.width+12,0]]){
+          const x=Math.max(rect.width/2+margin,Math.min(innerWidth-rect.width/2-margin,pos.x+dx));
+          const y=Math.max(hudBottom+rect.height*1.15+margin,Math.min(innerHeight-35,pos.y+dy));
+          b.el.style.left=x+'px';b.el.style.top=y+'px';
+          const r=b.el.getBoundingClientRect();
+          if(!occupied.some(v=>r.left<v.right+8&&r.right>v.left-8&&r.top<v.bottom+8&&r.bottom>v.top-8)){occupied.push(r);placed=true;break;}
+        }
+        b.el.hidden=!placed;
       }else b.el.hidden=true;
     }
   }
@@ -72,13 +97,13 @@
     if(s!==lastState){lastState=s;reset(now);}
     hideAll();
     if(s.phase!=='playing'){
-      for(const speaker of ['kevin','charline','rodolphe'])main[speaker].el.hidden=true;
+      for(const speaker of ['julien','kevin','charline','rodolphe'])main[speaker].el.hidden=true;
       requestAnimationFrame(loop);return;
     }
 
     updateMain(now,s);
 
-    const p=s.player,visible=[],limit=s.comedy?.delivery>0?1:2;
+    const p=s.player,visible=Object.values(main).filter(b=>!b.el.hidden).map(b=>b.el.getBoundingClientRect()),limit=visible.length+(s.comedy?.delivery>0?1:2);
     if(s.comedy?.delivery>0&&typeof deliveryScene==='function'){
       const scene=deliveryScene(s.comedy.delivery),t=scene.t;
       const visitorX=s.boss.x+4.6-Math.max(0,Math.min(1,t/1.5))*2.2+(scene.stage==='delivery'?Math.max(0,Math.min(1,(t-8)/1.2))*1.8:0);
