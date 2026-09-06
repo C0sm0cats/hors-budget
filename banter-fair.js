@@ -32,7 +32,7 @@
   const hideAll=()=>{for(const b of bubbles.values())b.el.hidden=true;};
   let lastState=null;
 
-  function reset(now){for(const b of bubbles.values()){b.el.hidden=true;b.until=0;b.next=now+1800+Math.random()*3500;b.last=-1;b.lastShown=-Math.random()*5000;}}
+  function reset(now){for(const b of bubbles.values()){b.el.hidden=true;b.until=0;b.next=now+1800+Math.random()*3500;b.lastShown=-Math.random()*5000;}}
 
   function showForced(id,cls,text,pos,now,visible){
     const b=make(id,cls);b.el.textContent=text;b.until=now+250;b.next=now+12000;b.lastShown=now;
