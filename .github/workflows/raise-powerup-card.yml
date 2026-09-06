@@ -1,0 +1,38 @@
+name: Raise Power Up card
+on:
+  push:
+    branches: [raise-powerup-card]
+permissions:
+  contents: write
+jobs:
+  patch:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Patch files
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          p=Path('game.js')
+          s=p.read_text()
+          old="{x:0,y:7.25,w:8.8,h:1.18,title:'POWER UP'"
+          new="{x:0,y:7.75,w:8.8,h:1.18,title:'POWER UP'"
+          if old not in s:
+              raise SystemExit('Power Up card pattern not found')
+          s=s.replace(old,new,1)
+          p.write_text(s)
+          q=Path('index.html')
+          h=q.read_text()
+          if 'game.js?v=30' not in h:
+              raise SystemExit('cache version pattern not found')
+          q.write_text(h.replace('game.js?v=30','game.js?v=31',1))
+          PY
+          node --check game.js
+      - name: Remove workflow and commit
+        run: |
+          git rm .github/workflows/raise-powerup-card.yml
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add game.js index.html
+          git commit -m 'Raise Power Up card above PowerPoint pickup'
+          git push
