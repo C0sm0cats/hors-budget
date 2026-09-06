@@ -172,10 +172,10 @@ function createRenderer(){
           c.restore();cursor+=size*(base==='m'?20:base==='i'||base==='l'?12:18);
         }
       };
-      write('Congés -',38,20,2);
+      write('Congés -',64,32,1.5);
       ['Il faut privilégier les CP','puis RS puis RE car les CP',
-       'ne peuvent pas être reportés','au delà du 31 Mai'].forEach((text,i)=>write(text,38,85+i*53,1.85));
-      write('- Kévin',38,H-50,1.9);
+       'ne peuvent pas être reportés','au delà du 31 Mai'].forEach((text,i)=>write(text,64,92+i*47,1.3875));
+      write('- Kévin',64,H-58,1.3);
 
     });
   }
