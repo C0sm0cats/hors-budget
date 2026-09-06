@@ -11,6 +11,11 @@
   // Le Game Over reste satirique sans viser directement le joueur.
   src=src.replace("'LES NAO ONT EU TA PEAU.'","'MERCI POUR TON ENGAGEMENT.'");
 
+  // Diversité visuelle naturelle parmi les salariés : Nora et Basile ont des carnations plus foncées,
+  // sans changer leur rôle, leurs mécaniques ni leurs dialogues.
+  src=src.replace("nora:{name:'Nora',shirt:'#609cbe',hair:'#ebc66d',skin:'#e7b892',female:true,style:'bob'","nora:{name:'Nora',shirt:'#609cbe',hair:'#211a18',skin:'#754b35',female:true,style:'bob'");
+  src=src.replace("basile:{name:'Basile',shirt:'#9b79a6',hair:'#573c31',skin:'#bf8d69',beard:true","basile:{name:'Basile',shirt:'#9b79a6',hair:'#1d1715',skin:'#8b5b3e',beard:true");
+
   const rollDef=" function roll(mesh,x,y,z,r,depth,spin,hex='#f0dbaf'){const col=rgb(hex),side=rgb('#d0ae7b');for(let i=0;i<14;i++){const a=i*Math.PI/7+spin,b=(i+1)*Math.PI/7+spin,p=[x+Math.cos(a)*r,y+Math.sin(a)*r,z-depth/2],q=[x+Math.cos(b)*r,y+Math.sin(b)*r,z-depth/2],P=[p[0],p[1],z+depth/2],Q=[q[0],q[1],z+depth/2];mesh.quad(p,q,Q,P,[Math.cos((a+b)/2),Math.sin((a+b)/2),0],i%4===0?rgb('#d27b73'):side);mesh.tri([x,y,z+depth/2],P,Q,[0,0,1],col);}const dx=Math.cos(spin)*r*.65,dy=Math.sin(spin)*r*.65;line(mesh,x-dx,y-dy,x+dx,y+dy,z+depth/2+.012,.08,'#bd7164');}";
   const esnDef=`
  function esnObstacle(mesh,x,y,z,level,movingHazard=true){
