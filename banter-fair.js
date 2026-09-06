@@ -1,8 +1,8 @@
 'use strict';
 (()=>{
-  document.body.classList.add('fair-banter-v3');
+  document.body.classList.add('fair-banter-v4');
   const style=document.createElement('style');
-  style.textContent='.fair-banter-v3 .actor-bubble:not(.fair-bubble){display:none!important}.main-banter{position:fixed!important;left:50%!important;top:auto!important;bottom:72px!important;transform:translateX(-50%)!important;max-width:min(560px,calc(100vw - 40px))!important;z-index:30!important;pointer-events:none}.main-banter::before{content:attr(data-speaker);display:block;font-size:10px;font-weight:900;letter-spacing:.12em;margin-bottom:4px;opacity:.72}';
+  style.textContent='.fair-banter-v4 .actor-bubble:not(.fair-bubble){display:none!important}.main-banter{z-index:30!important;max-width:min(300px,58vw)!important}.main-banter::before{content:attr(data-speaker);display:block;font-size:10px;font-weight:900;letter-spacing:.12em;margin-bottom:4px;opacity:.72}';
   document.head.append(style);
 
   const pools={
@@ -15,14 +15,16 @@
     rodolphe:['Une augmentation ? J’ai justement un budget pour un séminaire.','Les caisses sont vides. Le budget mobilier, lui, va très bien.','On ne dit pas non. On dit « à revoir au prochain exercice ».','Votre engagement est notre meilleure enveloppe budgétaire.','J’ai demandé un effort collectif. Surtout au collectif.','Le budget est gelé. Sauf pour les priorités que je viens d’inventer.','La reconnaissance n’est pas imposable. Profitez-en.','On va benchmarker votre augmentation avec zéro.','Je vous écoute. Le budget, beaucoup moins.','Bonne nouvelle : on maintient le baby-foot.','La marge progresse. Merci de ne pas faire le lien.','On reparle salaire après le prochain séminaire. Ou celui d’après.']
   };
 
-  const mainSpeakers=['kevin','charline','rodolphe'];
   const labels={kevin:'KÉVIN',charline:'CHARLINE',rodolphe:'RODOLPHE'};
-  const mainLast={kevin:-1,charline:-1,rodolphe:-1};
-  const mainBubble=document.createElement('div');
-  mainBubble.className='actor-bubble fair-bubble main-banter kevin';
-  mainBubble.hidden=true;
-  document.body.append(mainBubble);
-  let mainSpeakerIndex=0,mainNext=0;
+  const main={};
+  for(const [i,speaker] of ['kevin','charline','rodolphe'].entries()){
+    const el=document.createElement('div');
+    el.className='actor-bubble fair-bubble main-banter '+speaker;
+    el.dataset.speaker=labels[speaker];
+    el.hidden=true;
+    document.body.append(el);
+    main[speaker]={el,last:-1,until:0,next:performance.now()+1400+i*2200};
+  }
 
   const bubbles=new Map();
   const make=(id,cls)=>{
@@ -36,14 +38,31 @@
   const hideAll=()=>{for(const b of bubbles.values())b.el.hidden=true;};
   let lastState=null;
 
-  function reset(now){for(const b of bubbles.values()){b.el.hidden=true;b.until=0;b.next=now+1800+Math.random()*3500;b.lastShown=-Math.random()*5000;}mainNext=0;mainSpeakerIndex=0;mainBubble.hidden=true;}
+  function reset(now){
+    for(const b of bubbles.values()){b.el.hidden=true;b.until=0;b.next=now+1800+Math.random()*3500;b.lastShown=-Math.random()*5000;}
+    ['kevin','charline','rodolphe'].forEach((speaker,i)=>{const b=main[speaker];b.el.hidden=true;b.until=0;b.next=now+1200+i*2200;b.last=-1;});
+  }
 
   function showForced(id,cls,text,pos,now,visible){const b=make(id,cls);b.el.textContent=text;b.until=now+250;b.next=now+12000;b.lastShown=now;if(!place(b,pos))return false;const r=b.el.getBoundingClientRect();if(visible.some(v=>r.left<v.right+8&&r.right>v.left-8&&r.top<v.bottom+8&&r.bottom>v.top-8)){b.el.hidden=true;return false;}visible.push(r);return true;}
 
+  function mainPos(s,speaker){
+    if(speaker==='kevin')return renderer.project(s.player.x,s.player.y+2.25,.9);
+    if(speaker==='charline'&&s.princess)return renderer.project(s.princess.x,s.princess.y+2.35,.4);
+    if(speaker==='rodolphe'&&s.boss)return renderer.project(s.boss.x,s.boss.y+2.75,.55);
+    return null;
+  }
+
   function updateMain(now,s){
-    if(!s||s.phase!=='playing'){mainBubble.hidden=true;mainNext=0;return;}
-    if(!mainNext||now>=mainNext){const speaker=mainSpeakers[mainSpeakerIndex++%mainSpeakers.length],pool=pools[speaker];mainLast[speaker]=pick(pool,mainLast[speaker]);mainBubble.className='actor-bubble fair-bubble main-banter '+speaker;mainBubble.dataset.speaker=labels[speaker];mainBubble.textContent=pool[mainLast[speaker]];mainBubble.hidden=false;mainNext=now+6000;}
-    else mainBubble.hidden=false;
+    for(const speaker of ['kevin','charline','rodolphe']){
+      const b=main[speaker],pos=mainPos(s,speaker);
+      if(!s||s.phase!=='playing'||!onscreen(pos)){b.el.hidden=true;continue;}
+      if(now>=b.next){const pool=pools[speaker];b.last=pick(pool,b.last);b.el.textContent=pool[b.last];b.until=now+8500;b.next=b.until+4500+Math.random()*3500;}
+      if(now<b.until){
+        b.el.style.left=Math.max(125,Math.min(innerWidth-125,pos.x))+'px';
+        b.el.style.top=Math.max(120,Math.min(innerHeight-35,pos.y))+'px';
+        b.el.hidden=false;
+      }else b.el.hidden=true;
+    }
   }
 
   function loop(now){
@@ -51,8 +70,12 @@
     if(!s||typeof renderer==='undefined'){requestAnimationFrame(loop);return;}
     if(s!==lastState){lastState=s;reset(now);}
     hideAll();
+    if(s.phase!=='playing'){
+      for(const speaker of ['kevin','charline','rodolphe'])main[speaker].el.hidden=true;
+      requestAnimationFrame(loop);return;
+    }
+
     updateMain(now,s);
-    if(s.phase!=='playing'){requestAnimationFrame(loop);return;}
 
     const p=s.player,visible=[],limit=s.comedy?.delivery>0?1:2;
     if(s.comedy?.delivery>0&&typeof deliveryScene==='function'){
