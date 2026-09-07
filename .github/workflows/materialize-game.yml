@@ -1,0 +1,33 @@
+name: materialize-game
+
+on:
+  push:
+    branches: [native-game-engine]
+
+permissions:
+  contents: write
+
+jobs:
+  materialize:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: native-game-engine
+          fetch-depth: 0
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Materialize patched runtime into game.js
+        run: node scripts/materialize-game.cjs
+      - name: Commit generated game.js
+        run: |
+          git add game.js
+          if git diff --cached --quiet; then
+            echo "game.js already materialized"
+            exit 0
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git commit -m "Materialize canonical game runtime"
+          git push origin HEAD:native-game-engine
