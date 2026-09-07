@@ -31,9 +31,9 @@
     bossTick(s,now);
     const b=state(s);
 
-    if(b.hp>0&&s.player.floor===4&&Math.abs(s.player.x-s.princess.x)<2.2){
+    if(b.hp>0&&s.player.floor===4&&Math.abs(s.player.x-X)<2.2){
       const banner=document.getElementById('banner');
-      if(banner)banner.textContent='JUJU BLOQUE CHACHA · RENVOIE SES KPI AVEC X';
+      if(banner)banner.textContent='JUJU BLOQUE L’ACCÈS AU ROOFTOP · RENVOIE SES KPI AVEC X';
     }
     requestAnimationFrame(loop);
   }
