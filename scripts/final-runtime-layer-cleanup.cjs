@@ -5,17 +5,15 @@ const rep=(s,a,b,label)=>{must(s.includes(a),`missing ${label}`);return s.replac
 let game=readFileSync('game.js','utf8');
 game=game.replace(/const CHARLINE_LINES=\[[^\n]*\];\n/,'');
 game=rep(game,'charlineIn:8,charlineLine:0,charlineTalk:0,','charlineIn:8,','legacy CHACHA state');
-game=rep(game,'s.charlineTalk=3;s.charlineLine=s.damage>1?1:0;','','hurt CHACHA line');
-game=rep(game,'s.shield=0;s.charlineTalk=0;completeLevel();','s.shield=0;completeLevel();','finish CHACHA line');
-game=rep(game,"for(const key of ['coffee','shield','slideTime','dance','comboTime','charlineTalk'])","for(const key of ['coffee','shield','slideTime','dance','comboTime'])",'charlineTalk decay');
-game=rep(game,'s.charlineLine=5;s.charlineTalk=4;','','coffee CHACHA line');
-game=rep(game,'s.charlineTalk=3;s.charlineLine=0;','','shortcut CHACHA line');
-game=game.replace("if(s.level===2&&s.charlineTalk>0)label('CHACHA : '+CHARLINE_LINES[s.charlineLine],s.player.x,s.player.y+2.7,'#f4b9d9',11,true);",'');
+game=game.replace(/s\.charlineTalk=[^;]+;/g,'').replace(/s\.charlineLine=[^;]+;/g,'');
+game=game.replace(/,'charlineTalk'/g,'');
+game=game.replace(/if\(s\.level===2&&s\.charlineTalk>0\)label\([^;]+;/g,'');
 game=game.replaceAll("'JE PILOTE LA TRANSFORMATION !'","'LA MARGE EST AU VERT. C’EST L’ESSENTIEL.'");
 game=game.replaceAll("'REFUSÉ. MAIS BRAVO !'","'REFUSÉ. MAIS MERCI POUR L’ENGAGEMENT.'");
-must(!game.includes('charlineTalk'),'remaining charlineTalk');
-must(!game.includes('charlineLine'),'remaining charlineLine');
-must(!game.includes('CHARLINE_LINES'),'remaining CHARLINE_LINES');
+if(game.includes('charlineTalk')||game.includes('charlineLine')||game.includes('CHARLINE_LINES')){
+  for(const term of ['charlineTalk','charlineLine','CHARLINE_LINES']){const i=game.indexOf(term);if(i>=0)console.error(term,game.slice(Math.max(0,i-180),i+400));}
+  throw new Error('remaining legacy CHACHA chatter');
+}
 writeFileSync('game.js',game,'utf8');
 
 let polish=readFileSync('polish.js','utf8');
@@ -56,7 +54,7 @@ writeFileSync('tests/cache-version.test.cjs',`const {test}=require('node:test');
 
 let inv=readFileSync('tests/redesign-invariants.test.cjs','utf8');
 inv=inv.replaceAll('game.js?v=42','game.js?v=43');
-inv += `\ntest('final presentation has a single RORO owner and no per-frame dialogue cleanup layer',()=>{\n  const polish=read('polish.js'),roles=read('roles-polish.js'),game=read('game.js'),html=read('index.html');\n  has(polish,'projectedEyeGap');has(polish,'glassesScale');\n  lacks(roles,'polishBubble');lacks(roles,'originalFillText');\n  lacks(game,'charlineTalk');lacks(game,'charlineLine');lacks(game,'CHARLINE_LINES');\n  has(game,'LA MARGE EST AU VERT. C’EST L’ESSENTIEL.');\n  has(game,'REFUSÉ. MAIS MERCI POUR L’ENGAGEMENT.');\n  lacks(html,'cleanup.js');lacks(html,'main-dialogue-cleanup.js');\n  assert.equal(existsSync(join(root,'cleanup.js')),false);assert.equal(existsSync(join(root,'main-dialogue-cleanup.js')),false);\n});\n`;
+if(!inv.includes("test('final presentation has a single RORO owner"))inv += `\ntest('final presentation has a single RORO owner and no per-frame dialogue cleanup layer',()=>{\n  const polish=read('polish.js'),roles=read('roles-polish.js'),game=read('game.js'),html=read('index.html');\n  has(polish,'projectedEyeGap');has(polish,'glassesScale');\n  lacks(roles,'polishBubble');lacks(roles,'originalFillText');\n  lacks(game,'charlineTalk');lacks(game,'charlineLine');lacks(game,'CHARLINE_LINES');\n  has(game,'LA MARGE EST AU VERT. C’EST L’ESSENTIEL.');\n  has(game,'REFUSÉ. MAIS MERCI POUR L’ENGAGEMENT.');\n  lacks(html,'cleanup.js');lacks(html,'main-dialogue-cleanup.js');\n  assert.equal(existsSync(join(root,'cleanup.js')),false);assert.equal(existsSync(join(root,'main-dialogue-cleanup.js')),false);\n});\n`;
 writeFileSync('tests/redesign-invariants.test.cjs',inv,'utf8');
 
 rmSync('cleanup.js');rmSync('main-dialogue-cleanup.js');
