@@ -5,3 +5,5 @@
 .office-reading h2{margin:0 0 16px;font:800 20px system-ui}
 .office-reading img{display:block;width:100%;height:auto;max-height:65vh;object-fit:contain;margin:0 auto 16px}
 .office-reading .primary{width:auto;margin:0 auto;padding:12px 24px}
+
+.office-reading select{display:block;margin:0 auto 14px;padding:7px 12px;border:1px solid #839ba6;border-radius:6px;background:#213b4e;color:#fff5d8;font:600 14px system-ui}.office-reading select[hidden]{display:none}

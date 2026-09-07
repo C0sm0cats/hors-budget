@@ -9,16 +9,25 @@
   const title=document.createElement('h2'),picture=document.createElement('img'),close=document.createElement('button');
   title.id='office-reading-title';dialog.setAttribute('aria-labelledby',title.id);
   close.className='primary';close.textContent='REPRENDRE';
-  dialog.append(title,picture,close);document.body.append(dialog);
+  const choose=document.createElement('select');choose.setAttribute('aria-label','Choisir un bureau');
+  dialog.append(title,choose,picture,close);document.body.append(dialog);
   let readingState=null;
-  const board=()=>globalThis.OfficeBoard?.level===Arcade.state.level?globalThis.OfficeBoard:null;
-  function open(){
-    const data=board();if(!data||Arcade.state.phase!=='playing')return;
-    readingState=Arcade.state;Arcade.pause();
-    title.textContent='Bureau de '+(data.level===0?'Kévin':'Julien');
-    picture.alt=data.level===0?'Conseils de congés signés Kévin':'Graphiques intercontrat, marge et salaires signés Julien';
-    picture.src=data.canvas.toDataURL();dialog.showModal();close.focus();
+  const boards=()=> (globalThis.OfficeBoards||[]).filter(b=>b.level===Arcade.state.level);
+  function show(data){
+    title.textContent='Bureau de '+data.name;
+    picture.alt='Tableau du bureau de '+data.name;
+    picture.src=data.canvas.toDataURL();
   }
+  function open(data){
+    const available=boards();
+    if(!available.length||Arcade.state.phase!=='playing')return;
+    if(!available.includes(data))data=available.reduce((best,b)=>Math.abs(b.floor-Arcade.state.player.floor)<Math.abs(best.floor-Arcade.state.player.floor)?b:best);
+    readingState=Arcade.state;Arcade.pause();
+    choose.replaceChildren();available.forEach((b,i)=>{const option=document.createElement('option');option.value=String(i);option.textContent=b.name;choose.append(option);});
+    choose.hidden=available.length<2;choose.value=String(available.indexOf(data));
+    show(data);dialog.showModal();close.focus();
+  }
+  choose.addEventListener('change',()=>{const data=boards()[Number(choose.value)];if(data)show(data);});
   button.addEventListener('click',open);close.addEventListener('click',()=>dialog.close());
   dialog.addEventListener('close',()=>{
     if(Arcade.state===readingState&&readingState.phase==='paused')Arcade.pause();
@@ -30,12 +39,15 @@
     if(e.key==='Escape'){e.preventDefault();dialog.close();}
   },true);
   document.getElementById('world').addEventListener('click',e=>{
-    const b=board();if(!b||Arcade.state.phase!=='playing')return;
-    const corners=[[-1,-1],[-1,1],[1,-1],[1,1]].map(([dx,dy])=>renderer.project(b.x+dx*b.w/2,b.y+dy*b.h/2,b.z));
-    if(e.clientX>=Math.min(...corners.map(p=>p.x))&&e.clientX<=Math.max(...corners.map(p=>p.x))&&e.clientY>=Math.min(...corners.map(p=>p.y))&&e.clientY<=Math.max(...corners.map(p=>p.y)))open();
+    if(Arcade.state.phase!=='playing')return;
+    for(const b of boards()){
+      const corners=[[-1,-1],[-1,1],[1,-1],[1,1]].map(([dx,dy])=>renderer.project(b.x+dx*b.w/2,b.y+dy*b.h/2,b.z));
+      if(e.clientX>=Math.min(...corners.map(p=>p.x))&&e.clientX<=Math.max(...corners.map(p=>p.x))&&e.clientY>=Math.min(...corners.map(p=>p.y))&&e.clientY<=Math.max(...corners.map(p=>p.y))){open(b);break;}
+    }
   });
   function sync(){
-    button.hidden=Arcade.state.phase!=='playing'||!board();
+    button.hidden=Arcade.state.phase!=='playing'||!boards().length;
+    button.textContent=boards().length>1?'Tableaux':'Tableau';
     if(dialog.open&&Arcade.state!==readingState)dialog.close();
     requestAnimationFrame(sync);
   }
