@@ -1,13 +1,11 @@
 const {test}=require('node:test');
 const assert=require('node:assert/strict');
-const {readFileSync}=require('node:fs');
+const {readFileSync,existsSync}=require('node:fs');
 const {join}=require('node:path');
-
-test('cleanup overlay is cache-busted and never reads comedy applause unsafely',()=>{
-  const html=readFileSync(join(__dirname,'../index.html'),'utf8');
-  const cleanup=readFileSync(join(__dirname,'../cleanup.js'),'utf8');
-  assert.ok(html.includes('cleanup.js?v=10'));
-  assert.equal(cleanup.includes('Arcade.state.comedy.applause'),false);
-  assert.equal(cleanup.includes('s.comedy.applause'),false);
-  assert.ok(cleanup.includes('s.comedy?.miracle'));
+test('legacy runtime patch layers are gone and canonical assets are cache-busted',()=>{
+  const root=join(__dirname,'..'),html=readFileSync(join(root,'index.html'),'utf8');
+  assert.ok(html.includes('game.js?v=43'));assert.ok(html.includes('polish.js?v=24'));assert.ok(html.includes('roles-polish.js?v=7'));
+  assert.ok(html.includes('<link rel="icon" href="data:,">'));
+  assert.equal(html.includes('cleanup.js'),false);assert.equal(html.includes('main-dialogue-cleanup.js'),false);
+  assert.equal(existsSync(join(root,'cleanup.js')),false);assert.equal(existsSync(join(root,'main-dialogue-cleanup.js')),false);
 });

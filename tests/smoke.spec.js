@@ -42,11 +42,19 @@ test('unique NPC ambient quips never crash the renderer',async({page},testInfo)=
   await startAndDismissIntro(page);
   await page.evaluate(()=>{
     const s=Arcade.state;
-    const variants=['hugo2','nora2','basile2','lea2'];
+    const variants=['hugo','nora','hugo2','lea','nora2','basile','basile2','lea2','sarah','mehdi','elodie','antoine'];
     s.enemies.forEach((e,i)=>{e.kind=variants[i];e.talk=3;e.line=(i+1)%3;});
   });
   await page.waitForTimeout(350);
   expect(errors,`unique NPC quip errors in ${testInfo.project.name}`).toEqual([]);
+});
+
+test('Bon de commande is native and the runtime stays error-free',async({page},testInfo)=>{
+  const errors=[];page.on('pageerror',e=>errors.push(e.message));page.on('console',m=>{if(m.type()==='error')errors.push(m.text());});
+  await page.goto('/');await startAndDismissIntro(page);
+  const status=await page.evaluate(()=>{Arcade.state.shield=5;Arcade.hud();return document.getElementById('powerStatus').textContent;});
+  expect(status).toContain('BON DE COMMANDE');
+  expect(errors,`budget runtime errors in ${testInfo.project.name}`).toEqual([]);
 });
 
 test('final level polish uses CHACHA state without legacy runtime errors',async({page},testInfo)=>{
