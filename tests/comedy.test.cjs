@@ -42,26 +42,10 @@ test('a normal jump is not a fall; a long drop triggers the mobility line', () =
   g.step(65);
   assert.equal(g.run('Arcade.state.comedy.line'), 'Mobilité interne validée.');
 });
-test('the refusal scene waits for the player, runs in order and respects pause', () => {
+test('the removed RORO chair scene has no runtime state or helper left', () => {
   const g = game();
-  g.run('Arcade.state.levelTime=5;Arcade.spawnBarrel()');
-  assert.equal(g.run('Arcade.state.comedy.delivery'), 0);
-  g.run(`const s=Arcade.state;s.barrels=[];s.player.floor=3;s.player.x=-7;
-    s.player.y=surface(3,-7);s.player.invulnerable=100;`);
-  g.step(1);
-  assert.equal(g.run('deliveryScene(s.comedy.delivery).stage'), 'request');
-  g.step(230);
-  assert.equal(g.run('deliveryScene(s.comedy.delivery).stage'), 'refusal');
-  const before=g.run('s.comedy.delivery');g.run('Arcade.pause()');g.step(300);
-  assert.equal(g.run('s.comedy.delivery'), before);
-  g.run('Arcade.pause()');g.step(270);
-  assert.equal(g.run('deliveryScene(s.comedy.delivery).stage'), 'order');
-  g.step(225);
-  assert.equal(g.run('deliveryScene(s.comedy.delivery).stage'), 'delivery');
-  g.step(400);
-  assert.equal(g.run('s.comedy.delivery'), 0);
-  g.step(90);assert.equal(g.run('s.comedy.delivery'), 0);
-  g.run('Arcade.start()');assert.equal(g.run('Arcade.state.comedy.delivered'), false);
+  assert.equal(g.run(`Object.prototype.hasOwnProperty.call(Arcade.state.comedy,'delivery')`), false);
+  assert.equal(g.run(`typeof deliveryScene`), 'undefined');
 });
 test('the miracle freezes combat and bonuses, respects pause, resumes and cannot repeat', () => {
   const g = game();
@@ -81,8 +65,8 @@ test('the miracle freezes combat and bonuses, respects pause, resumes and cannot
   assert.equal(g.run('s.comedy.miracle'), 0);
   assert.ok(g.run('s.time') > 0);
   assert.equal(g.run('s.enemies[0].raise'), 3);
-  g.run(`s.enemies=[];s.hostile=[];s.barrels=[];s.player.floor=4;s.player.x=s.princess.x;
-    s.player.y=s.princess.y;s.player.grounded=true;s.player.invulnerable=100;`);
+  g.run(`s.enemies=[];s.hostile=[];s.barrels=[];s.player.floor=4;s.player.x=s.chacha.x;
+    s.player.y=s.chacha.y;s.player.grounded=true;s.player.invulnerable=100;`);
   g.step(290);
   assert.equal(g.run('Arcade.state.level'), 1);
   assert.equal(g.run('Arcade.state.comedy.miracleSeen'), true);
