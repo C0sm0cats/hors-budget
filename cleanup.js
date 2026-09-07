@@ -3,13 +3,12 @@
   if(!renderer?.gl)return;
 
   // Position and size the DOM glasses from RORO's actual projected eyes.
-  // There is no title/game size preset: resizing the browser automatically
-  // rescales the glasses in exactly the same proportion as the 3D character.
+  // RORO only exists in the final Power UP Tour level.
   const reduced=matchMedia('(prefers-reduced-motion: reduce)');
   function syncRodolphe(){
     const s=Arcade?.state,glasses=document.querySelector('.rodolphe-glasses'),name=document.querySelector('.rodolphe-name-fix');
     if(s&&glasses&&renderer){
-      const visible=s.boss.hp>0&&!['help','records','paused','won','lost'].includes(s.phase);
+      const visible=s.level===2&&s.boss.hp>0&&!['help','records','paused','won','lost'].includes(s.phase);
       glasses.hidden=!visible;
       if(name)name.hidden=!visible||s.phase==='title';
       if(visible){
