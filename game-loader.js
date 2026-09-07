@@ -4,12 +4,85 @@
   src=src.replace("'LES NAO ONT EU TA PEAU.'","'MERCI POUR TON ENGAGEMENT.'");
   src=src.replace("nora:{name:'Nora',shirt:'#609cbe',hair:'#ebc66d',skin:'#e7b892',female:true,style:'bob'","nora:{name:'Nora',shirt:'#609cbe',hair:'#211a18',skin:'#754b35',female:true,style:'bob'");
   src=src.replace("basile:{name:'Basile',shirt:'#9b79a6',hair:'#573c31',skin:'#bf8d69',beard:true","basile:{name:'Basile',shirt:'#9b79a6',hair:'#1d1715',skin:'#8b5b3e',beard:true");
-  src=src.replace("const LEVELS=", "CAST.julien={name:'JUJU',shirt:'#365b78',hair:'#49362d',skin:'#dfad86',tie:'#79b9c7'};\nconst LEVELS=");
+  src=src.replace("const LEVELS=", "CAST.julien={name:'JUJU',shirt:'#2d506a',hair:'#49362d',skin:'#dfad86',tie:'#78aebb',internal:true,role:'techDirector',pants:'#273440',shoes:'#171f26',blouse:'#f1ede4'};\nconst LEVELS=");
 
   const patchRequired=(from,to,label)=>{
     if(!src.includes(from))throw new Error(label+' introuvable');
     src=src.replace(from,to);
   };
+
+  // Les quatre personnages principaux et les deux populations doivent être lisibles par leur tenue.
+  // KÉKÉ reste management opérationnel, CHACHA est Business, JUJU direction Pays de la Loire,
+  // RORO direction régionale. Hugo/Nora sont consultants ; Basile/Léa sont internes/commerciaux.
+  patchRequired(
+    "kevin:{name:'KÉKÉ',shirt:'#397cbd',hair:'#4b352c',skin:'#e6b88f',tie:'#fb536b'}",
+    "kevin:{name:'KÉKÉ',shirt:'#355d78',hair:'#4b352c',skin:'#e6b88f',tie:'#b94d61',internal:true,role:'projectDirector',pants:'#2e4051',shoes:'#19262f',blouse:'#f1eee6'}",
+    'Tenue KÉKÉ'
+  );
+  patchRequired(
+    "hugo:{name:'Hugo',shirt:'#d6aa58',hair:'#dfbe6c',skin:'#e9bd97',style:'quiff',demand:'Et mon variable ?'}",
+    "hugo:{name:'Hugo',shirt:'#c58f4f',hair:'#dfbe6c',skin:'#e9bd97',style:'quiff',category:'consultant',pants:'#3f5872',shoes:'#eeeae1',blouse:'#c58f4f',demand:'Et mon variable ?'}",
+    'Tenue consultant Hugo'
+  );
+  patchRequired(
+    "nora:{name:'Nora',shirt:'#609cbe',hair:'#211a18',skin:'#754b35',female:true,style:'bob',demand:'3 000 € par an !'}",
+    "nora:{name:'Nora',shirt:'#5c91aa',hair:'#211a18',skin:'#754b35',female:true,style:'bob',category:'consultant',pants:'#394f66',shoes:'#f0ede7',blouse:'#5c91aa',demand:'3 000 € par an !'}",
+    'Tenue consultante Nora'
+  );
+  patchRequired(
+    "basile:{name:'Basile',shirt:'#9b79a6',hair:'#1d1715',skin:'#8b5b3e',beard:true,demand:'Juste l’inflation !'}",
+    "basile:{name:'Basile',shirt:'#596879',hair:'#1d1715',skin:'#8b5b3e',beard:true,internal:true,category:'business',pants:'#303b46',shoes:'#1b232a',blouse:'#eee8df',tie:'#b9785e',demand:'Juste l’inflation !'}",
+    'Tenue interne Basile'
+  );
+  patchRequired(
+    "lea:{name:'Léa',shirt:'#77a389',hair:'#c96c36',skin:'#f0c49d',female:true,style:'bun',demand:'On en reparle quand ?'}",
+    "lea:{name:'Léa',shirt:'#765d79',hair:'#c96c36',skin:'#f0c49d',female:true,style:'bun',internal:true,category:'business',pants:'#4a3d4b',shoes:'#29252c',blouse:'#f2e9ed',demand:'On en reparle quand ?'}",
+    'Tenue interne Léa'
+  );
+  patchRequired(
+    "rodolphe:{name:'RORO',shirt:'#cb8864',hair:'#ba5d2f',skin:'#dfac84',beard:true,style:'curly',demand:'LES NAO COMMENCENT !'}",
+    "rodolphe:{name:'RORO',shirt:'#4a505a',hair:'#ba5d2f',skin:'#dfac84',beard:true,style:'curly',internal:true,role:'regionalDirector',pants:'#292e35',shoes:'#17191d',blouse:'#f0ebe1',tie:'#a45f53',demand:'LES NAO COMMENCENT !'}",
+    'Tenue RORO'
+  );
+  patchRequired(
+    "charline:{name:'CHACHA',shirt:'#e789b5',hair:'#674433',skin:'#efc39e',female:true,style:'long',princess:true}",
+    "charline:{name:'CHACHA',shirt:'#8d4f72',hair:'#674433',skin:'#efc39e',female:true,style:'long',internal:true,role:'businessManager',pants:'#e3b48f',shoes:'#2b1e2a',blouse:'#f8e9ef',skirt:'#59364f'}",
+    'Tailleur CHACHA'
+  );
+
+  patchRequired(
+    "scale=kind==='rodolphe'?1.27:kind==='kevin'?1.18:1.1;const part=",
+    "scale=kind==='rodolphe'?1.27:kind==='julien'?1.21:kind==='kevin'?1.18:kind==='charline'?1.12:1.1;const pants=p.pants||(p.internal?'#303d48':'#3d536b'),shoes=p.shoes||(p.internal?'#19242c':'#ede9df');const part=",
+    'Proportions et palette vestimentaire'
+  );
+  patchRequired("part(-.115,.21,stun?.25:.085*move,.16,.35,.18,'#284255');","part(-.115,.21,stun?.25:.085*move,.16,.35,.18,pants);",'Pantalon jambe gauche');
+  patchRequired("part(.115,.21,stun?.25:-.085*move,.16,.35,.18,'#284255');","part(.115,.21,stun?.25:-.085*move,.16,.35,.18,pants);",'Pantalon jambe droite');
+  patchRequired("part(-.115,.06,.055+.1*move,.2,.12,.28,'#1c3440');","part(-.115,.06,.055+.1*move,.2,.12,.28,shoes);",'Chaussure gauche');
+  patchRequired(
+    "part(.115,.06,.055-.1*move,.2,.12,.28,'#1c3440');",
+    "part(.115,.06,.055-.1*move,.2,.12,.28,shoes);if(kind==='charline'){for(const side of [-1,1]){part(side*.115,.035,.14,.18,.07,.25,shoes);part(side*.17,.03,-.035,.045,.12,.045,shoes);}}else if(!p.internal){for(const side of [-1,1])part(side*.115,.025,.10,.22,.045,.30,'#f4f0e8');}",
+    'Chaussures métier'
+  );
+  patchRequired(
+    "if(p.princess)mesh.cylinder(x,base+.47,z,.4,.53,p.shirt,10,.19);",
+    "if(kind==='charline')mesh.cylinder(x,base+.43,z,.30,.38,p.skirt||'#59364f',10,.22);",
+    'Suppression robe de princesse'
+  );
+  patchRequired(
+    "part(0,.67,.15,.16,.35,.02,'#f6e8c9');",
+    "part(0,.67,.15,p.internal?.18:.12,p.internal?.36:.22,.025,p.blouse||p.shirt);if(p.internal){part(-.115,.72,.17,.075,.28,.022,p.shirt);part(.115,.72,.17,.075,.28,.022,p.shirt);}",
+    'Chemise et revers de veste'
+  );
+  patchRequired(
+    "part(kind==='kevin'?Math.sin(time*18)*Math.min(.14,Math.abs(Arcade.state.player.vx)*.025):0,.68,.167,.10,kind==='kevin'?.39:.22,.035,p.tie||'#ddba7c');",
+    "if(p.tie)part(kind==='kevin'?Math.sin(time*18)*Math.min(.14,Math.abs(Arcade.state.player.vx)*.025):0,.68,.167,.10,kind==='kevin'?.39:.22,.035,p.tie);",
+    'Cravates réservées aux tenues concernées'
+  );
+  patchRequired(
+    "if(p.style==='long'){part(0,.96,-.22,.45,.72,.1,p.hair);part(-.22,1.03,-.025,.085,.57,.27,p.hair);part(.22,1.03,-.025,.085,.57,.27,p.hair);}",
+    "if(p.style==='long'){part(0,.96,-.22,.45,.72,.1,p.hair);part(-.22,1.03,-.025,.085,.57,.27,p.hair);part(.22,1.03,-.025,.085,.57,.27,p.hair);}if(kind==='charline'){part(-.225,1.08,.19,.045,.075,.04,'#d5b26d');part(.225,1.08,.19,.045,.075,.04,'#d5b26d');part(0,.79,.175,.075,.09,.025,'#d5b26d');}",
+    'Finition CHACHA'
+  );
 
   // Ordre de mission et Swile partageaient la bande murale du bureau de KÉKÉ.
   // On les descend sur le mur du rez-de-chaussée, dans deux emplacements réellement dégagés.
