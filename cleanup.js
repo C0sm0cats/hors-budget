@@ -2,7 +2,7 @@
 (()=>{
   if(!renderer?.gl)return;
 
-  // Position and size the DOM glasses from Rodolphe's actual projected eyes.
+  // Position and size the DOM glasses from RORO's actual projected eyes.
   // There is no title/game size preset: resizing the browser automatically
   // rescales the glasses in exactly the same proportion as the 3D character.
   const reduced=matchMedia('(prefers-reduced-motion: reduce)');
@@ -39,10 +39,10 @@
           name.style.top=np.y+'px';
         }
 
-        // game.js still paints its original RODOLPHE label on the overlay canvas.
+        // game.js still paints its original RORO label on the overlay canvas.
         // Erase that exact static label after each frame; the raised DOM label above
         // remains the single visible name. Do not add the character bounce here:
-        // the legacy canvas label itself does not bounce with Rodolphe.
+        // the legacy canvas label itself does not bounce with RORO.
         const overlay=document.getElementById('overlay');
         if(overlay){
           const ctx=overlay.getContext('2d');
