@@ -69,7 +69,7 @@ test('all seminar cast lives natively in game.js',()=>{
   lacks(html,'game-loader.js');
   assert.equal(existsSync(join(root,'unique-cast-preload.js')),false);
   assert.equal(existsSync(join(root,'game-loader.js')),false);
-  has(html,'game.js?v=42');
+  has(html,'game.js?v=43');
 });
 
 test('consultants and internal/business NPCs keep distinct visual and dialogue families',()=>{
@@ -94,7 +94,7 @@ test('game.js is the canonical directly loaded runtime',()=>{
   lacks(game,'.delivered');
   has(game,'Object.defineProperties(globalThis,{Arcade:');
   has(game,'globalThis.OfficeDecor.draw(world,sign,level,surface)');
-  has(html,'<script src="game.js?v=42"></script>');
+  has(html,'<script src="game.js?v=43"></script>');
   lacks(html,'game-loader.js');
 });
 
@@ -121,7 +121,7 @@ test('corporate signage remains split by operational, direction and seminar cont
 });
 
 test('budget language is native and distinguishes project protection from the final budget',()=>{
-  const game=read('game.js'),signage=read('corporate-signage.js'),html=read('index.html'),roles=read('roles-polish.js');
+  const game=read('game.js'),signage=read('corporate-signage.js'),html=read('index.html'),polish=read('polish.js');
   has(game,'BON DE COMMANDE');
   has(game,'ARBITRAGE 1 / 3');
   has(game,'ARBITRAGE 2 / 3');
@@ -130,7 +130,7 @@ test('budget language is native and distinguishes project protection from the fi
   has(signage,'BON DE COMMANDE');
   lacks(html,'budget-semantics.js');
   assert.equal(existsSync(join(root,'budget-semantics.js')),false);
-  has(roles,'DIRECTEUR RÉGION GRAND OUEST');
+  has(polish,'DIRECTEUR RÉGION GRAND OUEST');
 });
 
 test('polish owns presentation only and has no legacy CHACHA or delivery runtime',()=>{
@@ -164,4 +164,15 @@ test('legacy generic signage is absent from the canonical renderer',()=>{
   lacks(game,"title:'SUMMER PARTY'");
   has(signage,'function cooptation');
   has(signage,'COOPTATION');
+});
+
+test('final presentation has a single RORO owner and no per-frame dialogue cleanup layer',()=>{
+  const polish=read('polish.js'),roles=read('roles-polish.js'),game=read('game.js'),html=read('index.html');
+  has(polish,'projectedEyeGap');has(polish,'glassesScale');
+  lacks(roles,'polishBubble');lacks(roles,'originalFillText');
+  lacks(game,'charlineTalk');lacks(game,'charlineLine');lacks(game,'CHARLINE_LINES');
+  has(game,'LA MARGE EST AU VERT. C’EST L’ESSENTIEL.');
+  has(game,'REFUSÉ. MAIS MERCI POUR L’ENGAGEMENT.');
+  lacks(html,'cleanup.js');lacks(html,'main-dialogue-cleanup.js');
+  assert.equal(existsSync(join(root,'cleanup.js')),false);assert.equal(existsSync(join(root,'main-dialogue-cleanup.js')),false);
 });

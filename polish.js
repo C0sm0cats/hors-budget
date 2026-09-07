@@ -103,23 +103,15 @@
 
   function positionRodolphe(s){
     const visible=s.level===2&&s.boss.hp>0&&!['help','records','paused','won','lost'].includes(s.phase),showName=visible&&s.phase!=='title';
-    rodolpheGlasses.hidden=!visible;
-    rodolpheName.hidden=!showName;
-    if(!visible)return;
-    const rowing=!(s.comedy?.miracle>0)&&!s.boss.active&&Math.floor(s.visual/6)%2===1,
-      bossX=s.boss.x-(s.boss.recoil>0?.24*(s.boss.recoil/.28):0),
-      drawX=bossX+(rowing?Math.sin(s.visual*6)*.18:0),
-      bounce=rowing&&!reduced?Math.abs(Math.sin(s.visual*7))*.48:0,
-      face=renderer.project(drawX,s.boss.y+1.79+bounce,.39),
-      name=renderer.project(drawX,s.boss.y+2.95+bounce,.45);
-    rodolpheGlasses.style.left=face.x+'px';
-    rodolpheGlasses.style.top=face.y+'px';
-    if(showName){rodolpheName.style.left=name.x+'px';rodolpheName.style.top=name.y+'px';}
-    const overlay=document.getElementById('overlay');
-    if(overlay){
-      const ctx=overlay.getContext('2d'),ratio=Math.min(devicePixelRatio||1,1.5),old=renderer.project(s.boss.x,s.boss.y+2.05+bounce,.65);
-      ctx.save();ctx.setTransform(ratio,0,0,ratio,0,0);ctx.clearRect(old.x-58,old.y-13,116,26);ctx.restore();
-    }
+    rodolpheGlasses.hidden=!visible;rodolpheName.hidden=!showName;if(!visible)return;
+    const rowing=!(s.comedy?.miracle>0)&&!s.boss.active&&Math.floor(s.visual/6)%2===1;
+    const bossX=s.boss.x-(s.boss.recoil>0?.24*(s.boss.recoil/.28):0),drawX=bossX+(rowing?Math.sin(s.visual*6)*.18:0),bounce=rowing&&!reduced?Math.abs(Math.sin(s.visual*7))*.48:0;
+    const scale=1.27,eyeY=s.boss.y+.32+bounce+1.16*scale,eyeZ=.15+.19*scale,eyeHalf=.105*scale;
+    const face=renderer.project(drawX,eyeY,eyeZ),leftEye=renderer.project(drawX-eyeHalf,eyeY,eyeZ),rightEye=renderer.project(drawX+eyeHalf,eyeY,eyeZ);
+    const projectedEyeGap=Math.hypot(rightEye.x-leftEye.x,rightEye.y-leftEye.y),glassesScale=Math.max(.28,Math.min(2.4,projectedEyeGap/19));
+    rodolpheGlasses.style.left=face.x+'px';rodolpheGlasses.style.top=face.y+'px';rodolpheGlasses.style.setProperty('transform','translate(-50%,-50%) scale('+glassesScale+')','important');
+    if(showName){const np=renderer.project(drawX,s.boss.y+.32+bounce+2.12,.45);rodolpheName.style.left=np.x+'px';rodolpheName.style.top=np.y+'px';}
+    const overlay=document.getElementById('overlay');if(overlay){const ctx=overlay.getContext('2d'),ratio=Math.min(devicePixelRatio||1,1.5),legacy=renderer.project(s.boss.x,s.boss.y+2.05,.65);ctx.save();ctx.setTransform(ratio,0,0,ratio,0,0);ctx.clearRect(legacy.x-64,legacy.y-16,128,32);ctx.restore();}
   }
 
   function resetPresentation(s){
