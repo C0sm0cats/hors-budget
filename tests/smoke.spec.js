@@ -144,6 +144,9 @@ test('canonical journey reaches CHACHA through JUJU and RORO without runtime err
     Arcade.physics(1/90);
   });
   await expect.poll(()=>page.evaluate(()=>Arcade.state.boss.active)).toBe(true);
+  await expect(page.locator('body')).toHaveAttribute('data-phase','bossIntro');
+  await page.keyboard.press('Enter');
+  await expect(page.locator('body')).toHaveAttribute('data-phase','playing');
   await page.evaluate(()=>{
     const s=Arcade.state;
     s.boss.hp=0;
@@ -170,10 +173,12 @@ test('pause, office reading and touch controls remain interactive',async({page},
   await page.locator('dialog.office-reading .primary').click();
   await expect(page.locator('body')).toHaveAttribute('data-phase','playing');
   if(testInfo.project.name.includes('mobile')){
-    const right=page.locator('.touch button[data-key="right"]');
-    await right.dispatchEvent('pointerdown');
+    const right=page.locator('.touch button[data-key="right"]'),box=await right.boundingBox();
+    expect(box).not.toBeNull();
+    await page.mouse.move(box.x+box.width/2,box.y+box.height/2);
+    await page.mouse.down();
     await expect.poll(()=>page.evaluate(()=>Arcade.keys.has('right'))).toBe(true);
-    await right.dispatchEvent('pointerup');
+    await page.mouse.up();
     await expect.poll(()=>page.evaluate(()=>Arcade.keys.has('right'))).toBe(false);
   }
   expect(errors,`interaction errors in ${testInfo.project.name}`).toEqual([]);
