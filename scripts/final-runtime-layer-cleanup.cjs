@@ -52,6 +52,8 @@ writeFileSync('tests/cache-version.test.cjs',`const {test}=require('node:test');
 
 let inv=readFileSync('tests/redesign-invariants.test.cjs','utf8');
 inv=inv.replaceAll('game.js?v=42','game.js?v=43');
+inv=inv.replace("const game=read('game.js'),signage=read('corporate-signage.js'),html=read('index.html'),roles=read('roles-polish.js');","const game=read('game.js'),signage=read('corporate-signage.js'),html=read('index.html'),polish=read('polish.js');");
+inv=inv.replace("has(roles,'DIRECTEUR RÉGION GRAND OUEST');","has(polish,'DIRECTEUR RÉGION GRAND OUEST');");
 if(!inv.includes("test('final presentation has a single RORO owner"))inv += `\ntest('final presentation has a single RORO owner and no per-frame dialogue cleanup layer',()=>{\n  const polish=read('polish.js'),roles=read('roles-polish.js'),game=read('game.js'),html=read('index.html');\n  has(polish,'projectedEyeGap');has(polish,'glassesScale');\n  lacks(roles,'polishBubble');lacks(roles,'originalFillText');\n  lacks(game,'charlineTalk');lacks(game,'charlineLine');lacks(game,'CHARLINE_LINES');\n  has(game,'LA MARGE EST AU VERT. C’EST L’ESSENTIEL.');\n  has(game,'REFUSÉ. MAIS MERCI POUR L’ENGAGEMENT.');\n  lacks(html,'cleanup.js');lacks(html,'main-dialogue-cleanup.js');\n  assert.equal(existsSync(join(root,'cleanup.js')),false);assert.equal(existsSync(join(root,'main-dialogue-cleanup.js')),false);\n});\n`;
 writeFileSync('tests/redesign-invariants.test.cjs',inv,'utf8');
 
