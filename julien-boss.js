@@ -9,7 +9,7 @@
   function hitBoss(s,b){
     if(b.hp<=0)return;
     b.hp=Math.max(0,b.hp-1);b.flash=.34;s.score+=500;
-    s.floaters.push({x:X,y:surface(4,X)+2.15,text:b.hp>0?'KPI RETOURNÉ':'JULIEN EN ALIGNEMENT STRATÉGIQUE',life:1.5,color:'#d5f382'});
+    s.floaters.push({x:X,y:surface(4,X)+2.15,text:b.hp>0?'KPI RETOURNÉ':'JUJU EN ALIGNEMENT STRATÉGIQUE',life:1.5,color:'#d5f382'});
     if(b.hp<=0){s.gate=2.6;s.hostile=s.hostile.filter(h=>h.julien!==true);}
   }
 
@@ -33,7 +33,7 @@
 
     if(b.hp>0&&s.player.floor===4&&Math.abs(s.player.x-s.princess.x)<2.2){
       const banner=document.getElementById('banner');
-      if(banner)banner.textContent='JULIEN BLOQUE CHARLINE · RENVOIE SES KPI AVEC X';
+      if(banner)banner.textContent='JUJU BLOQUE CHACHA · RENVOIE SES KPI AVEC X';
     }
     requestAnimationFrame(loop);
   }
