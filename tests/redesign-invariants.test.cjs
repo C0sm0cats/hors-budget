@@ -71,7 +71,7 @@ test('all seminar cast lives natively in game.js',()=>{
   lacks(html,'game-loader.js');
   assert.equal(existsSync(join(root,'unique-cast-preload.js')),false);
   assert.equal(existsSync(join(root,'game-loader.js')),false);
-  has(html,'game.js?v=39');
+  has(html,'game.js?v=40');
 });
 
 test('consultants and internal/business NPCs keep distinct visual and dialogue families',()=>{
@@ -96,7 +96,7 @@ test('game.js is the canonical directly loaded runtime',()=>{
   lacks(game,'.delivered');
   has(game,'Object.defineProperties(globalThis,{Arcade:');
   has(game,'globalThis.OfficeDecor.draw(world,sign,level,surface)');
-  has(html,'<script src="game.js?v=39"></script>');
+  has(html,'<script src="game.js?v=40"></script>');
   lacks(html,'game-loader.js');
 });
 
@@ -144,4 +144,10 @@ test('polish owns presentation only and has no legacy CHACHA or delivery runtime
   lacks(polish,'comedy.delivery');
   lacks(polish,'updateBanter');
   lacks(polish,'const banter=');
+});
+
+test('ambient quips have a safe fallback for every unique NPC kind',()=>{
+  const game=read('game.js');
+  has(game,"QUIPS[e.kind]||(CAST[e.kind]?.category==='consultant'?QUIPS.hugo:QUIPS.lea)");
+  lacks(game,'QUIPS[e.kind][e.line]');
 });

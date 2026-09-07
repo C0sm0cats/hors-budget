@@ -34,6 +34,21 @@ test('game boots without runtime errors and uses the canonical final-state model
   expect(errors,`browser errors in ${testInfo.project.name}`).toEqual([]);
 });
 
+test('unique NPC ambient quips never crash the renderer',async({page},testInfo)=>{
+  const errors=[];
+  page.on('pageerror',error=>errors.push(error.message));
+  page.on('console',msg=>{if(msg.type()==='error'&&!msg.text().includes('favicon.ico'))errors.push(msg.text());});
+  await page.goto('/');
+  await startAndDismissIntro(page);
+  await page.evaluate(()=>{
+    const s=Arcade.state;
+    const variants=['hugo2','nora2','basile2','lea2'];
+    s.enemies.forEach((e,i)=>{e.kind=variants[i];e.talk=3;e.line=(i+1)%3;});
+  });
+  await page.waitForTimeout(350);
+  expect(errors,`unique NPC quip errors in ${testInfo.project.name}`).toEqual([]);
+});
+
 test('final level polish uses CHACHA state without legacy runtime errors',async({page},testInfo)=>{
   const errors=[];
   page.on('pageerror',error=>errors.push(error.message));
