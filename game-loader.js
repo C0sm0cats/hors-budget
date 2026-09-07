@@ -4,7 +4,7 @@
   src=src.replace("'LES NAO ONT EU TA PEAU.'","'MERCI POUR TON ENGAGEMENT.'");
   src=src.replace("nora:{name:'Nora',shirt:'#609cbe',hair:'#ebc66d',skin:'#e7b892',female:true,style:'bob'","nora:{name:'Nora',shirt:'#609cbe',hair:'#211a18',skin:'#754b35',female:true,style:'bob'");
   src=src.replace("basile:{name:'Basile',shirt:'#9b79a6',hair:'#573c31',skin:'#bf8d69',beard:true","basile:{name:'Basile',shirt:'#9b79a6',hair:'#1d1715',skin:'#8b5b3e',beard:true");
-  src=src.replace("const LEVELS=", "CAST.julien={name:'JUJU',shirt:'#2d506a',hair:'#49362d',skin:'#dfad86',tie:'#78aebb',internal:true,role:'techDirector',pants:'#273440',shoes:'#171f26',blouse:'#f1ede4'};\nconst LEVELS=");
+  src=src.replace("const LEVELS=", "CAST.julien={name:'JUJU',shirt:'#2d506a',hair:'#49362d',skin:'#dfad86',tie:'#78aebb',internal:true,role:'techDirector',pants:'#273440',shoes:'#171f26',blouse:'#f1ede4'};\nCAST.hugo2={name:'Mathis',shirt:'#5f8068',hair:'#5a4436',skin:'#c9906c',style:'short',category:'consultant',pants:'#495d72',shoes:'#e7e1d7',blouse:'#5f8068'};\nCAST.nora2={name:'Inès',shirt:'#9a6f5d',hair:'#3d2e29',skin:'#d59a73',female:true,style:'bun',category:'consultant',pants:'#465262',shoes:'#f1ece3',blouse:'#9a6f5d'};\nCAST.basile2={name:'Thomas',shirt:'#3f5964',hair:'#332620',skin:'#dfb08c',internal:true,category:'business',pants:'#283740',shoes:'#182229',blouse:'#e8edf0',tie:'#7b5e79'};\nCAST.lea2={name:'Camille',shirt:'#5e6c8c',hair:'#4e3027',skin:'#b97958',female:true,style:'bob',internal:true,category:'business',pants:'#40475d',shoes:'#242936',blouse:'#f2ede5'};\nconst LEVELS=");
 
   const patchRequired=(from,to,label)=>{
     if(!src.includes(from))throw new Error(label+' introuvable');
