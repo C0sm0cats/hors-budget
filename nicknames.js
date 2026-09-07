@@ -46,6 +46,9 @@
     globalThis.OfficeDecor.draw=wrapped;
   }
 
+  const visibleAttrs=['aria-label','title','alt','data-speaker','placeholder','value'];
+  const selector=visibleAttrs.map(attr=>'['+attr+']').join(',');
+
   const rewriteDom=()=>{
     if(!document.body)return;
     const walker=document.createTreeWalker(document.body,NodeFilter.SHOW_TEXT);
@@ -54,8 +57,8 @@
       const next=swap(node.nodeValue);
       if(next!==node.nodeValue)node.nodeValue=next;
     }
-    for(const el of document.body.querySelectorAll('[aria-label],[title],[alt]')){
-      for(const attr of ['aria-label','title','alt']){
+    for(const el of document.body.querySelectorAll(selector)){
+      for(const attr of visibleAttrs){
         if(!el.hasAttribute(attr))continue;
         const old=el.getAttribute(attr),next=swap(old);
         if(next!==old)el.setAttribute(attr,next);
@@ -71,6 +74,6 @@
   };
 
   syncObjects();
-  new MutationObserver(rewriteDom).observe(document.body,{subtree:true,childList:true,characterData:true,attributes:true,attributeFilter:['aria-label','title','alt']});
+  new MutationObserver(rewriteDom).observe(document.body,{subtree:true,childList:true,characterData:true,attributes:true,attributeFilter:visibleAttrs});
   setInterval(syncObjects,1000);
 })();
