@@ -1,7 +1,7 @@
 'use strict';
 (()=>{
   const bossTitle=document.querySelector('.boss-hud-title span');
-  if(bossTitle)bossTitle.textContent='RODOLPHE · DIRECTEUR RÉGION GRAND OUEST';
+  if(bossTitle)bossTitle.textContent='RORO · DIRECTEUR RÉGION GRAND OUEST';
 
   const rodolpheLines=[
     'Une augmentation ? J’ai justement un budget pour un séminaire.',
@@ -35,7 +35,7 @@
     deliveryScene=function(remaining){
       const t=12-remaining,stage=t<2.5?'request':t<5.5?'refusal':t<8?'order':'delivery';
       return {t,stage,stamp:stage==='refusal'?cap((t-2.5)/.35,0,1):stage==='order'?cap((t-5.5)/.35,0,1):0,
-        text:stage==='request'?'SALARIÉE : « Une augmentation de 3 % ? »':stage==='refusal'?'RODOLPHE : « 3 % ? Vous voulez mettre la marge en danger ? »':stage==='order'?'RODOLPHE : « Deux fauteuils massants. Ça, c’est stratégique. »':'SALARIÉE : « Ah. Donc le budget existe quand il a des roulettes. »'};
+        text:stage==='request'?'SALARIÉE : « Une augmentation de 3 % ? »':stage==='refusal'?'RORO : « 3 % ? Vous voulez mettre la marge en danger ? »':stage==='order'?'RORO : « Deux fauteuils massants. Ça, c’est stratégique. »':'SALARIÉE : « Ah. Donc le budget existe quand il a des roulettes. »'};
     };
   }
 
@@ -59,7 +59,7 @@
     const visible=s&&s.boss&&renderer&&!['help','records','paused','won','lost','title'].includes(s.phase);
     if(!visible){safe.hidden=true;requestAnimationFrame(syncSafe);return;}
     // Le coffre reste volontairement au dernier étage, côté gauche, dans les 3 niveaux.
-    // Aux niveaux 1 et 2 il est près de Rodolphe ; au niveau 3 il reste à gauche même si le boss passe à droite.
+    // Aux niveaux 1 et 2 il est près de RORO ; au niveau 3 il reste à gauche même si le boss passe à droite.
     const x=-7.35,y=surface(4,x)+.72,z=.36;
     const pos=renderer.project(x,y,z),left=renderer.project(x-.45,y,z),right=renderer.project(x+.45,y,z);
     if(!pos||!Number.isFinite(pos.x)||pos.x<-80||pos.x>innerWidth+80||pos.y<-80||pos.y>innerHeight+80){safe.hidden=true;requestAnimationFrame(syncSafe);return;}

@@ -2,7 +2,7 @@
 
 **Un directeur de projet. Une quête épique. Un budget Excel.**
 
-Petit jeu d’arcade satirique en 3D, dans l’univers fictif d’INETUM. Kévin traverse l’open space, la direction et le rooftop du séminaire pour délivrer Charline. Rodolphe, le directeur, défend son budget à coups de dossiers.
+Petit jeu d’arcade satirique en 3D, dans l’univers fictif d’INETUM. KÉKÉ traverse l’open space, la direction et le rooftop du séminaire pour délivrer CHACHA. RORO, le directeur, défend son budget à coups de dossiers.
 
 ## Jouer directement
 
@@ -33,7 +33,7 @@ Des commandes tactiles sont disponibles sur petit écran.
 - Imprimante à CRA, ascenseur du COMEX, petits fours volants.
 - Photocopieurs et buffet rebondissants pour prendre des raccourcis.
 - Café accélérateur, budget protecteur et pluie de slides.
-- Tirs à ricochet, combos et boss final : renvoyez les dossiers de Rodolphe lorsqu’il annonce « Bénéfices records ».
+- Tirs à ricochet, combos et boss final : renvoyez les dossiers de RORO lorsqu’il annonce « Bénéfices records ».
 - Chronos par zone, médailles et défis : Sans PowerPoint, Zéro réunion, Café uniquement, Sans une égratignure.
 - Présentation arcade avec intros de niveaux, barre de vie du boss et finale « Budget débloqué ».
 - Gags en action : fauteuils de luxe livrés après un refus, réactions aux tirs ratés, chutes, cafés et ricochets.
