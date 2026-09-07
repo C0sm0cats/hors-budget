@@ -72,7 +72,10 @@
     const hudBottom=document.querySelector('.hud')?.getBoundingClientRect().bottom||80;
     for(const speaker of ['julien','kevin','charline','rodolphe']){
       const b=main[speaker],pos=mainPos(s,speaker);
-      b.el.dataset.paired='false';b.el.style.width='';b.el.style.transform='';
+      b.el.dataset.paired='false';
+      // A fixed width prevents shrink-to-fit wrapping from depending on the previous frame's position.
+      b.el.style.width=Math.min(300,innerWidth*.58,innerWidth-16)+'px';
+      b.el.style.transform='none';
       if(speaker==='rodolphe'&&s?.comedy?.delivery>0){b.el.hidden=true;b.until=0;b.next=Math.max(b.next,now+1800);continue;}
       if(!s||s.phase!=='playing'||!onscreen(pos)){b.el.hidden=true;continue;}
       if(now>=b.next){const pool=pools[speaker];b.last=pick(pool,b.last);b.el.textContent=pool[b.last];b.until=now+8500;b.next=b.until+4500+Math.random()*3500;}
@@ -98,10 +101,12 @@
     for(const {b,pos} of active){
       if(b.el.dataset.paired==='true')continue;
       const rect=b.el.getBoundingClientRect(),margin=8;
+      const baseX=Math.max(margin,Math.min(innerWidth-rect.width-margin,pos.x-rect.width/2));
+      const baseY=Math.max(hudBottom+margin,Math.min(innerHeight-rect.height-16,pos.y-rect.height*1.15));
       let placed=false;
-      for(const [dx,dy] of [[0,0],[0,rect.height+18],[-rect.width-12,0],[rect.width+12,0]]){
-        const x=Math.max(rect.width/2+margin,Math.min(innerWidth-rect.width/2-margin,pos.x+dx));
-        const y=Math.max(hudBottom+rect.height*1.15+margin,Math.min(innerHeight-35,pos.y+dy));
+      for(const [dx,dy] of [[0,0],[-rect.width-12,0],[rect.width+12,0],[0,Math.max(rect.height+18,...occupied.map(r=>r.bottom+12-baseY))]]){
+        const x=Math.max(margin,Math.min(innerWidth-rect.width-margin,baseX+dx));
+        const y=Math.max(hudBottom+margin,Math.min(innerHeight-rect.height-16,baseY+dy));
         b.el.style.left=x+'px';b.el.style.top=y+'px';
         const r=b.el.getBoundingClientRect();
         if(!occupied.some(v=>r.left<v.right+8&&r.right>v.left-8&&r.top<v.bottom+8&&r.bottom>v.top-8)){occupied.push(r);placed=true;break;}

@@ -39,6 +39,20 @@ test('Julien uses the visible main dialogue channel only while alive on level tw
     assert.ok(j.right+8<=c.left,'both speakers need separate space');
     assert.ok(j.left>=0&&c.right<=width);assert.equal(j.top,c.top);
   }
+  // Reproduce Kevin beside Charline at the upper-right edge (without Julien).
+  const kevin=elements.find(el=>el.className.split(' ').includes('kevin'));
+  arcade.state.level=0;arcade.state.player.x=6;ctx.innerWidth=1366;
+  ctx.renderer.project=x=>({x:900+x*16,y:69});
+  let stable=null;
+  for(let frame=0;frame<120;frame++){
+    tick(8000+frame);
+    assert.equal(charline.hidden,false);assert.equal(kevin.hidden,false);
+    const c=charline.getBoundingClientRect(),k=kevin.getBoundingClientRect();
+    assert.ok(c.left>=k.right+8||c.right<=k.left-8||c.top>=k.bottom+8||c.bottom<=k.top-8);
+    const layout=JSON.stringify(c);if(stable!==null)assert.equal(layout,stable,'stationary bubbles must not flicker');stable=layout;
+  }
+  arcade.state.level=1;arcade.state.player.x=0;
+  ctx.renderer.project=(x,y)=>({x:680+x*40,y:600-y*30});
   tick(30000);assert.notEqual(bubble.textContent,first);
   ctx.JulienBoss.state(arcade.state).hp=0;tick(30100);assert.equal(bubble.hidden,true);
   arcade.state=state();arcade.state.level=1;tick(31000);tick(32300);assert.equal(bubble.hidden,false);
