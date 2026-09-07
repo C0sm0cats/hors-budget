@@ -123,81 +123,6 @@ const glyphs={
     pen(c,'— JUJU',805,264,1.9,blue,170);
     pen(c,'capacité immédiatement disponible !',30,318,1.6,ink,760);
   }
-  function charlineBoard(c,W,H){
-    paper(c,W,H,520);
-    pen(c,'Business & Développement',40,25,2.35,ink,900);
-    c.strokeStyle=pink;c.lineWidth=3;c.beginPath();c.moveTo(40,86);c.lineTo(900,82);c.stroke();
-    ['Suivi du pipeline','Développement commercial','Relations clients & partenaires',
-     'Prospection de nouvelles opportunités','Atteinte des objectifs'].forEach((t,i)=>pen(c,'• '+t,40,115+i*57,1.65,red,785));
-    c.fillStyle=pink;for(let i=0;i<4;i++)c.fillRect(824+i*38,245-i*30,27,40+i*30);
-    c.strokeStyle=pink;c.lineWidth=4;c.beginPath();c.moveTo(818,221);c.lineTo(961,98);c.lineTo(940,102);c.moveTo(961,98);c.lineTo(958,123);c.stroke();
-    pen(c,'Plus loin, ensemble !',313,452,1.75,ink,525);
-    c.strokeStyle=ink;c.lineWidth=4;c.beginPath();c.arc(894,465,21,0,Math.PI);c.moveTo(881,447);c.lineTo(881,450);c.moveTo(907,447);c.lineTo(907,450);c.stroke();
-  }
-  function rodolpheBoard(c,W,H){
-    paper(c,W,H,520);
-    pen(c,'Activité Région Grand Ouest',40,25,2.35,ink,930);
-    c.strokeStyle=ink;c.lineWidth=3;c.beginPath();c.moveTo(40,89);c.lineTo(920,85);c.stroke();
-    pen(c,'CA (k€)',45,122,1.7,blue,350);
-    c.beginPath();c.moveTo(45,178);c.lineTo(45,367);c.lineTo(437,367);c.moveTo(467,135);c.lineTo(467,410);c.stroke();
-    [48,87,125,161].forEach((h,i)=>{c.fillStyle=i===3?'#738894':'#368bba';c.fillRect(78+i*93,367-h,53,h);pen(c,'T'+(i+1),80+i*93,383,1.55,ink,75);});
-    ['Déploiement commercial','Support aux agences','Suivi des objectifs','Développement du réseau','Projets stratégiques'].forEach((text,i)=>{
-      const y=150+i*51;c.strokeStyle=blue;c.lineWidth=3;c.strokeRect(528,y,23,24);
-      c.beginPath();c.moveTo(532,y+12);c.lineTo(539,y+19);c.lineTo(548,y+5);c.stroke();pen(c,text,572,y,1.4,ink,395);
-    });
-    pen(c,'Proximité — Performance — Long terme',160,459,1.6,blue,790);
-  }
-  function executiveOffice(mesh,sign,level,surface,charline){
-    const floor=charline?2:1,base=floor*3;
-    // These wall bays replace the buffet scenery while retaining the platforms and ladders.
-    mesh.box(0,base+1.32,-1.68,14.3,2.70,.12,charline?'#473849':'#274652');
-    for(const dx of [-7.10,7.10])mesh.box(dx,base+1.35,-1.25,.17,2.72,.18,'#c2a066');
-    const board={level,floor,name:charline?'CHACHA':'RORO',x:-2.15,y:base+1.72,z:-1.20,w:4.25,h:1.50};
-    mesh.box(board.x,board.y,board.z-.06,board.w+.17,board.h+.16,.09,'#7e8a8c');
-    mesh.box(board.x,board.y,board.z-.045,board.w+.04,board.h+.035,.04,'#c1c8c4');
-    mesh.box(board.x,board.y-board.h/2-.05,board.z+.12,board.w+.12,.06,.22,'#829291');
-    const item=sign(board.x,board.y,board.z,board.w,board.h,charline?charlineBoard:rodolpheBoard);
-    globalThis.OfficeBoards.push({...board,canvas:item.surface});
-    const plaqueX=2.15,plaqueY=base+1.87;
-    mesh.box(plaqueX,plaqueY,-1.27,2.70,.62,.07,'#c6a052');
-    sign(plaqueX,plaqueY,-1.22,2.63,.56,(c,W,H)=>{
-      c.fillStyle='#293f49';c.fillRect(0,0,W,H);c.strokeStyle='#c6a052';c.lineWidth=7;c.strokeRect(4,4,W-8,H-8);
-      c.fillStyle='#eee3c3';c.textBaseline='middle';c.font='bold '+H*.29+'px system-ui';c.fillText(charline?'CHACHA':'RORO',W*.07,H*.34);
-      c.fillStyle='#acd0db';c.font='bold '+H*.16+'px system-ui';c.fillText(charline?'BUSINESS MANAGER':'DIRECTEUR RÉGION GRAND OUEST',W*.07,H*.71,W*.87);
-    });
-    desk(mesh,1.45,surface(floor,1.45),-.65,false);
-    // Mug, files, storage cabinet and cardboard stacks from the reference.
-    mesh.cylinder(.59,surface(floor,1.45)+.76,-.48,.135,.26,charline?'#d99ca7':'#d5b989',10);
-    mesh.box(-6.18,base+.39,-.74,1.00,.77,.74,'#344e58');
-    if(charline){
-      for(let i=0;i<3;i++){const x=-6.48+i*.26;mesh.box(x,base+.56,-.28,.21,.58,.35,['#b17e99','#749ea5','#d3b16e'][i]);mesh.box(x,base+.60,-.095,.08,.21,.014,'#e4debf');}
-    }else{mesh.box(-6.18,base+.56,-.35,.61,.12,.02,'#1f3540');}
-    const plantX=-4.70;
-    mesh.box(plantX,base+.22,-.66,.45,.44,.40,'#d6d8c8');
-    for(const [dx,a] of [[-.2,-.4],[0,0],[.18,.35]])mesh.box(plantX+dx,base+.77,-.66,.18,.9,.07,dx===0?'#549349':'#3b773d',a);
-    for(let i=0;i<3;i++)mesh.box(6.3,base+.11+i*.21,-.66,.63,.2,.55,'#c9b996');
-    const poster=(x,paint)=>{mesh.box(x,base+1.35,-1.25,1.50,1.87,.08,charline?'#725368':'#425e68');sign(x,base+1.35,-1.19,1.36,1.72,paint);};
-    poster(-5.65,(c,W,H)=>{
-      c.fillStyle=charline?'#45364b':'#243c49';c.fillRect(0,0,W,H);c.textAlign='center';c.textBaseline='middle';
-      c.fillStyle=charline?'#d9a5c4':'#e7e8dc';c.font='bold '+H*.067+'px system-ui';
-      if(charline){['OPPORTUNITÉS','PARTENARIATS','CROISSANCE','DES PROJETS','QUI ONT DU SENS'].forEach((t,i)=>c.fillText(t,W/2,H*([.14,.23,.32,.56,.65][i]),W*.9));heart(c,W*.5,H*.85,H*.06,'#d79fbd');}
-      else{
-        c.fillText('GRAND OUEST',W/2,H*.13,W*.9);
-        // Stylised map silhouette, decorative rather than a geographic claim.
-        c.strokeStyle='#70acd0';c.fillStyle='#325e78';c.lineWidth=3;c.beginPath();[[.2,.4],[.13,.34],[.28,.33],[.31,.26],[.43,.3],[.54,.22],[.74,.24],[.79,.34],[.65,.43],[.64,.50],[.43,.46],[.31,.51]].forEach(([x,y],i)=>i?c.lineTo(W*x,H*y):c.moveTo(W*x,H*y));c.closePath();c.fill();c.stroke();
-        c.fillStyle='#83bce0';c.font='bold '+H*.07+'px system-ui';['TERRAIN','ÉQUIPES','RÉSULTATS'].forEach((t,i)=>c.fillText(t,W/2,H*(.63+i*.085),W*.9));
-      }
-    });
-    poster(5.55,(c,W,H)=>{
-      c.fillStyle=charline?'#dda9bd':'#213947';c.fillRect(0,0,W,H);
-      if(charline){['ÉCOUTER','COMPRENDRE','CONSTRUIRE','RÉUSSIR','ENSEMBLE'].forEach((t,i)=>pen(c,t,W*.1,H*(.14+i*.13),H*.0038,'#70465e',W*.83));heart(c,W*.5,H*.85,H*.045,'#a84e78');}
-      else{
-        c.strokeStyle='#99c5d6';c.lineWidth=H*.017;c.beginPath();c.moveTo(W*.19,H*.37);c.lineTo(W*.39,H*.25);c.lineTo(W*.52,H*.31);c.lineTo(W*.65,H*.18);c.lineTo(W*.8,H*.36);c.stroke();
-        c.fillStyle='#e6ebdf';c.textAlign='center';c.font='bold '+H*.075+'px system-ui';['DES','ÉQUIPES','PLUS LOIN'].forEach((t,i)=>c.fillText(t,W/2,H*(.53+i*.12),W*.88));
-      }
-    });
-  }
-  function heart(c,x,y,r,color){c.strokeStyle=color;c.lineWidth=r*.18;c.beginPath();c.moveTo(x,y+r);c.bezierCurveTo(x-r*2,y-r*.4,x-r*.4,y-r*1.1,x,y-r*.35);c.bezierCurveTo(x+r*.4,y-r*1.1,x+r*2,y-r*.4,x,y+r);c.stroke();}
 
   function desk(mesh,x,y,z,julien){
     mesh.box(x,y+.55,z,4.1,.16,.85,'#896548');
@@ -221,7 +146,7 @@ const glyphs={
   }
   function draw(mesh,sign,level,surface){
     globalThis.OfficeBoards=[];
-    if(level===2){executiveOffice(mesh,sign,level,surface,false);executiveOffice(mesh,sign,level,surface,true);globalThis.OfficeBoard=globalThis.OfficeBoards[0];return;}
+    if(level===2){globalThis.OfficeBoards=[];globalThis.OfficeBoard=null;return;}
     const julien=level===1,board={x:julien?-1.15:-1.9,y:4.72,z:-1.22,w:julien?5.3:2.9,h:1.50};
     const {x,y,z,w,h}=board;
     mesh.box(x,y,z-.07,w+.18,h+.16,.10,'#737f83');

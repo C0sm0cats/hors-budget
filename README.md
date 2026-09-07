@@ -42,13 +42,12 @@ Des commandes tactiles sont disponibles sur petit écran.
 - Café accélérateur, **Bon de commande** protecteur et pluie de slides.
 - Boss intermédiaire JUJU : renvoyez ses KPI pour débloquer le rooftop.
 - Boss final RORO : renvoyez ses dossiers lorsqu’il annonce « Bénéfices records » ; les deux premiers impacts sont des arbitrages, le dernier débloque réellement le budget.
-- Scène des fauteuils massants réservée à RORO et à la Direction Région Grand Ouest.
 - Chronos par zone, médailles et défis : Sans PowerPoint, Zéro réunion, Café uniquement, Sans une égratignure.
 - Présentation arcade avec intros de niveaux, barre de vie du boss et finale « CHACHA EST LIBÉRÉE · BUDGET DÉBLOQUÉ ».
 - Rare miracle : une vraie augmentation de 3 %, suivie de deux secondes d’applaudissements, projectiles compris.
 - Dialogues ambiants limités à deux bulles sans chevauchement ; les réactions aux actions sont prioritaires.
 
-Le fil narratif est désormais volontairement unique : **retrouver la trace de CHACHA → franchir JUJU → atteindre le Power UP Tour → battre RORO → débloquer le budget → libérer CHACHA**.
+Le fil narratif est volontairement unique : **retrouver la trace de CHACHA → franchir JUJU → atteindre le Power UP Tour → battre RORO → débloquer le budget → libérer CHACHA**.
 
 > **TOUT EST SOUS CONTRÔLE. MÊME LE BUDGET.**
 
@@ -56,7 +55,7 @@ Scores et palmarès sont stockés uniquement dans le navigateur (`localStorage`)
 
 ## Technique
 
-Le jeu reste volontairement sans dépendance : `index.html` porte la structure, `style.css` le style principal, `game.js` le moteur WebGL et la logique de jeu, complétés par des modules JavaScript dédiés aux décors, personnages, dialogues et finitions visuelles.
+Le jeu reste volontairement sans framework. `index.html` porte la structure, `style.css` le style principal et **`game.js` est le moteur canonique chargé directement par le navigateur**. Les autres modules JavaScript complètent les décors, personnages, dialogues et finitions visuelles. Il n’y a plus de loader XHR ni de réécriture du moteur par `eval` au démarrage.
 
 Le rendu adapte automatiquement certains effets aux appareils plus modestes et respecte `prefers-reduced-motion` pour limiter les animations non essentielles.
 
@@ -64,4 +63,9 @@ Personnages et situations fictifs ; satire des clichés du conseil informatique.
 
 ### Tests de développement
 
-Facultatif, avec Node.js : `node --test tests/*.test.cjs`. Ces tests exécutent une partie de la logique de jeu avec des interfaces de rendu simulées. Node.js n’est pas nécessaire pour jouer.
+Avec Node.js :
+
+- `npm test` lance les tests de logique et les invariants de refonte ;
+- `npm run test:e2e` lance les smoke tests Playwright desktop et mobile.
+
+Node.js n’est pas nécessaire pour jouer.
