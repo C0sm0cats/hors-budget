@@ -32,7 +32,7 @@ test('CHACHA and RORO are reserved for the final level in the native runtime',()
 });
 
 test('legacy RORO massage-chair scene is absent from production runtime',()=>{
-  const game=read('game.js'),banter=read('banter-fair.js'),roles=read('roles-polish.js');
+  const game=read('game.js'),banter=read('banter-fair.js');
   lacks(game,'deliveryScene');
   lacks(game,'comedy.delivery');
   lacks(game,'.delivered');
@@ -40,8 +40,6 @@ test('legacy RORO massage-chair scene is absent from production runtime',()=>{
   lacks(banter,'deliveryScene');
   lacks(banter,'raise-request');
   lacks(banter,'fauteuils');
-  lacks(roles,'disableLegacyDelivery');
-  lacks(roles,'deliveryScene');
 });
 
 test('JUJU guards rooftop access rather than CHACHA',()=>{
@@ -167,12 +165,13 @@ test('legacy generic signage is absent from the canonical renderer',()=>{
 });
 
 test('final presentation has a single RORO owner and no per-frame dialogue cleanup layer',()=>{
-  const polish=read('polish.js'),roles=read('roles-polish.js'),game=read('game.js'),html=read('index.html');
+  const polish=read('polish.js'),game=read('game.js'),html=read('index.html');
   has(polish,'projectedEyeGap');has(polish,'glassesScale');
-  lacks(roles,'polishBubble');lacks(roles,'originalFillText');
   lacks(game,'charlineTalk');lacks(game,'charlineLine');lacks(game,'CHARLINE_LINES');
   has(game,'LA MARGE EST AU VERT. C’EST L’ESSENTIEL.');
   has(game,'REFUSÉ. MAIS MERCI POUR L’ENGAGEMENT.');
   lacks(html,'cleanup.js');lacks(html,'main-dialogue-cleanup.js');
-  assert.equal(existsSync(join(root,'cleanup.js')),false);assert.equal(existsSync(join(root,'main-dialogue-cleanup.js')),false);
+  assert.equal(existsSync(join(root,'cleanup.js')),false);assert.equal(existsSync(join(root,'main-dialogue-cleanup.js')),false);assert.equal(existsSync(join(root,'roles-polish.js')),false);
 });
+
+test('RORO budget safe is owned by polish and dies with the boss',()=>{const polish=read('polish.js'),html=read('index.html');has(polish,"className='rodolphe-safe'");has(polish,'s.boss.hp>0');has(polish,'rodolpheSafe.hidden=!visible');lacks(html,'roles-polish.js');assert.equal(existsSync(join(root,'roles-polish.js')),false);});
