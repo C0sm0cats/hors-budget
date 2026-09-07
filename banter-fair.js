@@ -42,7 +42,7 @@
 
   const bubbles=new Map();
   const make=(id,cls)=>{
-    if(bubbles.has(id))return bubbles.get(id);
+    if(bubbles.has(id)){const b=bubbles.get(id);b.el.className='actor-bubble fair-bubble '+cls;return b;}
     const el=document.createElement('div');el.className='actor-bubble fair-bubble '+cls;el.hidden=true;document.body.append(el);
     const b={el,until:0,next:performance.now()+1800+Math.random()*3500,last:-1,lastShown:-Math.random()*5000,shownAt:0,dx:0,dy:0};bubbles.set(id,b);return b;
   };
