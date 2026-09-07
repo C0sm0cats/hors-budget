@@ -1,12 +1,12 @@
 'use strict';
 (()=>{
-  const xhr=new XMLHttpRequest();xhr.open('GET','game.js?v=35',false);xhr.send(null);if(xhr.status&&xhr.status!==200)throw new Error('Impossible de charger game.js ('+xhr.status+')');let src=xhr.responseText;
+  const xhr=new XMLHttpRequest();xhr.open('GET','game.js?v=36',false);xhr.send(null);if(xhr.status&&xhr.status!==200)throw new Error('Impossible de charger game.js ('+xhr.status+')');let src=xhr.responseText;
   src=src.replace("'LES NAO ONT EU TA PEAU.'","'MERCI POUR TON ENGAGEMENT.'");
   src=src.replace("nora:{name:'Nora',shirt:'#609cbe',hair:'#ebc66d',skin:'#e7b892',female:true,style:'bob'","nora:{name:'Nora',shirt:'#609cbe',hair:'#211a18',skin:'#754b35',female:true,style:'bob'");
   src=src.replace("basile:{name:'Basile',shirt:'#9b79a6',hair:'#573c31',skin:'#bf8d69',beard:true","basile:{name:'Basile',shirt:'#9b79a6',hair:'#1d1715',skin:'#8b5b3e',beard:true");
   src=src.replace("const LEVELS=", "CAST.julien={name:'Julien',shirt:'#365b78',hair:'#49362d',skin:'#dfad86',tie:'#79b9c7'};\nconst LEVELS=");
 
-  src=src.replace("for(let floor=0;floor<4;floor++)for(const x of [-5,2,6]){const y=surface(floor,x);","for(let floor=0;floor<4;floor++)for(const x of [-5,2,6]){const y=surface(floor,x);if(floor===1&&level<2)continue;");
+  src=src.replace("for(let floor=0;floor<4;floor++)for(const x of [-5,2,6]){const y=surface(floor,x);","for(let floor=0;floor<4;floor++)for(const x of [-5,2,6]){const y=surface(floor,x);if((floor===1&&level<2)||(level===2&&(floor===1||floor===2)))continue;");
 
   src=src.replace("world.box(x,5.9,-.8,.22,12,.25,'#bd9b59');","if(Math.abs(x)===3.8){world.box(x,1.4,-.8,.22,3,.25,'#bd9b59');world.box(x,9,-.8,.22,6,.25,'#bd9b59');}else world.box(x,5.9,-.8,.22,12,.25,'#bd9b59');");
   const rollDef=" function roll(mesh,x,y,z,r,depth,spin,hex='#f0dbaf'){const col=rgb(hex),side=rgb('#d0ae7b');for(let i=0;i<14;i++){const a=i*Math.PI/7+spin,b=(i+1)*Math.PI/7+spin,p=[x+Math.cos(a)*r,y+Math.sin(a)*r,z-depth/2],q=[x+Math.cos(b)*r,y+Math.sin(b)*r,z-depth/2],P=[p[0],p[1],z+depth/2],Q=[q[0],q[1],z+depth/2];mesh.quad(p,q,Q,P,[Math.cos((a+b)/2),Math.sin((a+b)/2),0],i%4===0?rgb('#d27b73'):side);mesh.tri([x,y,z+depth/2],P,Q,[0,0,1],col);}const dx=Math.cos(spin)*r*.65,dy=Math.sin(spin)*r*.65;line(mesh,x-dx,y-dy,x+dx,y+dy,z+depth/2+.012,.08,'#bd7164');}";
@@ -21,7 +21,7 @@
   if(!src.includes(personAnchor))throw new Error('Point insertion décor introuvable');src=src.replace(personAnchor,decorDef+'\n'+personAnchor);
   const plantAnchor='for(const m of Arcade.state.mechanisms){';
   const plantCalls=`
-  const plantLayouts=[[[-8.15,0,0,.92],[7.55,2,1,.82],[-7.85,3,2,.9]],[[-7.05,0,2,.86],[-1.85,3,1,.8]],[[-8.3,0,1,.88],[8.2,1,2,.82],[-7.6,3,0,.9]]];
+  const plantLayouts=[[[-8.15,0,0,.92],[7.55,2,1,.82],[-7.85,3,2,.9]],[[-7.05,0,2,.86],[-1.85,3,1,.8]],[[-8.3,0,1,.88],[-7.6,3,0,.9]]];
   for(const [px,pf,pk,ps] of plantLayouts[level])officePlant(world,px,surface(pf,px),-.72,pk,ps);
   globalThis.OfficeDecor.draw(world,sign,level,surface);
   `;
