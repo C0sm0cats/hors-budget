@@ -8,6 +8,7 @@ game=game.replace(decorRe,'const Arcade=');
 const renderRe=/  \/\/ Inetum decor is actual textured geometry in the 3D world so actors naturally occlude it\.[\s\S]*?(?=  world\.upload\(\);\})/;
 must(renderRe.test(game),'legacy signage renderer block not found');
 game=game.replace(renderRe,'');
+if(game.includes('INETUM_DECOR')){const i=game.indexOf('INETUM_DECOR');console.error(game.slice(Math.max(0,i-600),i+1400));throw new Error('remaining INETUM_DECOR reference');}
 writeFileSync('game.js',game,'utf8');
 
 let signage=readFileSync('corporate-signage.js','utf8');
@@ -28,6 +29,6 @@ writeFileSync('index.html',html,'utf8');
 let tests=readFileSync('tests/redesign-invariants.test.cjs','utf8');
 tests=tests.replaceAll('game.js?v=41','game.js?v=42');
 tests=tests.replace("for(const label of ['INETUM','LCP7','ORDRE DE MISSION','SWILE','SAP','CONCUR','MyPeopleDoc','CHRONOTIME 2','GLOBAL SERVICE CENTER'])has(signage,label);","for(const label of ['INETUM','LCP7','ORDRE DE MISSION','COOPTATION','SWILE','SAP','CONCUR','MyPeopleDoc','CHRONOTIME 2','GLOBAL SERVICE CENTER'])has(signage,label);");
-const insert=`\ntest('legacy generic signage is absent from the canonical renderer',()=>{\n  const game=read('game.js'),signage=read('corporate-signage.js');\n  lacks(game,'INETUM_DECOR');\n  lacks(game,'Inetum decor is actual textured geometry');\n  lacks(game,"title:'SUCCESS FACTORS'");\n  lacks(game,"title:'GLOBAL SERVICE CENTER'");\n  lacks(game,"title:'SUMMER PARTY'");\n  has(signage,'function cooptation');\n  has(signage,'COOPTATION');\n});\n`;
+const insert=`\ntest('legacy generic signage is absent from the canonical renderer',()=>{\n  const game=read('game.js'),signage=read('corporate-signage.js');\n  lacks(game,'INETUM_DECOR');\n  lacks(game,'Inetum decor is actual textured geometry');\n  lacks(game,\"title:'SUCCESS FACTORS'\");\n  lacks(game,\"title:'GLOBAL SERVICE CENTER'\");\n  lacks(game,\"title:'SUMMER PARTY'\");\n  has(signage,'function cooptation');\n  has(signage,'COOPTATION');\n});\n`;
 if(!tests.includes("test('legacy generic signage is absent"))tests+=insert;
 writeFileSync('tests/redesign-invariants.test.cjs',tests,'utf8');
