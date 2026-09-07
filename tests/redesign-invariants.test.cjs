@@ -69,7 +69,7 @@ test('all seminar cast lives natively in game.js',()=>{
   lacks(html,'game-loader.js');
   assert.equal(existsSync(join(root,'unique-cast-preload.js')),false);
   assert.equal(existsSync(join(root,'game-loader.js')),false);
-  has(html,'game.js?v=41');
+  has(html,'game.js?v=42');
 });
 
 test('consultants and internal/business NPCs keep distinct visual and dialogue families',()=>{
@@ -94,7 +94,7 @@ test('game.js is the canonical directly loaded runtime',()=>{
   lacks(game,'.delivered');
   has(game,'Object.defineProperties(globalThis,{Arcade:');
   has(game,'globalThis.OfficeDecor.draw(world,sign,level,surface)');
-  has(html,'<script src="game.js?v=41"></script>');
+  has(html,'<script src="game.js?v=42"></script>');
   lacks(html,'game-loader.js');
 });
 
@@ -115,7 +115,7 @@ test('office hierarchy exposes a handwritten CHACHA clue and Grand Ouest seminar
 
 test('corporate signage remains split by operational, direction and seminar contexts',()=>{
   const signage=read('corporate-signage.js');
-  for(const label of ['INETUM','LCP7','ORDRE DE MISSION','SWILE','SAP','CONCUR','MyPeopleDoc','CHRONOTIME 2','GLOBAL SERVICE CENTER'])has(signage,label);
+  for(const label of ['INETUM','LCP7','ORDRE DE MISSION','COOPTATION','SWILE','SAP','CONCUR','MyPeopleDoc','CHRONOTIME 2','GLOBAL SERVICE CENTER'])has(signage,label);
   for(const label of ['SUCCESS FACTORS','GCOMP','LEARNING','ACADEMY','POWER UP',"LET'S CONNECT",'FRANCE','DO YOU SPEAK','GEN AI?'])has(signage,label);
   for(const label of ['CHARITY DAY','SUMMER PARTY','LE POWER UP TOUR'])has(signage,label);
 });
@@ -152,4 +152,16 @@ test('ambient quips have a safe fallback for every unique NPC kind',()=>{
   const game=read('game.js');
   has(game,"QUIPS[e.kind]||(CAST[e.kind]?.category==='consultant'?QUIPS.hugo:QUIPS.lea)");
   lacks(game,'QUIPS[e.kind][e.line]');
+});
+
+test('legacy generic signage is absent from the canonical renderer',()=>{
+  const game=read('game.js'),signage=read('corporate-signage.js');
+  lacks(game,'INETUM_DECOR');
+  lacks(game,'cardRows=');
+  lacks(game,'Inetum decor is actual textured geometry');
+  lacks(game,"title:'SUCCESS FACTORS'");
+  lacks(game,"title:'GLOBAL SERVICE CENTER'");
+  lacks(game,"title:'SUMMER PARTY'");
+  has(signage,'function cooptation');
+  has(signage,'COOPTATION');
 });
