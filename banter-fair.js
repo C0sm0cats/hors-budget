@@ -28,6 +28,7 @@
     charline:['J’ai vendu un junior en senior. Il vieillit très vite chez le client.','Le client voulait un expert. J’ai trouvé quelqu’un de disponible.','J’ai augmenté le TJM. Pour le salaire, je n’ai pas les droits.','Il est en intercontrat depuis lundi. Depuis mardi, c’est un expert IA.','Le client demande dix ans d’expérience sur une techno qui en a quatre. J’ai envoyé trois CV.','J’ai promis un profil rare. KÉKÉ cherche encore ce que j’ai vendu.','J’ai dit “forfait”. KÉKÉ ne me parle plus.','Le consultant demande une augmentation. Le client aussi, mais de son équipe.','J’ai vendu deux jours. KÉKÉ vient de m’annoncer trois semaines. Classique.','Le client trouve le TJM élevé. Le consultant trouve son salaire bas. Je suis parfaitement au milieu.','Le CV faisait quatre pages. Après mon passage, il en fait six et maîtrise Kubernetes.','J’appelle ça une opportunité. KÉKÉ appelle ça un projet impossible.'],
     rodolphe:['Une augmentation ? J’ai justement un budget pour un séminaire.','Les caisses sont vides. Le budget mobilier, lui, va très bien.','On ne dit pas non. On dit « à revoir au prochain exercice ».','Votre engagement est notre meilleure enveloppe budgétaire.','J’ai demandé un effort collectif. Surtout au collectif.','Le budget est gelé. Sauf pour les priorités que je viens d’inventer.','La reconnaissance n’est pas imposable. Profitez-en.','On va benchmarker votre augmentation avec zéro.','Je vous écoute. Le budget, beaucoup moins.','Bonne nouvelle : on maintient le baby-foot.','La marge progresse. Merci de ne pas faire le lien.','On reparle salaire après le prochain séminaire. Ou celui d’après.']
   };
+  pools.hugo2=pools.hugo;pools.nora2=pools.nora;pools.basile2=pools.basile;pools.lea2=pools.lea;
 
   const labels={julien:'JUJU',kevin:'KÉKÉ',charline:'CHACHA',rodolphe:'RORO'};
   const main={};
@@ -159,7 +160,7 @@
     for(let i=0;i<s.enemies.length;i++){
       const e=s.enemies[i];if(e.stun>0||Math.abs(e.floor-p.floor)>1)continue;
       const pos=renderer.project(e.x,e.y+2.05,.45);if(!onscreen(pos))continue;
-      const category=e.kind==='hugo'||e.kind==='nora'?'consultant':'internal';
+      const category=/^(hugo|nora)/.test(e.kind)?'consultant':'internal';
       candidates.push({id:'emp-'+i,cls:'employee '+category,pool:pools[e.kind]||pools.lea,pos});
     }
     candidates.sort((a,b)=>{const ba=make(a.id,a.cls),bb=make(b.id,b.cls),aa=now<ba.until,ab=now<bb.until;if(aa!==ab)return aa?-1:1;return ba.lastShown-bb.lastShown;});
