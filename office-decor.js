@@ -86,7 +86,7 @@ const glyphs={
         const base=ch.normalize('NFD')[0];
         c.save();c.translate(cursor,Math.sin(i*1.8)*.7);c.scale(size,size);c.rotate(Math.sin(i*2.3)*.02);
         c.lineWidth=2.0+Math.sin(i)*.12;c.stroke(new Path2D(glyphs[base]));
-        if(ch!==base)c.stroke(new Path2D(ch==='ê'||ch==='ô'?'M3 3 L8 -1 L13 3':ch==='à'||ch==='è'?'M5 -1 L9 3':'M6 3 L11 -1'));
+        if(ch!==base){if(base===base.toUpperCase())c.translate(0,-5);c.stroke(new Path2D(ch==='ê'||ch==='ô'?'M3 3 L8 -1 L13 3':ch==='à'||ch==='è'?'M5 -1 L9 3':'M6 3 L11 -1'));}
         c.restore();
       }
       cursor+=advance(ch)*size;
@@ -101,7 +101,7 @@ const glyphs={
     ['Il faut privilégier les CP puis RS puis RE',
      'car les CP ne peuvent pas être reportés',
      'au delà du 31 Mai'].forEach((text,i)=>pen(c,text,55,323+i*39,1.45,blue,890));
-    pen(c,'— Kévin',705,455,2.4,red,250);
+    pen(c,'— KÉKÉ',705,455,2.4,red,250);
     c.strokeStyle=red;c.lineWidth=6;c.lineCap='round';c.beginPath();c.arc(196,474,29,.12,Math.PI-.12);c.stroke();
     c.beginPath();c.moveTo(180,453);c.lineTo(181,455);c.moveTo(211,453);c.lineTo(212,455);c.stroke();
   }
@@ -120,7 +120,7 @@ const glyphs={
     c.strokeStyle=pink;c.beginPath();c.moveTo(544,211);c.lineTo(960,199);c.stroke();
     [555,667,778,908].forEach(x=>{c.fillStyle=pink;c.beginPath();c.arc(x,211-(x-544)*12/416,5,0,7);c.fill();});
     pen(c,'marge ↑',829,59,1.35,blue,145);pen(c,'salaires →',817,164,1.25,pink,157);
-    pen(c,'— Julien',805,264,1.9,blue,170);
+    pen(c,'— JUJU',805,264,1.9,blue,170);
     pen(c,'capacité immédiatement disponible !',30,318,1.6,ink,760);
   }
   function charlineBoard(c,W,H){
@@ -152,7 +152,7 @@ const glyphs={
     // These wall bays replace the buffet scenery while retaining the platforms and ladders.
     mesh.box(0,base+1.32,-1.68,14.3,2.70,.12,charline?'#473849':'#274652');
     for(const dx of [-7.10,7.10])mesh.box(dx,base+1.35,-1.25,.17,2.72,.18,'#c2a066');
-    const board={level,floor,name:charline?'Charline':'Rodolphe',x:-2.15,y:base+1.72,z:-1.20,w:4.25,h:1.50};
+    const board={level,floor,name:charline?'CHACHA':'RORO',x:-2.15,y:base+1.72,z:-1.20,w:4.25,h:1.50};
     mesh.box(board.x,board.y,board.z-.06,board.w+.17,board.h+.16,.09,'#7e8a8c');
     mesh.box(board.x,board.y,board.z-.045,board.w+.04,board.h+.035,.04,'#c1c8c4');
     mesh.box(board.x,board.y-board.h/2-.05,board.z+.12,board.w+.12,.06,.22,'#829291');
@@ -162,7 +162,7 @@ const glyphs={
     mesh.box(plaqueX,plaqueY,-1.27,2.70,.62,.07,'#c6a052');
     sign(plaqueX,plaqueY,-1.22,2.63,.56,(c,W,H)=>{
       c.fillStyle='#293f49';c.fillRect(0,0,W,H);c.strokeStyle='#c6a052';c.lineWidth=7;c.strokeRect(4,4,W-8,H-8);
-      c.fillStyle='#eee3c3';c.textBaseline='middle';c.font='bold '+H*.29+'px system-ui';c.fillText(charline?'CHARLINE':'RODOLPHE',W*.07,H*.34);
+      c.fillStyle='#eee3c3';c.textBaseline='middle';c.font='bold '+H*.29+'px system-ui';c.fillText(charline?'CHACHA':'RORO',W*.07,H*.34);
       c.fillStyle='#acd0db';c.font='bold '+H*.16+'px system-ui';c.fillText(charline?'BUSINESS MANAGER':'DIRECTEUR RÉGION GRAND OUEST',W*.07,H*.71,W*.87);
     });
     desk(mesh,1.45,surface(floor,1.45),-.65,false);
@@ -228,13 +228,13 @@ const glyphs={
     mesh.box(x,y,z-.015,w+.06,h+.04,.045,'#c2c8c3');
     mesh.box(x,y-h/2-.055,z+.13,w+.16,.07,.28,'#7e8d90');
     const item=sign(x,y,z+.02,w,h,julien?julienBoard:kevinBoard);
-    globalThis.OfficeBoard={level,...board,floor:1,name:julien?'Julien':'Kévin',z:z+.02,canvas:item.surface};
+    globalThis.OfficeBoard={level,...board,floor:1,name:julien?'JUJU':'KÉKÉ',z:z+.02,canvas:item.surface};
     globalThis.OfficeBoards.push(globalThis.OfficeBoard);
     const plaqueX=julien?3.45:1.45,plaqueY=julien?4.98:4.87,plaqueW=julien?3.5:2.12,plaqueH=julien?.75:.59;
     mesh.box(plaqueX,plaqueY,-1.27,plaqueW+.07,plaqueH+.06,.07,'#c6a052');
     sign(plaqueX,plaqueY,-1.22,plaqueW,plaqueH,(c,W,H)=>{
       c.fillStyle='#293f49';c.fillRect(0,0,W,H);c.strokeStyle='#c6a052';c.lineWidth=8;c.strokeRect(4,4,W-8,H-8);
-      c.fillStyle='#ede2c0';c.textBaseline='middle';c.font='bold '+H*.28+'px system-ui';c.fillText(julien?'JULIEN':'KÉVIN',W*.09,H*(julien?.25:.35));
+      c.fillStyle='#ede2c0';c.textBaseline='middle';c.font='bold '+H*.28+'px system-ui';c.fillText(julien?'JUJU':'KÉKÉ',W*.09,H*(julien?.25:.35));
       c.fillStyle='#acd0db';c.font='bold '+H*.17+'px system-ui';
       if(julien){c.fillText('Directeur Technologies Services',W*.09,H*.56,W*.84);c.fillText('Pays de la Loire',W*.09,H*.82,W*.84);}
       else c.fillText('DIRECTEUR DE PROJETS',W*.09,H*.70,W*.84);

@@ -1,7 +1,6 @@
 'use strict';
 (()=>{
-  const xhr=new XMLHttpRequest();xhr.open('GET','game.js?v=36',false);xhr.send(null);if(xhr.status&&xhr.status!==200)throw new Error('Impossible de charger game.js ('+xhr.status+')');let src=xhr.responseText;
-  src=src.replaceAll('KÉVIN','KÉKÉ').replaceAll('Kévin','KÉKÉ').replaceAll('JULIEN','JUJU').replaceAll('Julien','JUJU').replaceAll('RODOLPHE','RORO').replaceAll('Rodolphe','RORO').replaceAll('CHARLINE','CHACHA').replaceAll('Charline','CHACHA');
+  const xhr=new XMLHttpRequest();xhr.open('GET','game.js?v=37',false);xhr.send(null);if(xhr.status&&xhr.status!==200)throw new Error('Impossible de charger game.js ('+xhr.status+')');let src=xhr.responseText;
   src=src.replace("'LES NAO ONT EU TA PEAU.'","'MERCI POUR TON ENGAGEMENT.'");
   src=src.replace("nora:{name:'Nora',shirt:'#609cbe',hair:'#ebc66d',skin:'#e7b892',female:true,style:'bob'","nora:{name:'Nora',shirt:'#609cbe',hair:'#211a18',skin:'#754b35',female:true,style:'bob'");
   src=src.replace("basile:{name:'Basile',shirt:'#9b79a6',hair:'#573c31',skin:'#bf8d69',beard:true","basile:{name:'Basile',shirt:'#9b79a6',hair:'#1d1715',skin:'#8b5b3e',beard:true");
