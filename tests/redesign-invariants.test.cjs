@@ -20,26 +20,28 @@ test('canonical roles and story are visible in the entry point',()=>{
   has(html,'Niveau 3 : affronte RORO');
 });
 
-test('CHACHA and RORO are reserved for the final level in production patches',()=>{
-  const loader=read('game-loader.js'),banter=read('banter-fair.js');
-  has(loader,"if(s.level===2)person(moving,'charline'");
-  has(loader,"if(s.level===2){moving.box(s.boss.x");
-  has(loader,"if(s.level===2&&s.charlineIn<=0)");
-  has(loader,"if(s.level===2)label('CHACHA'");
-  has(loader,"if(s.level===2)label('RORO'");
+test('CHACHA and RORO are reserved for the final level in the native runtime',()=>{
+  const game=read('game.js'),banter=read('banter-fair.js');
+  has(game,"if(s.level===2)person(moving,'charline'");
+  has(game,"if(s.level===2){moving.box(s.boss.x");
+  has(game,"if(s.level===2&&s.charlineIn<=0)");
+  has(game,"if(s.level===2)label('CHACHA'");
+  has(game,"if(s.level===2)label('RORO'");
   has(banter,"s.level===2&&s.chacha");
   has(banter,"s.level===2&&s.boss");
 });
 
-test('legacy RORO massage-chair scene is removed rather than hidden',()=>{
-  const loader=read('game-loader.js'),banter=read('banter-fair.js'),roles=read('roles-polish.js');
+test('legacy RORO massage-chair scene is absent from production runtime',()=>{
+  const game=read('game.js'),banter=read('banter-fair.js'),roles=read('roles-polish.js');
+  lacks(game,'deliveryScene');
+  lacks(game,'comedy.delivery');
+  lacks(game,'.delivered');
+  lacks(game,'fauteuils massants');
   lacks(banter,'deliveryScene');
   lacks(banter,'raise-request');
   lacks(banter,'fauteuils');
   lacks(roles,'disableLegacyDelivery');
   lacks(roles,'deliveryScene');
-  has(loader,"src.includes('deliveryScene')");
-  has(loader,"src.includes('comedy.delivery')");
 });
 
 test('JUJU guards rooftop access rather than CHACHA',()=>{
@@ -62,26 +64,40 @@ test('all twelve generic NPC slots are unique across the three levels',()=>{
   has(population,"role:'RORO · DIRECTEUR RÉGION GRAND OUEST'");
 });
 
-test('extra seminar cast is folded into the single game loader',()=>{
-  const loader=read('game-loader.js'),html=read('index.html');
-  for(const [key,name] of [['sarah','Sarah'],['mehdi','Mehdi'],['elodie','Élodie'],['antoine','Antoine']])has(loader,`CAST.${key}={name:'${name}'`);
+test('all seminar cast lives natively in game.js',()=>{
+  const game=read('game.js'),html=read('index.html');
+  for(const [key,name] of [['sarah','Sarah'],['mehdi','Mehdi'],['elodie','Élodie'],['antoine','Antoine']])has(game,`CAST.${key}={name:'${name}'`);
   lacks(html,'unique-cast-preload.js');
+  lacks(html,'game-loader.js');
   assert.equal(existsSync(join(root,'unique-cast-preload.js')),false);
-  has(html,'game-loader.js?v=23');
+  assert.equal(existsSync(join(root,'game-loader.js')),false);
+  has(html,'game.js?v=39');
 });
 
 test('consultants and internal/business NPCs keep distinct visual and dialogue families',()=>{
-  const loader=read('game-loader.js'),banter=read('banter-fair.js');
-  has(loader,"category:'consultant'");
-  has(loader,"category:'business'");
-  has(loader,"CAST.hugo2={name:'Mathis'");
-  has(loader,"CAST.nora2={name:'Inès'");
-  has(loader,"CAST.basile2={name:'Thomas'");
-  has(loader,"CAST.lea2={name:'Camille'");
+  const game=read('game.js'),banter=read('banter-fair.js');
+  has(game,"category:'consultant'");
+  has(game,"category:'business'");
+  has(game,"CAST.hugo2={name:'Mathis'");
+  has(game,"CAST.nora2={name:'Inès'");
+  has(game,"CAST.basile2={name:'Thomas'");
+  has(game,"CAST.lea2={name:'Camille'");
   has(banter,"pools.hugo2=pools.hugo");
   has(banter,"/^(hugo|nora)/.test(e.kind)?'consultant':'internal'");
   has(banter,'Le CRA est validé. Mon existence administrative aussi.');
   has(banter,'Le pipeline est vert. Les signatures sont plus nuancées.');
+});
+
+test('game.js is the canonical directly loaded runtime',()=>{
+  const game=read('game.js'),html=read('index.html');
+  lacks(game,'princess');
+  lacks(game,'deliveryScene');
+  lacks(game,'comedy.delivery');
+  lacks(game,'.delivered');
+  has(game,'Object.defineProperties(globalThis,{Arcade:');
+  has(game,'globalThis.OfficeDecor.draw(world,sign,level,surface)');
+  has(html,'<script src="game.js?v=39"></script>');
+  lacks(html,'game-loader.js');
 });
 
 test('office hierarchy exposes a handwritten CHACHA clue and Grand Ouest seminar structure',()=>{
