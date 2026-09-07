@@ -51,11 +51,7 @@ test('JUJU guards rooftop access rather than CHACHA',()=>{
 
 test('all twelve generic NPC slots are unique across the three levels',()=>{
   const population=read('population-levels.js');
-  const expected=[
-    "['hugo','nora','hugo2','lea']",
-    "['nora2','basile','basile2','lea2']",
-    "['sarah','mehdi','elodie','antoine']"
-  ];
+  const expected=["['hugo','nora','hugo2','lea']","['nora2','basile','basile2','lea2']","['sarah','mehdi','elodie','antoine']"];
   for(const roster of expected)has(population,roster);
   const keys=['hugo','nora','hugo2','lea','nora2','basile','basile2','lea2','sarah','mehdi','elodie','antoine'];
   assert.equal(new Set(keys).size,12);
@@ -100,7 +96,7 @@ test('office hierarchy exposes a handwritten CHACHA clue and Grand Ouest seminar
   has(hierarchy,"pen(c,'— CHACHA'");
   lacks(hierarchy,"fillText('ABSENTE'");
   lacks(hierarchy,"fillText('BUSINESS MANAGER'");
-  has(hierarchy,'DIRECTEUR RÉGION GRAND OUEST');
+  has(hierarchy,'DIRECTION RÉGION GRAND OUEST');
 });
 
 test('corporate signage remains split by operational, direction and seminar contexts',()=>{
