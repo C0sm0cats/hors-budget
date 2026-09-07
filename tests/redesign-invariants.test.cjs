@@ -1,6 +1,6 @@
 const {test}=require('node:test');
 const assert=require('node:assert/strict');
-const {readFileSync}=require('node:fs');
+const {readFileSync,existsSync}=require('node:fs');
 const {join}=require('node:path');
 
 const root=join(__dirname,'..');
@@ -21,13 +21,25 @@ test('canonical roles and story are visible in the entry point',()=>{
 });
 
 test('CHACHA and RORO are reserved for the final level in production patches',()=>{
-  const loader=read('game-loader.js');
+  const loader=read('game-loader.js'),banter=read('banter-fair.js');
   has(loader,"if(s.level===2)person(moving,'charline'");
   has(loader,"if(s.level===2){moving.box(s.boss.x");
-  has(loader,"if(!c.delivered&&s.level===2");
   has(loader,"if(s.level===2&&s.charlineIn<=0)");
   has(loader,"if(s.level===2)label('CHACHA'");
   has(loader,"if(s.level===2)label('RORO'");
+  has(banter,"s.level===2&&s.chacha");
+  has(banter,"s.level===2&&s.boss");
+});
+
+test('legacy RORO massage-chair scene is removed rather than hidden',()=>{
+  const loader=read('game-loader.js'),banter=read('banter-fair.js'),roles=read('roles-polish.js');
+  lacks(banter,'deliveryScene');
+  lacks(banter,'raise-request');
+  lacks(banter,'fauteuils');
+  lacks(roles,'disableLegacyDelivery');
+  lacks(roles,'deliveryScene');
+  has(loader,"src.includes('deliveryScene')");
+  has(loader,"src.includes('comedy.delivery')");
 });
 
 test('JUJU guards rooftop access rather than CHACHA',()=>{
@@ -54,14 +66,14 @@ test('all twelve generic NPC slots are unique across the three levels',()=>{
   has(population,"role:'RORO · DIRECTEUR RÉGION GRAND OUEST'");
 });
 
-test('the final seminar gets four additional unique business characters',()=>{
-  const preload=read('unique-cast-preload.js'),html=read('index.html');
+test('extra seminar cast is folded into the single game loader',()=>{
+  const loader=read('game-loader.js'),html=read('index.html');
   for(const [key,name] of [['sarah','Sarah'],['mehdi','Mehdi'],['elodie','Élodie'],['antoine','Antoine']]){
-    has(preload,`CAST.${key}={name:'${name}'`);
+    has(loader,`CAST.${key}={name:'${name}'`);
   }
-  has(preload,"category:'business'");
-  has(html,'unique-cast-preload.js?v=1');
-  assert.ok(html.indexOf('unique-cast-preload.js?v=1')<html.indexOf('game-loader.js?v=22'),'extra cast must load before game-loader');
+  lacks(html,'unique-cast-preload.js');
+  assert.equal(existsSync(join(root,'unique-cast-preload.js')),false);
+  has(html,'game-loader.js?v=23');
 });
 
 test('consultants and internal/business NPCs keep distinct visual and dialogue families',()=>{
@@ -105,7 +117,7 @@ test('budget language distinguishes project protection from the final budget',()
   has(budget,'BON DE COMMANDE');
   has(budget,'ARBITRAGE 1 / 3');
   has(budget,'ARBITRAGE 2 / 3');
-  has(roles,"const visible=s&&s.level===2");
+  has(roles,"s?.level!==2");
   has(roles,'DIRECTEUR RÉGION GRAND OUEST');
 });
 
