@@ -21,8 +21,10 @@
 
   let lastReplacement='',lastIndex=-1;
   function polishBubble(){
+    let s=null;try{s=Arcade?.state;}catch{}
     const bubble=document.querySelector('.main-banter.rodolphe');
-    if(bubble&&bubble.textContent&&bubble.textContent!==lastReplacement){
+    if(!bubble||s?.level!==2){requestAnimationFrame(polishBubble);return;}
+    if(bubble.textContent&&bubble.textContent!==lastReplacement){
       let i=Math.floor(Math.random()*rodolpheLines.length);
       if(rodolpheLines.length>1&&i===lastIndex)i=(i+1)%rodolpheLines.length;
       lastIndex=i;lastReplacement=rodolpheLines[i];bubble.textContent=lastReplacement;
@@ -30,23 +32,6 @@
     requestAnimationFrame(polishBubble);
   }
   requestAnimationFrame(polishBubble);
-
-  // RORO est maintenant uniquement le boss final : l'ancienne scène secondaire
-  // « augmentation refusée / fauteuils massants » ne doit plus se déclencher.
-  // Le moteur conserve encore son ancien état comedy pour compatibilité, mais on le neutralise
-  // dès la création de chaque niveau afin que ni la scène ni ses accessoires ne soient rendus.
-  let deliveryState=null;
-  function disableLegacyDelivery(){
-    let s=null;try{s=Arcade?.state;}catch{}
-    if(s&&s!==deliveryState){
-      deliveryState=s;
-      if(s.comedy){s.comedy.delivery=0;s.comedy.delivered=true;}
-    }else if(s?.comedy?.delivery){
-      s.comedy.delivery=0;s.comedy.delivered=true;
-    }
-    requestAnimationFrame(disableLegacyDelivery);
-  }
-  requestAnimationFrame(disableLegacyDelivery);
 
   const proto=CanvasRenderingContext2D.prototype,originalFillText=proto.fillText;
   const replacements={
@@ -67,7 +52,6 @@
     let s=null;try{s=Arcade?.state;}catch{}
     const visible=s&&s.level===2&&s.boss&&renderer&&!['help','records','paused','won','lost','title'].includes(s.phase);
     if(!visible){safe.hidden=true;requestAnimationFrame(syncSafe);return;}
-    // Le coffre BUDGET appartient à RORO : il n'existe que dans la zone finale du Power UP Tour.
     const x=-7.35,y=surface(4,x)+.72,z=.36;
     const pos=renderer.project(x,y,z),left=renderer.project(x-.45,y,z),right=renderer.project(x+.45,y,z);
     if(!pos||!Number.isFinite(pos.x)||pos.x<-80||pos.x>innerWidth+80||pos.y<-80||pos.y>innerHeight+80){safe.hidden=true;requestAnimationFrame(syncSafe);return;}
