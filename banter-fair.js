@@ -73,7 +73,6 @@
     for(const speaker of ['julien','kevin','charline','rodolphe']){
       const b=main[speaker],pos=mainPos(s,speaker);
       b.el.dataset.paired='false';
-      // A fixed width prevents shrink-to-fit wrapping from depending on the previous frame's position.
       b.el.style.width=Math.min(300,innerWidth*.58,innerWidth-16)+'px';
       b.el.style.transform='none';
       if(speaker==='rodolphe'&&s?.comedy?.delivery>0){b.el.hidden=true;b.until=0;b.next=Math.max(b.next,now+1800);continue;}
@@ -82,9 +81,15 @@
       b.el.hidden=now>=b.until;
       if(!b.el.hidden)active.push({speaker,b,pos});
     }
-    // Lay out neighbours together: neither speaker can displace or hide the other.
-    const pair=['julien','charline'].map(name=>active.find(a=>a.speaker===name));
-    if(pair.every(Boolean)){
+
+    // Charline partage une disposition stable avec le personnage principal qui est réellement près d'elle.
+    // Priorité à Kévin lorsqu'il est arrivé en haut du niveau ; sinon Julien garde la paire au niveau 2.
+    const byName=name=>active.find(a=>a.speaker===name);
+    const charline=byName('charline'),kevin=byName('kevin'),julien=byName('julien');
+    let pair=null;
+    if(charline&&kevin&&Math.abs(kevin.pos.x-charline.pos.x)<520)pair=[kevin,charline];
+    else if(charline&&julien)pair=[julien,charline];
+    if(pair){
       const gap=12,margin=8,width=Math.min(300,(innerWidth-margin*2-gap)/2);
       const total=width*2+gap,mid=(pair[0].pos.x+pair[1].pos.x)/2;
       const left=Math.max(margin,Math.min(innerWidth-margin-total,mid-total/2));
