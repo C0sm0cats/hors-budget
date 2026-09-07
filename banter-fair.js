@@ -109,8 +109,8 @@
   function mainPos(s,speaker){
     if(speaker==='julien'){const boss=globalThis.JulienBoss;return s.level===1&&boss&&!boss.defeated(s)?renderer.project(boss.x,surface(4,boss.x)+2,.35):null;}
     if(speaker==='kevin')return renderer.project(s.player.x,s.player.y+2.25,.9);
-    if(speaker==='charline'&&s.princess)return renderer.project(s.princess.x,s.princess.y+2.35,.4);
-    if(speaker==='rodolphe'&&s.boss)return renderer.project(s.boss.x,s.boss.y+2.75,.55);
+    if(speaker==='charline')return s.level===2&&s.chacha?renderer.project(s.chacha.x,s.chacha.y+2.35,.4):null;
+    if(speaker==='rodolphe')return s.level===2&&s.boss?renderer.project(s.boss.x,s.boss.y+2.75,.55):null;
     return null;
   }
 
@@ -118,7 +118,6 @@
     const occupied=[],active=[];
     for(const speaker of ['julien','kevin','charline','rodolphe']){
       const b=main[speaker],pos=mainPos(s,speaker);
-      if(speaker==='rodolphe'&&s?.comedy?.delivery>0){b.el.hidden=true;b.until=0;b.next=Math.max(b.next,now+1800);continue;}
       if(!s||s.phase!=='playing'||!onscreen(pos)){b.el.hidden=true;continue;}
       if(now>=b.next){
         const pool=pools[speaker];b.last=pick(pool,b.last);b.el.textContent=pool[b.last];
@@ -128,8 +127,6 @@
       if(!b.el.hidden)active.push({speaker,b,pos});
     }
 
-    // Generic rule: the oldest visible line keeps its natural place; every newer nearby
-    // character gets only a small local shift around its own head. Timers stay independent.
     active.sort((a,b)=>a.b.shownAt-b.b.shownAt);
     for(const item of active)placeNearCharacter(item.b,item.pos,occupied);
     return occupied;
@@ -145,15 +142,7 @@
       requestAnimationFrame(loop);return;
     }
 
-    const visible=updateMain(now,s),p=s.player,limit=visible.length+(s.comedy?.delivery>0?1:2);
-    if(s.comedy?.delivery>0&&typeof deliveryScene==='function'){
-      const scene=deliveryScene(s.comedy.delivery),t=scene.t;
-      const visitorX=s.boss.x+4.6-Math.max(0,Math.min(1,t/1.5))*2.2+(scene.stage==='delivery'?Math.max(0,Math.min(1,(t-8)/1.2))*1.8:0);
-      const visitorPos=renderer.project(visitorX,s.boss.y+2.05,.45);
-      if(scene.stage==='request')showForced('raise-request','employee internal','Chef, j’ai une demande d’augmentation pour un de mes salariés.',visitorPos,now,visible);
-      else if(scene.stage==='refusal'||scene.stage==='order')showForced('rodolphe-scene','rodolphe',scene.text.replace(/^RORO\s*:\s*/,''),renderer.project(s.boss.x,s.boss.y+2.75,.55),now,visible);
-      else if(scene.stage==='delivery'&&t>=10.1)showForced('raise-after','employee internal','Ils sont beaux vos fauteuils, chef. Presque 3 % chacun ?',visitorPos,now,visible);
-    }
+    const visible=updateMain(now,s),p=s.player,limit=visible.length+2;
     if(visible.length<limit&&s.comedy?.lineTime>0&&s.comedy.line)showForced('kevin-script','kevin',s.comedy.line,renderer.project(p.x,p.y+2.25,.9),now,visible);
 
     const candidates=[];
