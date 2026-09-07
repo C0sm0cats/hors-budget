@@ -68,9 +68,7 @@ test('all twelve generic NPC slots are unique across the three levels',()=>{
 
 test('extra seminar cast is folded into the single game loader',()=>{
   const loader=read('game-loader.js'),html=read('index.html');
-  for(const [key,name] of [['sarah','Sarah'],['mehdi','Mehdi'],['elodie','Élodie'],['antoine','Antoine']]){
-    has(loader,`CAST.${key}={name:'${name}'`);
-  }
+  for(const [key,name] of [['sarah','Sarah'],['mehdi','Mehdi'],['elodie','Élodie'],['antoine','Antoine']])has(loader,`CAST.${key}={name:'${name}'`);
   lacks(html,'unique-cast-preload.js');
   assert.equal(existsSync(join(root,'unique-cast-preload.js')),false);
   has(html,'game-loader.js?v=23');
@@ -94,9 +92,9 @@ test('office hierarchy exposes a handwritten CHACHA clue and Grand Ouest seminar
   const hierarchy=read('office-hierarchy.js');
   has(hierarchy,"name:'CHACHA'");
   has(hierarchy,"pen(c,'Business & Développement'");
-  has(hierarchy,"pen(c,'PROSPECTS'");
-  has(hierarchy,"pen(c,'OPPORTUNITÉS'");
-  has(hierarchy,"pen(c,'CLIENTS'");
+  has(hierarchy,"title:'PROSPECTS'");
+  has(hierarchy,"title:'OPPORTUNITÉS'");
+  has(hierarchy,"title:'CLIENTS'");
   has(hierarchy,"pen(c,'Au Power UP Tour'");
   has(hierarchy,"pen(c,'retour après le séminaire'");
   has(hierarchy,"pen(c,'— CHACHA'");
