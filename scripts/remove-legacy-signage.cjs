@@ -1,14 +1,18 @@
 const {readFileSync,writeFileSync}=require('node:fs');
 const must=(ok,label)=>{if(!ok)throw new Error(label);};
+const replace=(s,a,b,label)=>{must(s.includes(a),label);return s.replace(a,b);};
 
 let game=readFileSync('game.js','utf8');
 const decorRe=/const INETUM_DECOR=\[[\s\S]*?\n\];\nconst Arcade=/;
 must(decorRe.test(game),'INETUM_DECOR block not found');
 game=game.replace(decorRe,'const Arcade=');
+const windowOld="if(level<2){const cardRows=INETUM_DECOR[level]||[];for(let x=-9;x<=9;x+=3)for(let i=0;i<4;i++){const cy=1.35+i*3,rowHasCard=cardRows.some(d=>Math.abs(d.y-cy)<1.05);world.box(x,cy,-1.45,2.25,1.65,.05,rowHasCard?theme.wall:((Math.round(x)+i)%3===0?theme.window:theme.wall));if(!rowHasCard){world.box(x,cy,-1.39,.05,1.65,.04,'#203f57');world.box(x,cy,-1.39,2.25,.045,.04,'#203f57');}}}";
+const windowNew="if(level<2){for(let x=-9;x<=9;x+=3)for(let i=0;i<4;i++){const cy=1.35+i*3;world.box(x,cy,-1.45,2.25,1.65,.05,(Math.round(x)+i)%3===0?theme.window:theme.wall);world.box(x,cy,-1.39,.05,1.65,.04,'#203f57');world.box(x,cy,-1.39,2.25,.045,.04,'#203f57');}}";
+game=replace(game,windowOld,windowNew,'legacy cardRows window dependency');
 const renderRe=/  \/\/ Inetum decor is actual textured geometry in the 3D world so actors naturally occlude it\.[\s\S]*?(?=  world\.upload\(\);\})/;
 must(renderRe.test(game),'legacy signage renderer block not found');
 game=game.replace(renderRe,'');
-if(game.includes('INETUM_DECOR')){const i=game.indexOf('INETUM_DECOR');console.error(game.slice(Math.max(0,i-600),i+1400));throw new Error('remaining INETUM_DECOR reference');}
+must(!game.includes('INETUM_DECOR'),'remaining INETUM_DECOR reference');
 writeFileSync('game.js',game,'utf8');
 
 let signage=readFileSync('corporate-signage.js','utf8');
@@ -29,6 +33,6 @@ writeFileSync('index.html',html,'utf8');
 let tests=readFileSync('tests/redesign-invariants.test.cjs','utf8');
 tests=tests.replaceAll('game.js?v=41','game.js?v=42');
 tests=tests.replace("for(const label of ['INETUM','LCP7','ORDRE DE MISSION','SWILE','SAP','CONCUR','MyPeopleDoc','CHRONOTIME 2','GLOBAL SERVICE CENTER'])has(signage,label);","for(const label of ['INETUM','LCP7','ORDRE DE MISSION','COOPTATION','SWILE','SAP','CONCUR','MyPeopleDoc','CHRONOTIME 2','GLOBAL SERVICE CENTER'])has(signage,label);");
-const insert=`\ntest('legacy generic signage is absent from the canonical renderer',()=>{\n  const game=read('game.js'),signage=read('corporate-signage.js');\n  lacks(game,'INETUM_DECOR');\n  lacks(game,'Inetum decor is actual textured geometry');\n  lacks(game,\"title:'SUCCESS FACTORS'\");\n  lacks(game,\"title:'GLOBAL SERVICE CENTER'\");\n  lacks(game,\"title:'SUMMER PARTY'\");\n  has(signage,'function cooptation');\n  has(signage,'COOPTATION');\n});\n`;
+const insert=`\ntest('legacy generic signage is absent from the canonical renderer',()=>{\n  const game=read('game.js'),signage=read('corporate-signage.js');\n  lacks(game,'INETUM_DECOR');\n  lacks(game,'cardRows=');\n  lacks(game,'Inetum decor is actual textured geometry');\n  lacks(game,\"title:'SUCCESS FACTORS'\");\n  lacks(game,\"title:'GLOBAL SERVICE CENTER'\");\n  lacks(game,\"title:'SUMMER PARTY'\");\n  has(signage,'function cooptation');\n  has(signage,'COOPTATION');\n});\n`;
 if(!tests.includes("test('legacy generic signage is absent"))tests+=insert;
 writeFileSync('tests/redesign-invariants.test.cjs',tests,'utf8');
