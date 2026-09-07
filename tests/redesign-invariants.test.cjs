@@ -63,7 +63,7 @@ test('consultants and internal/business NPCs keep distinct visual and dialogue f
   has(banter,'Le pipeline est vert. Les signatures sont plus nuancées.');
 });
 
-test('office hierarchy exposes KÉKÉ, CHACHA, JUJU and RORO in their intended zones',()=>{
+test('office hierarchy exposes the business clue and Grand Ouest seminar structure',()=>{
   const hierarchy=read('office-hierarchy.js');
   has(hierarchy,"name:'CHACHA'");
   has(hierarchy,'PIPELINE');
@@ -76,8 +76,8 @@ test('office hierarchy exposes KÉKÉ, CHACHA, JUJU and RORO in their intended z
 
 test('corporate signage remains split by operational, direction and seminar contexts',()=>{
   const signage=read('corporate-signage.js');
-  for(const label of ['INETUM LCP7','ORDRE DE MISSION','SWILE','SAP CONCUR','MYPEOPLEDOC','CHRONOTIME 2','GLOBAL SERVICE CENTER'])has(signage,label);
-  for(const label of ['SUCCESS FACTORS','GCOMP','LEARNING ACADEMY','POWER UP',"LET'S CONNECT FRANCE",'DO YOU SPEAK GEN AI?'])has(signage,label);
+  for(const label of ['INETUM','LCP7','ORDRE DE MISSION','SWILE','SAP','CONCUR','MyPeopleDoc','CHRONOTIME 2','GLOBAL SERVICE CENTER'])has(signage,label);
+  for(const label of ['SUCCESS FACTORS','GCOMP','LEARNING','ACADEMY','POWER UP',"LET'S CONNECT",'FRANCE','DO YOU SPEAK','GEN AI?'])has(signage,label);
   for(const label of ['CHARITY DAY','SUMMER PARTY','LE POWER UP TOUR'])has(signage,label);
 });
 
