@@ -1,24 +1,32 @@
 'use strict';
 (()=>{
   const swap=text=>String(text)
-    .replaceAll('KÉVIN','KÉKÉ').replaceAll('Kévin','KÉKÉ')
-    .replaceAll('JULIEN','JUJU').replaceAll('Julien','JUJU')
-    .replaceAll('RODOLPHE','RORO').replaceAll('Rodolphe','RORO')
-    .replaceAll('CHARLINE','CHACHA').replaceAll('Charline','CHACHA');
+    .replace(/K(?:É|E)VIN/gi,'KÉKÉ')
+    .replace(/JULIEN/gi,'JUJU')
+    .replace(/RODOLPHE/gi,'RORO')
+    .replace(/CHARLINE/gi,'CHACHA');
+
+  const proto=globalThis.CanvasRenderingContext2D?.prototype;
+  if(proto&&!proto.__nicknamePatched){
+    const fill=proto.fillText,stroke=proto.strokeText;
+    proto.fillText=function(text,...args){return fill.call(this,swap(text),...args);};
+    proto.strokeText=function(text,...args){return stroke.call(this,swap(text),...args);};
+    Object.defineProperty(proto,'__nicknamePatched',{value:true});
+  }
 
   const originalDraw=globalThis.OfficeDecor?.draw;
-  if(originalDraw){
-    globalThis.OfficeDecor.draw=(mesh,sign,level,surface)=>{
-      const wrappedSign=(x,y,z,w,h,draw)=>sign(x,y,z,w,h,(c,W,H)=>{
-        const fillText=c.fillText;
-        c.fillText=function(text,...args){return fillText.call(this,swap(text),...args);};
-        try{draw(c,W,H);}finally{c.fillText=fillText;}
-      });
+  if(originalDraw&&!originalDraw.__nicknameWrapped){
+    const wrapped=(mesh,sign,level,surface)=>{
+      const wrappedSign=(x,y,z,w,h,draw)=>sign(x,y,z,w,h,(c,W,H)=>draw(c,W,H));
       originalDraw(mesh,wrappedSign,level,surface);
+
+      const boards=globalThis.OfficeBoards||[];
+      for(const board of boards)if(board?.name)board.name=swap(board.name);
       const board=globalThis.OfficeBoard;
-      if(board){
-        board.name=swap(board.name);
-        const c=board.canvas?.getContext?.('2d');
+      if(board?.name)board.name=swap(board.name);
+
+      if(board?.canvas){
+        const c=board.canvas.getContext?.('2d');
         if(c&&level===0){
           const W=board.canvas.width,H=board.canvas.height;
           c.save();
@@ -34,16 +42,35 @@
         }
       }
     };
+    wrapped.__nicknameWrapped=true;
+    globalThis.OfficeDecor.draw=wrapped;
   }
 
   const rewriteDom=()=>{
+    if(!document.body)return;
     const walker=document.createTreeWalker(document.body,NodeFilter.SHOW_TEXT);
     let node;
     while((node=walker.nextNode())){
       const next=swap(node.nodeValue);
       if(next!==node.nodeValue)node.nodeValue=next;
     }
+    for(const el of document.body.querySelectorAll('[aria-label],[title],[alt]')){
+      for(const attr of ['aria-label','title','alt']){
+        if(!el.hasAttribute(attr))continue;
+        const old=el.getAttribute(attr),next=swap(old);
+        if(next!==old)el.setAttribute(attr,next);
+      }
+    }
   };
-  rewriteDom();
-  new MutationObserver(rewriteDom).observe(document.body,{subtree:true,childList:true,characterData:true});
+
+  const syncObjects=()=>{
+    const boards=globalThis.OfficeBoards||[];
+    for(const board of boards)if(board?.name)board.name=swap(board.name);
+    if(globalThis.OfficeBoard?.name)globalThis.OfficeBoard.name=swap(globalThis.OfficeBoard.name);
+    rewriteDom();
+  };
+
+  syncObjects();
+  new MutationObserver(rewriteDom).observe(document.body,{subtree:true,childList:true,characterData:true,attributes:true,attributeFilter:['aria-label','title','alt']});
+  setInterval(syncObjects,1000);
 })();
