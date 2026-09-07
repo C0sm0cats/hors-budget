@@ -115,13 +115,17 @@ test('budget language distinguishes project protection from the final budget',()
   has(roles,'DIRECTEUR RÉGION GRAND OUEST');
 });
 
-test('legacy polish layer is itself hierarchy-aware',()=>{
+test('polish owns presentation only and has no legacy CHACHA or delivery runtime',()=>{
   const polish=read('polish.js');
   has(polish,'RORO · DIRECTEUR RÉGION GRAND OUEST');
   has(polish,"['NIVEAU 1','OPEN SPACE · LCP7'");
   has(polish,"['NIVEAU 2','DIRECTION TECHNOLOGIES SERVICES'");
   has(polish,"['NIVEAU 3','POWER UP TOUR · GRAND OUEST'");
-  has(polish,"if(s.level===2&&s.boss.hp>0");
-  has(polish,"if(s.level===2&&p.floor>=3)");
+  has(polish,"s.level===2&&s.boss.active&&s.boss.hp>0");
   has(polish,'DIRECTEUR RÉGION GRAND OUEST · GARDIEN DU BUDGET');
+  lacks(polish,'s.princess');
+  lacks(polish,'deliveryScene');
+  lacks(polish,'comedy.delivery');
+  lacks(polish,'updateBanter');
+  lacks(polish,'const banter=');
 });
