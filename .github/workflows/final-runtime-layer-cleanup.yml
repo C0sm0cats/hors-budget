@@ -1,0 +1,26 @@
+name: final-runtime-layer-cleanup
+on:
+  push:
+    branches: [final-runtime-layer-cleanup]
+permissions:
+  contents: write
+jobs:
+  cleanup:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: final-runtime-layer-cleanup
+          fetch-depth: 0
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - run: node scripts/final-runtime-layer-cleanup.cjs
+      - run: npm test
+      - name: Commit cleanup
+        run: |
+          git add -A
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git commit -m "Remove final runtime patch layers" || exit 0
+          git push origin HEAD:final-runtime-layer-cleanup
