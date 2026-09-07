@@ -8,12 +8,10 @@ game=rep(game,'charlineIn:8,charlineLine:0,charlineTalk:0,','charlineIn:8,','leg
 game=game.replace(/s\.charlineTalk=[^;]+;/g,'').replace(/s\.charlineLine=[^;]+;/g,'');
 game=game.replace(/,'charlineTalk'/g,'');
 game=game.replace(/if\(s\.level===2&&s\.charlineTalk>0\)label\([^;]+;/g,'');
+game=game.replace('attack:s.charlineTalk>0&&!celebrating',"attack:!celebrating&&s.pickups.some(b=>b.fall&&b.originX===s.chacha.x)");
 game=game.replaceAll("'JE PILOTE LA TRANSFORMATION !'","'LA MARGE EST AU VERT. C’EST L’ESSENTIEL.'");
 game=game.replaceAll("'REFUSÉ. MAIS BRAVO !'","'REFUSÉ. MAIS MERCI POUR L’ENGAGEMENT.'");
-if(game.includes('charlineTalk')||game.includes('charlineLine')||game.includes('CHARLINE_LINES')){
-  for(const term of ['charlineTalk','charlineLine','CHARLINE_LINES']){const i=game.indexOf(term);if(i>=0)console.error(term,game.slice(Math.max(0,i-180),i+400));}
-  throw new Error('remaining legacy CHACHA chatter');
-}
+if(game.includes('charlineTalk')||game.includes('charlineLine')||game.includes('CHARLINE_LINES'))throw new Error('remaining legacy CHACHA chatter');
 writeFileSync('game.js',game,'utf8');
 
 let polish=readFileSync('polish.js','utf8');
