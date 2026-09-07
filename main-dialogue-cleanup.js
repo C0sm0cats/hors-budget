@@ -1,6 +1,6 @@
 'use strict';
-// Kévin et Charline utilisent uniquement leurs punchlines récurrentes.
-// Les scènes réellement scénarisées (notamment Rodolphe et les fauteuils) restent intactes.
+// KÉKÉ et CHACHA utilisent uniquement leurs punchlines récurrentes.
+// Les scènes réellement scénarisées (notamment RORO et les fauteuils) restent intactes.
 (()=>{
   function clean(){
     let s=null;
