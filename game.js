@@ -20,7 +20,7 @@ CAST.sarah={name:'Sarah',shirt:'#6a4e72',hair:'#2f2420',skin:'#d9a17c',female:tr
 CAST.mehdi={name:'Mehdi',shirt:'#415c6b',hair:'#171412',skin:'#a66e4a',beard:true,style:'short',internal:true,category:'business',pants:'#293b45',shoes:'#171f24',blouse:'#e9eef0',tie:'#8b6b55'};
 CAST.elodie={name:'Élodie',shirt:'#7a5d52',hair:'#b06a3c',skin:'#efc29f',female:true,style:'bun',internal:true,category:'business',pants:'#4d413d',shoes:'#2c2421',blouse:'#f6efe7'};
 CAST.antoine={name:'Antoine',shirt:'#4d627b',hair:'#5a4638',skin:'#d3a27c',style:'short',internal:true,category:'business',pants:'#344252',shoes:'#1d252d',blouse:'#eef0e8',tie:'#77624b'};
-const LEVELS=[{name:'OPEN SPACE',subtitle:'Le salaire émotionnel ne paie pas le loyer.',wall:'#29495b',window:'#67848a',speed:1,spawn:3.5},{name:'LA DIRECTION',subtitle:'Ici, même les plantes ont un variable.',wall:'#453b55',window:'#977b73',speed:1.18,spawn:2.9},{name:'ROOFTOP DU SÉMINAIRE',subtitle:'Dernier atelier : fuir le dernier atelier.',wall:'#344d60',window:'#ba8271',speed:1.32,spawn:2.4}];
+const LEVELS=[{name:'OPEN SPACE · LCP7',subtitle:'Le salaire émotionnel ne paie pas le loyer.',wall:'#29495b',window:'#67848a',speed:1,spawn:3.5},{name:'DIRECTION TS · PAYS DE LA LOIRE',subtitle:'Ici, même les plantes ont un variable.',wall:'#453b55',window:'#977b73',speed:1.18,spawn:2.9},{name:'POWER UP TOUR · GRAND OUEST',subtitle:'Dernier atelier : fuir le dernier atelier.',wall:'#344d60',window:'#ba8271',speed:1.32,spawn:2.4}];
 const QUIPS={hugo:['Mon loyer refuse les badges !','Junior, pas bénévole !','Le baby-foot ne se mange pas !'],nora:['Le marché me dit bonjour.','Ton benchmark date de 2014.','Senior, même sur ma fiche de paie !'],basile:['Cette échelle est en grève.','+3 %, pas trois pizzas !','Pas de budget ? Pas de barreaux !'],lea:['Mon variable est imaginaire !','J’ai livré. À ton tour !','La passion est hors forfait.']};
 const CHARLINE_LINES=['Tu peux escalader autre chose que les incidents ?','Jette les slides, pas le café !','Ils ont lancé un tour de table. VITE.','Le directeur vient de dire « icebreaker ».','KÉKÉ, tu es mon seul plan de réversibilité.','Je te couvre. C’est déjà plus que ta mutuelle.'];
 const STUN_MESSAGES=[
@@ -94,7 +94,7 @@ const Arcade=(()=>{
  function tickComedy(dt){
   const c=s.comedy;c.lineTime=Math.max(0,c.lineTime-dt);c.cooldown=Math.max(0,c.cooldown-dt);
   if(c.miracle<=0){
-   if(c.delivery<=0&&c.eligible&&!c.miracleSeen&&!s.boss.active&&s.player.grounded&&s.time>=c.miracleAt){
+   if(c.eligible&&!c.miracleSeen&&!s.boss.active&&s.player.grounded&&s.time>=c.miracleAt){
     const recipient=s.enemies.find(e=>e.floor===s.player.floor&&e.stun<=0&&Math.abs(e.x-s.player.x)<4.5);
     if(recipient){recipient.raise=(recipient.raise||0)+3;c.recipient=recipient.kind;c.miracleSeen=true;c.miracle=2;c.applause=0;c.lineTime=0;soundFX('win');}
    }
