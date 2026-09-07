@@ -78,14 +78,18 @@ test('consultants and internal/business NPCs keep distinct visual and dialogue f
   has(banter,'Le pipeline est vert. Les signatures sont plus nuancées.');
 });
 
-test('office hierarchy exposes the business clue and Grand Ouest seminar structure',()=>{
+test('office hierarchy exposes a handwritten CHACHA clue and Grand Ouest seminar structure',()=>{
   const hierarchy=read('office-hierarchy.js');
   has(hierarchy,"name:'CHACHA'");
-  has(hierarchy,'PIPELINE');
-  has(hierarchy,'PROSPECTS');
-  has(hierarchy,'OPPORTUNITÉS');
-  has(hierarchy,'CLIENTS');
-  has(hierarchy,'POWER UP TOUR');
+  has(hierarchy,"pen(c,'Business & Développement'");
+  has(hierarchy,"pen(c,'PROSPECTS'");
+  has(hierarchy,"pen(c,'OPPORTUNITÉS'");
+  has(hierarchy,"pen(c,'CLIENTS'");
+  has(hierarchy,"pen(c,'Au Power UP Tour'");
+  has(hierarchy,"pen(c,'retour après le séminaire'");
+  has(hierarchy,"pen(c,'— CHACHA'");
+  lacks(hierarchy,"fillText('ABSENTE'");
+  lacks(hierarchy,"fillText('BUSINESS MANAGER'");
   has(hierarchy,'DIRECTEUR RÉGION GRAND OUEST');
 });
 
