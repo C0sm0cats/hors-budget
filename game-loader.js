@@ -1,12 +1,13 @@
 'use strict';
 (()=>{
   const xhr=new XMLHttpRequest();xhr.open('GET','game.js?v=36',false);xhr.send(null);if(xhr.status&&xhr.status!==200)throw new Error('Impossible de charger game.js ('+xhr.status+')');let src=xhr.responseText;
+  src=src.replaceAll('KÉVIN','KÉKÉ').replaceAll('Kévin','KÉKÉ').replaceAll('JULIEN','JUJU').replaceAll('Julien','JUJU').replaceAll('RODOLPHE','RORO').replaceAll('Rodolphe','RORO').replaceAll('CHARLINE','CHACHA').replaceAll('Charline','CHACHA');
   src=src.replace("'LES NAO ONT EU TA PEAU.'","'MERCI POUR TON ENGAGEMENT.'");
   src=src.replace("nora:{name:'Nora',shirt:'#609cbe',hair:'#ebc66d',skin:'#e7b892',female:true,style:'bob'","nora:{name:'Nora',shirt:'#609cbe',hair:'#211a18',skin:'#754b35',female:true,style:'bob'");
   src=src.replace("basile:{name:'Basile',shirt:'#9b79a6',hair:'#573c31',skin:'#bf8d69',beard:true","basile:{name:'Basile',shirt:'#9b79a6',hair:'#1d1715',skin:'#8b5b3e',beard:true");
-  src=src.replace("const LEVELS=", "CAST.julien={name:'Julien',shirt:'#365b78',hair:'#49362d',skin:'#dfad86',tie:'#79b9c7'};\nconst LEVELS=");
+  src=src.replace("const LEVELS=", "CAST.julien={name:'JUJU',shirt:'#365b78',hair:'#49362d',skin:'#dfad86',tie:'#79b9c7'};\nconst LEVELS=");
 
-  // Ordre de mission et Swile partageaient la bande murale du bureau de Kévin.
+  // Ordre de mission et Swile partageaient la bande murale du bureau de KÉKÉ.
   // On les descend sur le mur du rez-de-chaussée, dans deux emplacements réellement dégagés.
   const orderDecor="{x:-6.4,y:4.45,w:3.2,h:.68,title:'ORDRE DE MISSION'";
   const swileDecor="{x:5.1,y:4.45,w:2.7,h:.68,title:'SWILE'";
@@ -36,10 +37,10 @@
   if(!src.includes(plantAnchor))throw new Error('Point insertion décor végétal introuvable');src=src.replace(plantAnchor,plantCalls+plantAnchor);
 
   const gateAnchor="if(p.floor===4&&p.grounded&&Math.abs(p.x-s.princess.x)<.85){if(s.level<2){";
-  if(!src.includes(gateAnchor))throw new Error('Point de contrôle Charline introuvable');src=src.replace(gateAnchor,"if(p.floor===4&&p.grounded&&Math.abs(p.x-s.princess.x)<.85){if(s.level===1&&globalThis.JulienBoss&&!globalThis.JulienBoss.defeated(s)){notice('JULIEN BLOQUE L’ACCÈS · RENVOIE SES KPI AVEC X.',1.5);}else if(s.level<2){");
-  const julienDrawAnchor="const celebrating=s.phase==='won'||s.phase==='transition',charlineX=";if(!src.includes(julienDrawAnchor))throw new Error('Point de rendu Julien introuvable');src=src.replace(julienDrawAnchor,"if(s.level===1&&globalThis.JulienBoss){const jb=globalThis.JulienBoss.state(s),jx=globalThis.JulienBoss.x,jy=surface(4,jx);if(jb.hp>0&&(!jb.flash||Math.floor(s.visual*18)%2===0))person(moving,'julien',jx,jy,.25,{facing:-1,attack:jb.flash>0});}const celebrating=s.phase==='won'||s.phase==='transition',charlineX=");
+  if(!src.includes(gateAnchor))throw new Error('Point de contrôle CHACHA introuvable');src=src.replace(gateAnchor,"if(p.floor===4&&p.grounded&&Math.abs(p.x-s.princess.x)<.85){if(s.level===1&&globalThis.JulienBoss&&!globalThis.JulienBoss.defeated(s)){notice('JUJU BLOQUE L’ACCÈS · RENVOIE SES KPI AVEC X.',1.5);}else if(s.level<2){");
+  const julienDrawAnchor="const celebrating=s.phase==='won'||s.phase==='transition',charlineX=";if(!src.includes(julienDrawAnchor))throw new Error('Point de rendu JUJU introuvable');src=src.replace(julienDrawAnchor,"if(s.level===1&&globalThis.JulienBoss){const jb=globalThis.JulienBoss.state(s),jx=globalThis.JulienBoss.x,jy=surface(4,jx);if(jb.hp>0&&(!jb.flash||Math.floor(s.visual*18)%2===0))person(moving,'julien',jx,jy,.25,{facing:-1,attack:jb.flash>0});}const celebrating=s.phase==='won'||s.phase==='transition',charlineX=");
   src=src.replace("if(h.kind==='boss'&&!h.reflected){h.reflected=true;h.vx=8;h.life=3;", "if((h.kind==='boss'||h.julien)&&!h.reflected){h.reflected=true;h.vx=8;h.life=3;");
-  const rodLabel="label('RODOLPHE',s.boss.x,s.boss.y+2.05,'#f0b69e',10);";if(src.includes(rodLabel))src=src.replace(rodLabel,rodLabel+"if(s.level===1&&globalThis.JulienBoss&&!globalThis.JulienBoss.defeated(s))label('JULIEN',globalThis.JulienBoss.x,surface(4,globalThis.JulienBoss.x)+2.05,'#bfe8f2',10);");
+  const rodLabel="label('RORO',s.boss.x,s.boss.y+2.05,'#f0b69e',10);";if(src.includes(rodLabel))src=src.replace(rodLabel,rodLabel+"if(s.level===1&&globalThis.JulienBoss&&!globalThis.JulienBoss.defeated(s))label('JUJU',globalThis.JulienBoss.x,surface(4,globalThis.JulienBoss.x)+2.05,'#bfe8f2',10);");
   const decorative="if(!s.boss.active)for(let i=0;i<3;i++)roll(moving,-9.35+i*.38,s.boss.y+.27,-.47,.21,.35,0);",moving="for(const b of s.barrels)roll(moving,b.x,b.y,.65,b.r,.48,b.spin);";if(!src.includes(decorative)||!src.includes(moving))throw new Error('Appel tonneau introuvable');src=src.replace(decorative,"if(!s.boss.active)for(let i=0;i<3;i++)esnObstacle(moving,-9.35+i*.55,s.boss.y+.38,-.47,s.level,false);");src=src.replace(moving,"for(const b of s.barrels)esnObstacle(moving,b.x,b.y,.65,s.level,true);");
   src+=`\nObject.defineProperties(globalThis,{Arcade:{configurable:true,get:()=>Arcade},renderer:{configurable:true,get:()=>renderer,set:value=>{renderer=value;}},surface:{configurable:true,get:()=>surface},deliveryScene:{configurable:true,get:()=>deliveryScene,set:value=>{deliveryScene=value;}},cap:{configurable:true,get:()=>cap}});`;
   (0,eval)(src+'\n//# sourceURL=game.js');
