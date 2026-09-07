@@ -8,7 +8,7 @@ test('Julien uses the visible main dialogue channel only while alive on level tw
   const elements=[],frames=[];
   const element=()=>({hidden:true,style:{},dataset:{},className:'',textContent:'',
     classList:{add(){}},append(el){elements.push(el);},
-    getBoundingClientRect(){const left=(parseFloat(this.style.left)||0)-150,top=(parseFloat(this.style.top)||0)-60;return {left,right:left+300,top,bottom:top+60,width:300,height:60};}});
+    getBoundingClientRect(){const width=parseFloat(this.style.width)||300,paired=this.style.transform==='none',left=(parseFloat(this.style.left)||0)-(paired?0:width/2),top=(parseFloat(this.style.top)||0)-(paired?0:60);return {left,right:left+width,top,bottom:top+60,width,height:60};}});
   const state=()=>({level:0,phase:'playing',player:{x:0,y:0,floor:0},princess:{x:8,y:12},boss:{x:-8,y:12},enemies:[],hostile:[],comedy:{delivery:0},floaters:[],score:0});
   const arcade={state:state()};
   const ctx=vm.createContext({document:{body:element(),head:element(),createElement:element,
@@ -27,6 +27,18 @@ test('Julien uses the visible main dialogue channel only while alive on level tw
   const first=bubble.textContent;
   arcade.state.phase='paused';tick(3000);assert.equal(bubble.hidden,true);
   arcade.state.phase='playing';tick(3100);assert.equal(bubble.hidden,false);
+  const charline=elements.find(el=>el.className.split(' ').includes('charline'));
+  tick(7500);
+  for(const width of [1366,390,1920]){
+    ctx.innerWidth=width;
+    ctx.renderer.project=(x,y)=>({x:width/2+x*(width<500?8:40),y:600-y*30});
+    tick(7600);
+    assert.equal(bubble.hidden,false);assert.equal(charline.hidden,false);
+    assert.equal(bubble.dataset.paired,'true');assert.equal(charline.dataset.paired,'true');
+    const j=bubble.getBoundingClientRect(),c=charline.getBoundingClientRect();
+    assert.ok(j.right+8<=c.left,'both speakers need separate space');
+    assert.ok(j.left>=0&&c.right<=width);assert.equal(j.top,c.top);
+  }
   tick(30000);assert.notEqual(bubble.textContent,first);
   ctx.JulienBoss.state(arcade.state).hp=0;tick(30100);assert.equal(bubble.hidden,true);
   arcade.state=state();arcade.state.level=1;tick(31000);tick(32300);assert.equal(bubble.hidden,false);

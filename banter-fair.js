@@ -68,26 +68,45 @@
   }
 
   function updateMain(now,s){
-    const occupied=[];
+    const occupied=[],active=[];
     const hudBottom=document.querySelector('.hud')?.getBoundingClientRect().bottom||80;
     for(const speaker of ['julien','kevin','charline','rodolphe']){
       const b=main[speaker],pos=mainPos(s,speaker);
+      b.el.dataset.paired='false';b.el.style.width='';b.el.style.transform='';
       if(speaker==='rodolphe'&&s?.comedy?.delivery>0){b.el.hidden=true;b.until=0;b.next=Math.max(b.next,now+1800);continue;}
       if(!s||s.phase!=='playing'||!onscreen(pos)){b.el.hidden=true;continue;}
       if(now>=b.next){const pool=pools[speaker];b.last=pick(pool,b.last);b.el.textContent=pool[b.last];b.until=now+8500;b.next=b.until+4500+Math.random()*3500;}
-      if(now<b.until){
-        b.el.hidden=false;
-        const rect=b.el.getBoundingClientRect(),margin=8;
-        let placed=false;
-        for(const [dx,dy] of [[0,0],[0,rect.height+18],[-rect.width-12,0],[rect.width+12,0]]){
-          const x=Math.max(rect.width/2+margin,Math.min(innerWidth-rect.width/2-margin,pos.x+dx));
-          const y=Math.max(hudBottom+rect.height*1.15+margin,Math.min(innerHeight-35,pos.y+dy));
-          b.el.style.left=x+'px';b.el.style.top=y+'px';
-          const r=b.el.getBoundingClientRect();
-          if(!occupied.some(v=>r.left<v.right+8&&r.right>v.left-8&&r.top<v.bottom+8&&r.bottom>v.top-8)){occupied.push(r);placed=true;break;}
-        }
-        b.el.hidden=!placed;
-      }else b.el.hidden=true;
+      b.el.hidden=now>=b.until;
+      if(!b.el.hidden)active.push({speaker,b,pos});
+    }
+    // Lay out neighbours together: neither speaker can displace or hide the other.
+    const pair=['julien','charline'].map(name=>active.find(a=>a.speaker===name));
+    if(pair.every(Boolean)){
+      const gap=12,margin=8,width=Math.min(300,(innerWidth-margin*2-gap)/2);
+      const total=width*2+gap,mid=(pair[0].pos.x+pair[1].pos.x)/2;
+      const left=Math.max(margin,Math.min(innerWidth-margin-total,mid-total/2));
+      const feet=renderer.project(s.princess.x,s.princess.y,.4);
+      let height=0;
+      for(const [i,{b}] of pair.entries()){
+        b.el.dataset.paired='true';b.el.style.width=width+'px';
+        b.el.style.transform='none';b.el.style.left=(left+i*(width+gap))+'px';
+        height=Math.max(height,b.el.getBoundingClientRect().height);
+      }
+      const top=Math.max(hudBottom+8,Math.min(innerHeight-height-16,feet.y+18));
+      for(const {b} of pair){b.el.style.top=top+'px';occupied.push(b.el.getBoundingClientRect());}
+    }
+    for(const {b,pos} of active){
+      if(b.el.dataset.paired==='true')continue;
+      const rect=b.el.getBoundingClientRect(),margin=8;
+      let placed=false;
+      for(const [dx,dy] of [[0,0],[0,rect.height+18],[-rect.width-12,0],[rect.width+12,0]]){
+        const x=Math.max(rect.width/2+margin,Math.min(innerWidth-rect.width/2-margin,pos.x+dx));
+        const y=Math.max(hudBottom+rect.height*1.15+margin,Math.min(innerHeight-35,pos.y+dy));
+        b.el.style.left=x+'px';b.el.style.top=y+'px';
+        const r=b.el.getBoundingClientRect();
+        if(!occupied.some(v=>r.left<v.right+8&&r.right>v.left-8&&r.top<v.bottom+8&&r.bottom>v.top-8)){occupied.push(r);placed=true;break;}
+      }
+      b.el.hidden=!placed;
     }
   }
 
