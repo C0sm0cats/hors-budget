@@ -1,57 +1,59 @@
 'use strict';
 (()=>{
-  if(!renderer?.gl)return;
+  if(!globalThis.renderer?.gl||!globalThis.Arcade)return;
 
   // Position and size the DOM glasses from RORO's actual projected eyes.
   // RORO only exists in the final Power UP Tour level.
   const reduced=matchMedia('(prefers-reduced-motion: reduce)');
   function syncRodolphe(){
     const s=Arcade?.state,glasses=document.querySelector('.rodolphe-glasses'),name=document.querySelector('.rodolphe-name-fix');
-    if(s&&glasses&&renderer){
-      const visible=s.level===2&&s.boss.hp>0&&!['help','records','paused','won','lost'].includes(s.phase);
-      glasses.hidden=!visible;
-      if(name)name.hidden=!visible||s.phase==='title';
-      if(visible){
-        const rowing=!(s.comedy?.miracle>0)&&!(s.comedy?.delivery>0)&&!s.boss.active&&Math.floor(s.visual/6)%2===1;
-        const bossX=s.boss.x-(s.boss.recoil>0?.24*(s.boss.recoil/.28):0);
-        const drawX=bossX+(rowing?Math.sin(s.visual*6)*.18:0);
-        const bounce=rowing&&!reduced.matches?Math.abs(Math.sin(s.visual*7))*.48:0;
-        const scale=1.27;
-        const eyeY=s.boss.y+.32+bounce+1.16*scale;
-        const eyeZ=.15+.19*scale;
-        const eyeHalf=.105*scale;
-        const face=renderer.project(drawX,eyeY,eyeZ);
-        const leftEye=renderer.project(drawX-eyeHalf,eyeY,eyeZ);
-        const rightEye=renderer.project(drawX+eyeHalf,eyeY,eyeZ);
-        const projectedEyeGap=Math.hypot(rightEye.x-leftEye.x,rightEye.y-leftEye.y);
+    if(!s||!glasses||!globalThis.renderer||!s.boss){
+      requestAnimationFrame(syncRodolphe);
+      return;
+    }
 
-        // With border-box sizing the DOM lens centres are 19 px apart at scale 1.
-        // Match that separation to the projected 3D eye separation.
-        const glassesScale=Math.max(.28,Math.min(2.4,projectedEyeGap/19));
-        glasses.style.left=face.x+'px';
-        glasses.style.top=face.y+'px';
-        glasses.style.setProperty('transform','translate(-50%,-50%) scale('+glassesScale+')','important');
+    const visible=s.level===2&&s.boss.hp>0&&!['help','records','paused','won','lost'].includes(s.phase);
+    glasses.hidden=!visible;
+    if(name)name.hidden=!visible||s.phase==='title';
 
-        if(name&&!name.hidden){
-          const np=renderer.project(drawX,s.boss.y+.32+bounce+2.12,.45);
-          name.style.left=np.x+'px';
-          name.style.top=np.y+'px';
-        }
+    if(visible){
+      const rowing=!(s.comedy?.miracle>0)&&!s.boss.active&&Math.floor(s.visual/6)%2===1;
+      const bossX=s.boss.x-(s.boss.recoil>0?.24*(s.boss.recoil/.28):0);
+      const drawX=bossX+(rowing?Math.sin(s.visual*6)*.18:0);
+      const bounce=rowing&&!reduced.matches?Math.abs(Math.sin(s.visual*7))*.48:0;
+      const scale=1.27;
+      const eyeY=s.boss.y+.32+bounce+1.16*scale;
+      const eyeZ=.15+.19*scale;
+      const eyeHalf=.105*scale;
+      const face=renderer.project(drawX,eyeY,eyeZ);
+      const leftEye=renderer.project(drawX-eyeHalf,eyeY,eyeZ);
+      const rightEye=renderer.project(drawX+eyeHalf,eyeY,eyeZ);
+      const projectedEyeGap=Math.hypot(rightEye.x-leftEye.x,rightEye.y-leftEye.y);
 
-        // game.js still paints its original RORO label on the overlay canvas.
-        // Erase that exact static label after each frame; the raised DOM label above
-        // remains the single visible name. Do not add the character bounce here:
-        // the legacy canvas label itself does not bounce with RORO.
-        const overlay=document.getElementById('overlay');
-        if(overlay){
-          const ctx=overlay.getContext('2d');
-          const ratio=Math.min(devicePixelRatio||1,1.5);
-          const legacy=renderer.project(s.boss.x,s.boss.y+2.05,.65);
-          ctx.save();
-          ctx.setTransform(ratio,0,0,ratio,0,0);
-          ctx.clearRect(legacy.x-64,legacy.y-16,128,32);
-          ctx.restore();
-        }
+      // With border-box sizing the DOM lens centres are 19 px apart at scale 1.
+      // Match that separation to the projected 3D eye separation.
+      const glassesScale=Math.max(.28,Math.min(2.4,projectedEyeGap/19));
+      glasses.style.left=face.x+'px';
+      glasses.style.top=face.y+'px';
+      glasses.style.setProperty('transform','translate(-50%,-50%) scale('+glassesScale+')','important');
+
+      if(name&&!name.hidden){
+        const np=renderer.project(drawX,s.boss.y+.32+bounce+2.12,.45);
+        name.style.left=np.x+'px';
+        name.style.top=np.y+'px';
+      }
+
+      // game.js paints its RORO label on the overlay canvas. Erase that static
+      // label after each frame; the raised DOM label above remains the single name.
+      const overlay=document.getElementById('overlay');
+      if(overlay){
+        const ctx=overlay.getContext('2d');
+        const ratio=Math.min(devicePixelRatio||1,1.5);
+        const legacy=renderer.project(s.boss.x,s.boss.y+2.05,.65);
+        ctx.save();
+        ctx.setTransform(ratio,0,0,ratio,0,0);
+        ctx.clearRect(legacy.x-64,legacy.y-16,128,32);
+        ctx.restore();
       }
     }
     requestAnimationFrame(syncRodolphe);
