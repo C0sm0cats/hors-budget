@@ -6,6 +6,11 @@
   src=src.replace("basile:{name:'Basile',shirt:'#9b79a6',hair:'#573c31',skin:'#bf8d69',beard:true","basile:{name:'Basile',shirt:'#9b79a6',hair:'#1d1715',skin:'#8b5b3e',beard:true");
   src=src.replace("const LEVELS=", "CAST.julien={name:'JUJU',shirt:'#365b78',hair:'#49362d',skin:'#dfad86',tie:'#79b9c7'};\nconst LEVELS=");
 
+  const patchRequired=(from,to,label)=>{
+    if(!src.includes(from))throw new Error(label+' introuvable');
+    src=src.replace(from,to);
+  };
+
   // Ordre de mission et Swile partageaient la bande murale du bureau de KÉKÉ.
   // On les descend sur le mur du rez-de-chaussée, dans deux emplacements réellement dégagés.
   const orderDecor="{x:-6.4,y:4.45,w:3.2,h:.68,title:'ORDRE DE MISSION'";
@@ -35,11 +40,90 @@
   `;
   if(!src.includes(plantAnchor))throw new Error('Point insertion décor végétal introuvable');src=src.replace(plantAnchor,plantCalls+plantAnchor);
 
+  // Progression narrative : CHACHA n'est réellement au séminaire qu'au niveau 3,
+  // JUJU garde le passage du niveau 2 et RORO n'existe physiquement qu'au final.
+  patchRequired(
+    "if(!c.delivered&&s.level<2&&s.player.floor>=3&&Math.abs(s.player.x-s.boss.x)<6){c.delivery=12;c.delivered=true;}",
+    "if(!c.delivered&&s.level===2&&s.player.floor>=3&&Math.abs(s.player.x-s.boss.x)<6){c.delivery=12;c.delivered=true;}",
+    'Déclenchement de la scène fauteuils'
+  );
+  patchRequired(
+    "s.charlineIn-=dt;if(s.charlineIn<=0){s.charlineIn=rnd(12,17);",
+    "s.charlineIn-=dt;if(s.level===2&&s.charlineIn<=0){s.charlineIn=rnd(12,17);",
+    'Aide café de CHACHA'
+  );
+  patchRequired(
+    "notice('NIVEAU VALIDÉ · CHACHA LIBÉRÉE · '+LEVELS[s.level+1].name+' EN VUE !',3);",
+    "notice(s.level===0?'CHACHA EST AU POWER UP TOUR · DIRECTION EN VUE !':'JUJU EN ALIGNEMENT STRATÉGIQUE · ACCÈS AU ROOFTOP DÉBLOQUÉ !',3);",
+    'Message de transition de niveau'
+  );
+  patchRequired(
+    "function hud(){document.body.classList.toggle('top-floor',s.player.floor===4&&s.phase!=='title');",
+    "function hud(){document.body.dataset.level=String(s.level);document.body.classList.toggle('top-floor',s.player.floor===4&&s.phase!=='title');",
+    'Synchronisation du niveau dans le DOM'
+  );
+  patchRequired(
+    "s.phase==='transition'?'CHACHA LIBÉRÉE · ON CONTINUE !'",
+    "s.phase==='transition'?(s.level===0?'CHACHA EST AU POWER UP TOUR · DIRECTION EN VUE !':'ACCÈS AU ROOFTOP DÉBLOQUÉ !')",
+    'Bandeau de transition'
+  );
+  patchRequired(
+    "'DERNIER ÉTAGE · REJOINS CHACHA →'",
+    "(s.level===0?'DERNIER ÉTAGE · RETROUVE LA TRACE DE CHACHA →':s.level===1?'DERNIER ÉTAGE · PASSE JUJU · ACCÈS ROOFTOP →':'DERNIER ÉTAGE · REJOINS CHACHA →')",
+    'Objectif du dernier étage'
+  );
+
   const gateAnchor="if(p.floor===4&&p.grounded&&Math.abs(p.x-s.princess.x)<.85){if(s.level<2){";
   if(!src.includes(gateAnchor))throw new Error('Point de contrôle CHACHA introuvable');src=src.replace(gateAnchor,"if(p.floor===4&&p.grounded&&Math.abs(p.x-s.princess.x)<.85){if(s.level===1&&globalThis.JulienBoss&&!globalThis.JulienBoss.defeated(s)){notice('JUJU BLOQUE L’ACCÈS · RENVOIE SES KPI AVEC X.',1.5);}else if(s.level<2){");
-  const julienDrawAnchor="const celebrating=s.phase==='won'||s.phase==='transition',charlineX=";if(!src.includes(julienDrawAnchor))throw new Error('Point de rendu JUJU introuvable');src=src.replace(julienDrawAnchor,"if(s.level===1&&globalThis.JulienBoss){const jb=globalThis.JulienBoss.state(s),jx=globalThis.JulienBoss.x,jy=surface(4,jx);if(jb.hp>0&&(!jb.flash||Math.floor(s.visual*18)%2===0))person(moving,'julien',jx,jy,.25,{facing:-1,attack:jb.flash>0});}const celebrating=s.phase==='won'||s.phase==='transition',charlineX=");
+
+  const julienDrawAnchor="const celebrating=s.phase==='won'||s.phase==='transition',charlineX=";
+  if(!src.includes(julienDrawAnchor))throw new Error('Point de rendu JUJU introuvable');
+  src=src.replace(julienDrawAnchor,"if(s.level===1&&globalThis.JulienBoss){const jb=globalThis.JulienBoss.state(s),jx=globalThis.JulienBoss.x,jy=surface(4,jx);if(jb.hp>0&&(!jb.flash||Math.floor(s.visual*18)%2===0))person(moving,'julien',jx,jy,.25,{facing:-1,attack:jb.flash>0});}const celebrating=s.phase==='won',charlineX=");
+
+  patchRequired(
+    "person(moving,'charline',charlineX,s.princess.y,.25,{win:celebrating,attack:s.charlineTalk>0&&!celebrating});",
+    "if(s.level===2)person(moving,'charline',charlineX,s.princess.y,.25,{win:celebrating,attack:s.charlineTalk>0&&!celebrating});",
+    'Rendu de CHACHA'
+  );
+  patchRequired(
+    "moving.box(s.boss.x,s.boss.y+.24,-.1,1.9,.16,.8,'#a57862');",
+    "if(s.level===2){moving.box(s.boss.x,s.boss.y+.24,-.1,1.9,.16,.8,'#a57862');",
+    'Début du rendu de RORO'
+  );
+  patchRequired(
+    "}if(!s.boss.active)for(let i=0;i<3;i++)roll(moving,-9.35+i*.38,s.boss.y+.27,-.47,.21,.35,0);",
+    "}}if(!s.boss.active)for(let i=0;i<3;i++)roll(moving,-9.35+i*.38,s.boss.y+.27,-.47,.21,.35,0);",
+    'Fin du rendu de RORO'
+  );
+  patchRequired(
+    "const py=s.princess.y;for(let i=0;i<5;i++)moving.box(7.48+i*.46,py+.91+s.gate,.7,.055,1.83,.055,'#d9b879');moving.box(8.4,py+1.83+s.gate,.7,2.15,.075,.075,'#ebd39b');",
+    "const py=s.princess.y;if(s.level>0){for(let i=0;i<5;i++)moving.box(7.48+i*.46,py+.91+s.gate,.7,.055,1.83,.055,'#d9b879');moving.box(8.4,py+1.83+s.gate,.7,2.15,.075,.075,'#ebd39b');}",
+    'Grille de progression'
+  );
+  patchRequired(
+    "label('CHACHA ♛',s.princess.x,py+2.15,'#f2b2cf',11);label('RORO',s.boss.x,s.boss.y+2.05,'#f0b69e',10);",
+    "if(s.level===2)label('CHACHA',s.princess.x,py+2.15,'#f2b2cf',11);if(s.level===2)label('RORO',s.boss.x,s.boss.y+2.05,'#f0b69e',10);",
+    'Labels CHACHA / RORO'
+  );
+  patchRequired(
+    "if(!s.boss.active&&s.comedy.delivery<=0&&s.comedy.miracle<=0&&(s.boss.throwTime>0||rowing))label(rowing?'JE PILOTE LA TRANSFORMATION !':'REFUSÉ. MAIS BRAVO !',s.boss.x,s.boss.y+2.72,'#f0b69e',10,true);",
+    "if(s.level===2&&!s.boss.active&&s.comedy.delivery<=0&&s.comedy.miracle<=0&&(s.boss.throwTime>0||rowing))label(rowing?'JE PILOTE LA TRANSFORMATION !':'REFUSÉ. MAIS BRAVO !',s.boss.x,s.boss.y+2.72,'#f0b69e',10,true);",
+    'Bulle canvas de RORO'
+  );
+  patchRequired(
+    "if(s.gagTime>0&&!s.boss.active&&s.comedy.delivery<=0&&s.comedy.miracle<=0)label(s.gag,s.boss.x,s.boss.y+2.78,'#dfc3f0',10,true);",
+    "if(s.level===2&&s.gagTime>0&&!s.boss.active&&s.comedy.delivery<=0&&s.comedy.miracle<=0)label(s.gag,s.boss.x,s.boss.y+2.78,'#dfc3f0',10,true);",
+    'Gag visuel de RORO'
+  );
+  patchRequired(
+    "if(s.charlineTalk>0)label('CHACHA : '+CHARLINE_LINES[s.charlineLine],s.player.x,s.player.y+2.7,'#f4b9d9',11,true);",
+    "if(s.level===2&&s.charlineTalk>0)label('CHACHA : '+CHARLINE_LINES[s.charlineLine],s.player.x,s.player.y+2.7,'#f4b9d9',11,true);",
+    'Dialogue canvas de CHACHA'
+  );
+
   src=src.replace("if(h.kind==='boss'&&!h.reflected){h.reflected=true;h.vx=8;h.life=3;", "if((h.kind==='boss'||h.julien)&&!h.reflected){h.reflected=true;h.vx=8;h.life=3;");
-  const rodLabel="label('RORO',s.boss.x,s.boss.y+2.05,'#f0b69e',10);";if(src.includes(rodLabel))src=src.replace(rodLabel,rodLabel+"if(s.level===1&&globalThis.JulienBoss&&!globalThis.JulienBoss.defeated(s))label('JUJU',globalThis.JulienBoss.x,surface(4,globalThis.JulienBoss.x)+2.05,'#bfe8f2',10);");
+  const rodLabel="label('RORO',s.boss.x,s.boss.y+2.05,'#f0b69e',10);";
+  if(src.includes(rodLabel))src=src.replace(rodLabel,"if(s.level===2)"+rodLabel+"if(s.level===1&&globalThis.JulienBoss&&!globalThis.JulienBoss.defeated(s))label('JUJU',globalThis.JulienBoss.x,surface(4,globalThis.JulienBoss.x)+2.05,'#bfe8f2',10);");
   const decorative="if(!s.boss.active)for(let i=0;i<3;i++)roll(moving,-9.35+i*.38,s.boss.y+.27,-.47,.21,.35,0);",moving="for(const b of s.barrels)roll(moving,b.x,b.y,.65,b.r,.48,b.spin);";if(!src.includes(decorative)||!src.includes(moving))throw new Error('Appel tonneau introuvable');src=src.replace(decorative,"if(!s.boss.active)for(let i=0;i<3;i++)esnObstacle(moving,-9.35+i*.55,s.boss.y+.38,-.47,s.level,false);");src=src.replace(moving,"for(const b of s.barrels)esnObstacle(moving,b.x,b.y,.65,s.level,true);");
   src+=`\nObject.defineProperties(globalThis,{Arcade:{configurable:true,get:()=>Arcade},renderer:{configurable:true,get:()=>renderer,set:value=>{renderer=value;}},surface:{configurable:true,get:()=>surface},deliveryScene:{configurable:true,get:()=>deliveryScene,set:value=>{deliveryScene=value;}},cap:{configurable:true,get:()=>cap}});`;
   (0,eval)(src+'\n//# sourceURL=game.js');
