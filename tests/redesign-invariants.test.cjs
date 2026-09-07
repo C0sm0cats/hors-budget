@@ -51,17 +51,15 @@ test('JUJU guards rooftop access rather than CHACHA',()=>{
   lacks(juju,'JUJU BLOQUE CHACHA');
 });
 
-test('all twelve generic NPC slots are unique across the three levels',()=>{
-  const population=read('population-levels.js');
+test('all twelve generic NPC slots are native and unique across the three levels',()=>{
+  const game=read('game.js'),html=read('index.html');
   const expected=["['hugo','nora','hugo2','lea']","['nora2','basile','basile2','lea2']","['sarah','mehdi','elodie','antoine']"];
-  for(const roster of expected)has(population,roster);
-  const keys=['hugo','nora','hugo2','lea','nora2','basile','basile2','lea2','sarah','mehdi','elodie','antoine'];
-  assert.equal(new Set(keys).size,12);
-  has(population,"hud:'OPEN SPACE · LCP7'");
-  has(population,"hud:'DIRECTION TS · PAYS DE LA LOIRE'");
-  has(population,"hud:'POWER UP TOUR · GRAND OUEST'");
-  has(population,"role:'JUJU · DIRECTEUR TECHNOLOGIES SERVICES PAYS DE LA LOIRE'");
-  has(population,"role:'RORO · DIRECTEUR RÉGION GRAND OUEST'");
+  for(const roster of expected)has(game,roster);
+  has(game,'const LEVEL_ROSTERS=');
+  has(game,'const roster=LEVEL_ROSTERS[s.level]');
+  assert.equal(new Set(['hugo','nora','hugo2','lea','nora2','basile','basile2','lea2','sarah','mehdi','elodie','antoine']).size,12);
+  lacks(html,'population-levels.js');
+  assert.equal(existsSync(join(root,'population-levels.js')),false);
 });
 
 test('all seminar cast lives natively in game.js',()=>{
@@ -71,7 +69,7 @@ test('all seminar cast lives natively in game.js',()=>{
   lacks(html,'game-loader.js');
   assert.equal(existsSync(join(root,'unique-cast-preload.js')),false);
   assert.equal(existsSync(join(root,'game-loader.js')),false);
-  has(html,'game.js?v=40');
+  has(html,'game.js?v=41');
 });
 
 test('consultants and internal/business NPCs keep distinct visual and dialogue families',()=>{
@@ -96,7 +94,7 @@ test('game.js is the canonical directly loaded runtime',()=>{
   lacks(game,'.delivered');
   has(game,'Object.defineProperties(globalThis,{Arcade:');
   has(game,'globalThis.OfficeDecor.draw(world,sign,level,surface)');
-  has(html,'<script src="game.js?v=40"></script>');
+  has(html,'<script src="game.js?v=41"></script>');
   lacks(html,'game-loader.js');
 });
 
@@ -122,12 +120,16 @@ test('corporate signage remains split by operational, direction and seminar cont
   for(const label of ['CHARITY DAY','SUMMER PARTY','LE POWER UP TOUR'])has(signage,label);
 });
 
-test('budget language distinguishes project protection from the final budget',()=>{
-  const budget=read('budget-semantics.js'),roles=read('roles-polish.js');
-  has(budget,'BON DE COMMANDE');
-  has(budget,'ARBITRAGE 1 / 3');
-  has(budget,'ARBITRAGE 2 / 3');
-  has(roles,"s?.level!==2");
+test('budget language is native and distinguishes project protection from the final budget',()=>{
+  const game=read('game.js'),signage=read('corporate-signage.js'),html=read('index.html'),roles=read('roles-polish.js');
+  has(game,'BON DE COMMANDE');
+  has(game,'ARBITRAGE 1 / 3');
+  has(game,'ARBITRAGE 2 / 3');
+  lacks(game,'BUDGET VALIDÉ');
+  has(signage,'function purchaseOrder');
+  has(signage,'BON DE COMMANDE');
+  lacks(html,'budget-semantics.js');
+  assert.equal(existsSync(join(root,'budget-semantics.js')),false);
   has(roles,'DIRECTEUR RÉGION GRAND OUEST');
 });
 
