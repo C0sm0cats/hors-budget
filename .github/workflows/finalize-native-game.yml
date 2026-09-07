@@ -1,0 +1,33 @@
+name: finalize-native-game
+
+on:
+  push:
+    branches: [native-game-engine]
+
+permissions:
+  contents: write
+
+jobs:
+  finalize:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: native-game-engine
+          fetch-depth: 0
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Finalize canonical game.js
+        run: node scripts/finalize-native-game.cjs
+      - name: Commit canonical game.js
+        run: |
+          git add game.js
+          if git diff --cached --quiet; then
+            echo "game.js already canonical"
+            exit 0
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git commit -m "Finalize native game runtime"
+          git push origin HEAD:native-game-engine
