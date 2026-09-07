@@ -1,14 +1,14 @@
 'use strict';
 (()=>{
-  // La population suit désormais la zone : l'open space est surtout peuplé de consultants,
-  // la direction bascule vers les internes/business, et le séminaire reste majoritairement interne.
-  // Chaque niveau utilise des silhouettes/couleurs distinctes : pas de clone exact simplement recoloré.
+  // La population suit désormais la zone avec douze personnes distinctes sur toute la partie :
+  // aucun nom ni modèle générique ne réapparaît dans un autre niveau.
+  // Open space : surtout consultants. Direction : surtout internes/business. Séminaire : internes.
   // On ne touche pas aux archétypes de gameplay (junior/senior/union/runner) : seuls le personnage,
   // sa tenue et ses dialogues changent afin de garder la difficulté existante.
   const rosters=[
     ['hugo','nora','hugo2','lea'],
-    ['nora2','basile','lea','basile2'],
-    ['lea2','basile2','nora2','basile']
+    ['nora2','basile','basile2','lea2'],
+    ['sarah','mehdi','elodie','antoine']
   ];
   const identities=[
     {

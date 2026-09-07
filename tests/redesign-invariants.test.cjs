@@ -37,16 +37,31 @@ test('JUJU guards rooftop access rather than CHACHA',()=>{
   lacks(juju,'JUJU BLOQUE CHACHA');
 });
 
-test('level populations and identities follow the hierarchy',()=>{
+test('all twelve generic NPC slots are unique across the three levels',()=>{
   const population=read('population-levels.js');
-  has(population,"['hugo','nora','hugo2','lea']");
-  has(population,"['nora2','basile','lea','basile2']");
-  has(population,"['lea2','basile2','nora2','basile']");
+  const expected=[
+    "['hugo','nora','hugo2','lea']",
+    "['nora2','basile','basile2','lea2']",
+    "['sarah','mehdi','elodie','antoine']"
+  ];
+  for(const roster of expected)has(population,roster);
+  const keys=['hugo','nora','hugo2','lea','nora2','basile','basile2','lea2','sarah','mehdi','elodie','antoine'];
+  assert.equal(new Set(keys).size,12);
   has(population,"hud:'OPEN SPACE · LCP7'");
   has(population,"hud:'DIRECTION TS · PAYS DE LA LOIRE'");
   has(population,"hud:'POWER UP TOUR · GRAND OUEST'");
   has(population,"role:'JUJU · DIRECTEUR TECHNOLOGIES SERVICES PAYS DE LA LOIRE'");
   has(population,"role:'RORO · DIRECTEUR RÉGION GRAND OUEST'");
+});
+
+test('the final seminar gets four additional unique business characters',()=>{
+  const preload=read('unique-cast-preload.js'),html=read('index.html');
+  for(const [key,name] of [['sarah','Sarah'],['mehdi','Mehdi'],['elodie','Élodie'],['antoine','Antoine']]){
+    has(preload,`CAST.${key}={name:'${name}'`);
+  }
+  has(preload,"category:'business'");
+  has(html,'unique-cast-preload.js?v=1');
+  assert.ok(html.indexOf('unique-cast-preload.js?v=1')<html.indexOf('game-loader.js?v=22'),'extra cast must load before game-loader');
 });
 
 test('consultants and internal/business NPCs keep distinct visual and dialogue families',()=>{
