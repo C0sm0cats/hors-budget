@@ -15,7 +15,7 @@ if(!polish.includes("className='rodolphe-safe'")){
   writeFileSync('polish.js',polish);
 }
 let html=readFileSync('index.html','utf8');
-html=html.replace('polish.js?v=24','polish.js?v=25').replace('  <script src="roles-polish.js?v=7"></script>\n','');
+html=html.replace('polish.js?v=24','polish.js?v=25').replace('<script src="roles-polish.js?v=7"></script>\n','');
 writeFileSync('index.html',html);
 let cache=readFileSync('tests/cache-version.test.cjs','utf8');
 cache=cache.replace("assert.ok(html.includes('game.js?v=43'));assert.ok(html.includes('polish.js?v=24'));assert.ok(html.includes('roles-polish.js?v=7'));","assert.ok(html.includes('game.js?v=43'));assert.ok(html.includes('polish.js?v=25'));assert.equal(html.includes('roles-polish.js'),false);")
