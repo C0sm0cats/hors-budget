@@ -9,3 +9,10 @@
 .office-reading select{display:block;margin:0 auto 14px;padding:7px 12px;border:1px solid #839ba6;border-radius:6px;background:#213b4e;color:#fff5d8;font:600 14px system-ui}.office-reading select[hidden]{display:none}
 
 .main-banter[data-paired=true]::after{display:none}
+
+/* Final-level RORO presentation ownership */
+.rodolphe-glasses{transform:translate(-50%,-50%)!important}
+.rodolphe-glasses i{border-width:3px!important;background:#8fb0bdcc!important}
+.rodolphe-glasses b{height:3px!important}
+.rodolphe-name-fix{margin-top:-18px!important;font-size:11px!important;font-weight:900!important}
+body:not([data-level="2"]) .rodolphe-glasses,body:not([data-level="2"]) .rodolphe-name-fix,body:not([data-level="2"]) .rodolphe-safe,body:not([data-level="2"]) .main-banter.charline,body:not([data-level="2"]) .main-banter.rodolphe{display:none!important}
