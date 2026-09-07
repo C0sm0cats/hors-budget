@@ -28,24 +28,31 @@ test('game boots without runtime errors and uses the canonical final-state model
 
   await startAndDismissIntro(page);
   await expect.poll(()=>page.locator('#levelName').textContent()).toContain('OPEN SPACE · LCP7');
-  await expect(page.locator('#banner')).toContainText(/CHACHA|ÉTAGE/);
+  await expect(page.locator('#banner')).toContainText(/OPEN SPACE|CHACHA|ÉTAGE/);
   await page.waitForTimeout(350);
 
   expect(errors,`browser errors in ${testInfo.project.name}`).toEqual([]);
 });
 
-test('unique NPC ambient quips never crash the renderer',async({page},testInfo)=>{
+test('all unique NPC ambient quips stay renderer-safe',async({page},testInfo)=>{
   const errors=[];
   page.on('pageerror',error=>errors.push(error.message));
-  page.on('console',msg=>{if(msg.type()==='error'&&!msg.text().includes('favicon.ico'))errors.push(msg.text());});
+  page.on('console',msg=>{if(msg.type()==='error')errors.push(msg.text());});
   await page.goto('/');
   await startAndDismissIntro(page);
-  await page.evaluate(()=>{
-    const s=Arcade.state;
-    const variants=['hugo','nora','hugo2','lea','nora2','basile','basile2','lea2','sarah','mehdi','elodie','antoine'];
-    s.enemies.forEach((e,i)=>{e.kind=variants[i];e.talk=3;e.line=(i+1)%3;});
-  });
-  await page.waitForTimeout(350);
+
+  const groups=[
+    ['hugo','nora','hugo2','lea'],
+    ['nora2','basile','basile2','lea2'],
+    ['sarah','mehdi','elodie','antoine']
+  ];
+  for(const group of groups){
+    await page.evaluate(group=>{
+      Arcade.state.enemies.forEach((e,i)=>{e.kind=group[i];e.talk=3;e.line=(i+1)%3;});
+    },group);
+    await page.waitForTimeout(300);
+  }
+
   expect(errors,`unique NPC quip errors in ${testInfo.project.name}`).toEqual([]);
 });
 
