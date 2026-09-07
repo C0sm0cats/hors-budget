@@ -56,10 +56,9 @@
 
   function syncSafe(){
     let s=null;try{s=Arcade?.state;}catch{}
-    const visible=s&&s.boss&&renderer&&!['help','records','paused','won','lost','title'].includes(s.phase);
+    const visible=s&&s.level===2&&s.boss&&renderer&&!['help','records','paused','won','lost','title'].includes(s.phase);
     if(!visible){safe.hidden=true;requestAnimationFrame(syncSafe);return;}
-    // Le coffre reste volontairement au dernier étage, côté gauche, dans les 3 niveaux.
-    // Aux niveaux 1 et 2 il est près de RORO ; au niveau 3 il reste à gauche même si le boss passe à droite.
+    // Le coffre BUDGET appartient à RORO : il n'existe que dans la zone finale du Power UP Tour.
     const x=-7.35,y=surface(4,x)+.72,z=.36;
     const pos=renderer.project(x,y,z),left=renderer.project(x-.45,y,z),right=renderer.project(x+.45,y,z);
     if(!pos||!Number.isFinite(pos.x)||pos.x<-80||pos.x>innerWidth+80||pos.y<-80||pos.y>innerHeight+80){safe.hidden=true;requestAnimationFrame(syncSafe);return;}
