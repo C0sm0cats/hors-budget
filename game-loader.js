@@ -6,6 +6,14 @@
   src=src.replace("basile:{name:'Basile',shirt:'#9b79a6',hair:'#573c31',skin:'#bf8d69',beard:true","basile:{name:'Basile',shirt:'#9b79a6',hair:'#1d1715',skin:'#8b5b3e',beard:true");
   src=src.replace("const LEVELS=", "CAST.julien={name:'Julien',shirt:'#365b78',hair:'#49362d',skin:'#dfad86',tie:'#79b9c7'};\nconst LEVELS=");
 
+  // Ordre de mission et Swile partageaient la bande murale du bureau de Kévin.
+  // On les descend sur le mur du rez-de-chaussée, dans deux emplacements réellement dégagés.
+  const orderDecor="{x:-6.4,y:4.45,w:3.2,h:.68,title:'ORDRE DE MISSION'";
+  const swileDecor="{x:5.1,y:4.45,w:2.7,h:.68,title:'SWILE'";
+  if(!src.includes(orderDecor)||!src.includes(swileDecor))throw new Error('Décors Ordre de mission / Swile introuvables');
+  src=src.replace(orderDecor,"{x:-2.45,y:1.45,w:3.2,h:.68,title:'ORDRE DE MISSION'");
+  src=src.replace(swileDecor,"{x:3.15,y:1.45,w:2.7,h:.68,title:'SWILE'");
+
   src=src.replace("for(let floor=0;floor<4;floor++)for(const x of [-5,2,6]){const y=surface(floor,x);","for(let floor=0;floor<4;floor++)for(const x of [-5,2,6]){const y=surface(floor,x);if((floor===1&&level<2)||(level===2&&(floor===1||floor===2)))continue;");
 
   src=src.replace("world.box(x,5.9,-.8,.22,12,.25,'#bd9b59');","if(Math.abs(x)===3.8){world.box(x,1.4,-.8,.22,3,.25,'#bd9b59');world.box(x,9,-.8,.22,6,.25,'#bd9b59');}else world.box(x,5.9,-.8,.22,12,.25,'#bd9b59');");
