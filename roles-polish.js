@@ -31,13 +31,22 @@
   }
   requestAnimationFrame(polishBubble);
 
-  if(typeof deliveryScene==='function'){
-    deliveryScene=function(remaining){
-      const t=12-remaining,stage=t<2.5?'request':t<5.5?'refusal':t<8?'order':'delivery';
-      return {t,stage,stamp:stage==='refusal'?cap((t-2.5)/.35,0,1):stage==='order'?cap((t-5.5)/.35,0,1):0,
-        text:stage==='request'?'SALARIÉE : « Une augmentation de 3 % ? »':stage==='refusal'?'RORO : « 3 % ? Vous voulez mettre la marge en danger ? »':stage==='order'?'RORO : « Deux fauteuils massants. Ça, c’est stratégique. »':'SALARIÉE : « Ah. Donc le budget existe quand il a des roulettes. »'};
-    };
+  // RORO est maintenant uniquement le boss final : l'ancienne scène secondaire
+  // « augmentation refusée / fauteuils massants » ne doit plus se déclencher.
+  // Le moteur conserve encore son ancien état comedy pour compatibilité, mais on le neutralise
+  // dès la création de chaque niveau afin que ni la scène ni ses accessoires ne soient rendus.
+  let deliveryState=null;
+  function disableLegacyDelivery(){
+    let s=null;try{s=Arcade?.state;}catch{}
+    if(s&&s!==deliveryState){
+      deliveryState=s;
+      if(s.comedy){s.comedy.delivery=0;s.comedy.delivered=true;}
+    }else if(s?.comedy?.delivery){
+      s.comedy.delivery=0;s.comedy.delivered=true;
+    }
+    requestAnimationFrame(disableLegacyDelivery);
   }
+  requestAnimationFrame(disableLegacyDelivery);
 
   const proto=CanvasRenderingContext2D.prototype,originalFillText=proto.fillText;
   const replacements={
