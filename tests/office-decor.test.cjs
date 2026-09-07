@@ -20,5 +20,5 @@ test('all office boards have complete pen strokes and sit in front of their back
       assert.equal(covering,false,b.name+' board hidden by its backing');
     }
   }
-  assert.deepEqual(Array.from(ctx.OfficeBoards,b=>b.name),['Rodolphe','Charline']);
+  assert.deepEqual(Array.from(ctx.OfficeBoards,b=>b.name),['RORO','CHACHA']);
 });
