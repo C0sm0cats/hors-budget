@@ -33,6 +33,11 @@ jobs:
           h=i.read_text()
           assert 'game.js?v=43' in h
           i.write_text(h.replace('game.js?v=43','game.js?v=44',1))
+          for name in ['tests/cache-version.test.cjs','tests/redesign-invariants.test.cjs']:
+              t=Path(name)
+              x=t.read_text()
+              assert 'game.js?v=43' in x
+              t.write_text(x.replace('game.js?v=43','game.js?v=44'))
           Path('tests/storage-migration.test.cjs').write_text("""const test=require('node:test');\nconst assert=require('node:assert/strict');\nconst fs=require('node:fs');\nconst game=fs.readFileSync('game.js','utf8');\nconst index=fs.readFileSync('index.html','utf8');\ntest('save storage uses canonical key with legacy migration',()=>{\n  assert.match(game,/STORAGE='hors-budget\\.arcade\\.v1'/);\n  assert.match(game,/LEGACY_STORAGE='mutine\\.kevin\\.arcade\\.v3'/);\n  assert.match(game,/stored\\|\\|legacy/);\n  assert.match(game,/localStorage\\.setItem\\(STORAGE,legacy\\)/);\n  assert.match(index,/game\\.js\\?v=44/);\n});\n""")
           PY
           npm test
@@ -41,6 +46,6 @@ jobs:
           rm .github/workflows/oneshot-save-key.yml
           git config user.name github-actions[bot]
           git config user.email 41898282+github-actions[bot]@users.noreply.github.com
-          git add game.js index.html tests/storage-migration.test.cjs .github/workflows/oneshot-save-key.yml
+          git add game.js index.html tests/cache-version.test.cjs tests/redesign-invariants.test.cjs tests/storage-migration.test.cjs .github/workflows/oneshot-save-key.yml
           git commit -m "Migrate legacy save storage safely"
           git push origin HEAD:save-key-migration
