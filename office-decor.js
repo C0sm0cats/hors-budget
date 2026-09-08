@@ -178,12 +178,6 @@ const glyphs={
         c.beginPath();c.moveTo(.2,-.62);c.lineTo(-.22,-.08);c.quadraticCurveTo(-.02,.2,.2,-.02);c.lineTo(.36,-.18);c.lineTo(.68,.42);c.moveTo(-.46,.22);c.lineTo(-.12,.7);c.moveTo(-.2,.08);c.lineTo(.2,.62);c.moveTo(-.72,-.54);c.lineTo(-.62,.24);c.moveTo(.78,-.4);c.lineTo(.68,.42);c.stroke();c.restore();
         c.fillStyle='#df9aba';c.font='bold '+H*.12+'px system-ui';c.fillText('1 TALENT =',W/2,H*.71,W*.9);c.fillText('1 PRIME',W/2,H*.88,W*.9);
       });
-      poster(4.65,4.43,1.05,1.24,(c,W,H)=>{
-        c.fillStyle='#243b46';c.fillRect(0,0,W,H);c.strokeStyle='#647c81';c.lineWidth=8;c.strokeRect(10,10,W-20,H-20);
-        c.fillStyle='#eee9d8';c.textAlign='center';c.font='bold '+H*.12+'px system-ui';c.fillText('BUDGET',W/2,H*.22,W*.9);c.fillText('VALIDÉ',W/2,H*.40,W*.9);
-        c.strokeStyle='#a8d477';c.lineWidth=H*.045;c.beginPath();c.moveTo(W*.3,H*.69);c.lineTo(W*.46,H*.81);c.lineTo(W*.76,H*.52);c.stroke();
-        c.lineWidth=H*.018;c.strokeRect(W*.2,H*.58,W*.5,H*.30);
-      });
     }
   }
   globalThis.OfficeDecor={draw};
