@@ -40,6 +40,9 @@ Des commandes tactiles sont disponibles sur petit écran.
 - Imprimante à CRA, KPI, ascenseur du COMEX et petits fours volants selon les niveaux.
 - Photocopieurs et buffet rebondissants pour prendre des raccourcis.
 - Café accélérateur, **Bon de commande** protecteur et pluie de slides.
+- Lire le tableau de CHACHA révèle sa destination et déclenche une réaction de KÉKÉ, une fois par partie.
+- Des repères discrets signalent les tableaux et raccourcis utilisables à proximité ; ils restent fixes avec les animations réduites.
+- JUJU et RORO préparent visiblement leurs projectiles avant de tirer.
 - Boss intermédiaire JUJU : renvoyez ses KPI pour débloquer le rooftop.
 - Boss final RORO : renvoyez ses dossiers lorsqu’il annonce « Bénéfices records » ; les deux premiers impacts sont des arbitrages, le dernier débloque réellement le budget.
 - Chronos par zone, médailles et défis : Sans PowerPoint, Zéro réunion, Café uniquement, Sans une égratignure.
