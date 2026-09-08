@@ -42,6 +42,7 @@ jobs:
           p.write_text(s.replace('game.js?v=45','game.js?v=46',1))
           for name in ['tests/cache-version.test.cjs','tests/redesign-invariants.test.cjs']:
             p=Path(name); s=p.read_text(); p.write_text(s.replace('game.js?v=45','game.js?v=46'))
+          p=Path('tests/redesign-invariants.test.cjs'); s=p.read_text(); p.write_text(s.replace("person(moving,'charline'","person(moving,'chacha'"))
           Path('tests/canonical-cast-keys.test.cjs').write_text("""const test=require('node:test');\nconst assert=require('node:assert/strict');\nconst fs=require('node:fs');\nconst game=fs.readFileSync('game.js','utf8');\ntest('KÉKÉ and CHACHA use canonical runtime cast keys',()=>{\n  assert.match(game,/CAST=\\{keke:/);\n  assert.match(game,/,chacha:\\{/);\n  assert.doesNotMatch(game,/CAST=\\{kevin:/);\n  assert.doesNotMatch(game,/,charline:\\{/);\n  assert.doesNotMatch(game,/kind==='kevin'|kind==='charline'|charlineIn|charlineX|kevinX/);\n  assert.match(game,/chachaIn/);\n  assert.match(game,/person\\(moving,'keke'/);\n  assert.match(game,/person\\(moving,'chacha'/);\n});\n""")
           Path('.github/workflows/tmp-cast-keys.yml').unlink()
           PY
