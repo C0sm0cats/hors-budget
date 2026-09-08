@@ -4,13 +4,6 @@
   const lowPerf=(navigator.hardwareConcurrency&&navigator.hardwareConcurrency<=4)||(navigator.deviceMemory&&navigator.deviceMemory<=4)||innerWidth<700;
   if(lowPerf)document.body.classList.add('perf-low');
 
-  const contrastButton=document.getElementById('contrastButton');
-  contrastButton?.addEventListener('click',()=>{
-    const on=document.body.classList.toggle('high-contrast');
-    contrastButton.setAttribute('aria-pressed',String(on));
-    contrastButton.textContent=on?'◐ Contraste +':'◐ Contraste';
-  });
-
   const bossHud=document.createElement('div');
   bossHud.className='boss-hud';
   bossHud.hidden=true;
