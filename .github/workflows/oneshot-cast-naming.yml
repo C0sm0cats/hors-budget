@@ -53,7 +53,10 @@ jobs:
           for name in ['tests/cache-version.test.cjs','tests/redesign-invariants.test.cjs','tests/storage-migration.test.cjs']:
               t=Path(name)
               x=t.read_text()
-              x=x.replace('game.js?v=44','game.js?v=45')
+              x=x.replace('v=44','v=45')
+              x=x.replace('charlineIn','chachaIn')
+              x=x.replace('charlineX','chachaX')
+              x=x.replace('kevinX','kekeX')
               x=x.replace("person(moving,'charline'","person(moving,'chacha'")
               x=x.replace("person(moving,'kevin'","person(moving,'keke'")
               t.write_text(x)
