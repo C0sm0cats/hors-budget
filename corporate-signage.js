@@ -102,13 +102,6 @@
     text(c,'SUMMER PARTY',W*.08,H*.28,H*.18,'#fff1db',W*.62);text(c,'LE POWER UP TOUR',W*.08,H*.55,H*.1,'#f6d67e',W*.68);text(c,'ROOFTOP · GRAND OUEST',W*.08,H*.76,H*.065,'#f4c8d7',W*.64,800);
   }
 
-  function cooptation(c,W,H){
-    c.fillStyle='#24384a';c.fillRect(0,0,W,H);
-    c.fillStyle='#f1c75b';for(const [x,y] of [[.2,.3],[.5,.22],[.78,.35],[.34,.7],[.68,.72]]){c.beginPath();c.arc(W*x,H*y,H*.065,0,Math.PI*2);c.fill();}
-    c.strokeStyle='#f1c75b';c.lineWidth=4;c.beginPath();c.moveTo(W*.2,H*.3);c.lineTo(W*.5,H*.22);c.lineTo(W*.78,H*.35);c.moveTo(W*.5,H*.22);c.lineTo(W*.34,H*.7);c.lineTo(W*.68,H*.72);c.stroke();
-    text(c,'COOPTATION',W*.5,H*.48,H*.13,'#fff1d8',W*.82,900,'center');text(c,'RECOMMANDEZ UN TALENT',W*.5,H*.83,H*.065,'#f1c75b',W*.82,800,'center');
-  }
-
   function purchaseOrder(c,W,H){
     c.fillStyle='#f5f1e4';c.fillRect(0,0,W,H);c.fillStyle='#294b5c';c.fillRect(0,0,W,H*.18);
     text(c,'BON DE COMMANDE',W*.5,H*.1,H*.065,'#fff7df',W*.9,900,'center');
@@ -120,7 +113,6 @@
   function drawLevel0(mesh,sign){
     band(mesh,1.45,'#29495b');
     panel(mesh,sign,-6.6,1.45,4.8,.9,site);panel(mesh,sign,-1.25,1.45,3.6,.9,mission,'#465b62');panel(mesh,sign,4.45,1.45,2.8,.9,swile,'#7b4f69');
-    panel(mesh,sign,-2.4,4.65,2.5,.68,cooptation,'#3d4d5d');
     panel(mesh,sign,4.65,4.43,1.05,1.24,purchaseOrder,'#586a70');
     band(mesh,10.42,'#29495b');
     panel(mesh,sign,-6.7,10.42,3.0,.82,concur);panel(mesh,sign,-3.1,10.42,3.0,.82,peopleDoc);panel(mesh,sign,.55,10.42,3.0,.82,chronotime);panel(mesh,sign,5.65,10.42,4.0,.82,support);
