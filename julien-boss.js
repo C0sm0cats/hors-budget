@@ -2,7 +2,7 @@
 (()=>{
   const states=new WeakMap();
   const X=5.35;
-  function state(s){let b=states.get(s);if(!b){b={hp:3,flash:0,nextAttack:performance.now()+1800,lastNow:performance.now()};states.set(s,b);}return b;}
+  function state(s){let b=states.get(s);if(!b){b={hp:3,flash:0,nextAttack:(s.levelTime||0)+1.8,lastNow:s.levelTime||0};states.set(s,b);}return b;}
   const defeated=s=>state(s).hp<=0;
   globalThis.JulienBoss={x:X,state,defeated};
 
@@ -13,22 +13,23 @@
     if(b.hp<=0){s.gate=2.6;s.hostile=s.hostile.filter(h=>h.julien!==true);}
   }
 
-  function bossTick(s,now){
-    const b=state(s),dt=Math.min(.05,Math.max(0,(now-b.lastNow)/1000));b.lastNow=now;b.flash=Math.max(0,b.flash-dt);
+  function bossTick(s){
+    const now=s.levelTime||0;
+    const b=state(s),dt=Math.min(.05,Math.max(0,now-b.lastNow));b.lastNow=now;b.flash=Math.max(0,b.flash-dt);
     const y=surface(4,X);
     for(const h of s.hostile){
       if(h.julien&&h.reflected&&h.life>0&&h.x>=X-.45){h.life=0;hitBoss(s,b);}
     }
     if(b.hp>0&&now>=b.nextAttack&&s.phase==='playing'&&s.player.floor>=3){
-      b.nextAttack=now+1900+Math.random()*850;
+      b.nextAttack=now+1.9+Math.random()*.85;
       s.hostile.push({x:X-.48,y:y+.82,vx:-3.5,life:5,kind:'kpi',julien:true,reflected:false});
     }
   }
 
-  function loop(now){
+  function loop(){
     let s=null;try{s=Arcade?.state;}catch{}
-    if(!s||!renderer||s.level!==1||s.phase!=='playing'){requestAnimationFrame(loop);return;}
-    bossTick(s,now);
+    if(!s||!renderer||s.level!==1||s.phase!=='playing'||s.comedy?.miracle>0||s.hitStop>0){requestAnimationFrame(loop);return;}
+    bossTick(s);
     const b=state(s);
 
     if(b.hp>0&&s.player.floor===4&&Math.abs(s.player.x-X)<2.2){
