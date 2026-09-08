@@ -171,9 +171,12 @@ const glyphs={
       poster(-4.7,4.56,1.55,1.24,(c,W,H)=>{
         c.fillStyle='#353445';c.fillRect(0,0,W,H);c.fillStyle='#252f3d';c.fillRect(0,0,W,H*.22);
         c.fillStyle='#e5dadd';c.font='bold '+H*.12+'px system-ui';c.textAlign='center';c.fillText('COOPTATION',W/2,H*.16,W*.9);
-        c.strokeStyle='#cd83a8';c.lineWidth=H*.023;
-        for(const dx of [-.17,0,.17]){c.beginPath();c.arc(W*(.5+dx),H*.34,H*.043,0,7);c.moveTo(W*(.5+dx),H*.39);c.lineTo(W*(.5+dx),H*.52);c.moveTo(W*(.5+dx)-H*.05,H*.45);c.lineTo(W*(.5+dx)+H*.05,H*.45);c.stroke();}
-        c.fillStyle='#df9aba';c.font='bold '+H*.12+'px system-ui';c.fillText('1 TALENT =',W/2,H*.71,W*.9);c.fillText('1 PRIME ?',W/2,H*.88,W*.9);
+        // Font-independent handshake icon.
+        c.save();c.translate(W*.5,H*.41);c.scale(W*.30,H*.18);
+        c.strokeStyle='#df9aba';c.fillStyle='#353445';c.lineWidth=.09;c.lineJoin='round';c.lineCap='round';
+        c.beginPath();c.moveTo(-1,-.35);c.lineTo(-.55,-.72);c.lineTo(-.12,-.52);c.lineTo(.2,-.62);c.lineTo(.62,-.32);c.lineTo(1,-.5);c.lineTo(1,.25);c.lineTo(.68,.42);c.lineTo(.25,.82);c.lineTo(-.12,.7);c.lineTo(-.62,.24);c.lineTo(-1,.38);c.closePath();c.fill();c.stroke();
+        c.beginPath();c.moveTo(.2,-.62);c.lineTo(-.22,-.08);c.quadraticCurveTo(-.02,.2,.2,-.02);c.lineTo(.36,-.18);c.lineTo(.68,.42);c.moveTo(-.46,.22);c.lineTo(-.12,.7);c.moveTo(-.2,.08);c.lineTo(.2,.62);c.moveTo(-.72,-.54);c.lineTo(-.62,.24);c.moveTo(.78,-.4);c.lineTo(.68,.42);c.stroke();c.restore();
+        c.fillStyle='#df9aba';c.font='bold '+H*.12+'px system-ui';c.fillText('1 TALENT =',W/2,H*.71,W*.9);c.fillText('1 PRIME',W/2,H*.88,W*.9);
       });
       poster(4.65,4.43,1.05,1.24,(c,W,H)=>{
         c.fillStyle='#243b46';c.fillRect(0,0,W,H);c.strokeStyle='#647c81';c.lineWidth=8;c.strokeRect(10,10,W-20,H-20);
