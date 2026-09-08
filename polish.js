@@ -148,7 +148,15 @@
       cinematic('levelIntro',a,b,c,0,true,true);
     }
 
-    if(s.level===2&&s.boss.active&&s.boss.hp>0){
+    if(s.level===1&&s.player.floor>=3&&['playing','paused'].includes(s.phase)&&globalThis.JulienBoss){
+      const hp=globalThis.JulienBoss.state(s).hp;
+      bossHud.hidden=false;
+      bossHud.querySelector('.boss-hud-title span').textContent=hp>0?'JUJU · ACCÈS ROOFTOP VERROUILLÉ':'JUJU · ACCÈS ROOFTOP OUVERT';
+      bossHpText.textContent=hp+' / 3 KPI';
+      bossFill.style.width=(hp/3*100)+'%';
+      bossHud.classList.toggle('vulnerable',hp===0);
+    }else if(s.level===2&&s.boss.active&&s.boss.hp>0){
+      bossHud.querySelector('.boss-hud-title span').textContent='RORO · DIRECTEUR RÉGION GRAND OUEST';
       bossHud.hidden=false;
       bossFill.style.width=(s.boss.hp/3*100)+'%';
       bossHpText.textContent=s.boss.hp+' / 3';
