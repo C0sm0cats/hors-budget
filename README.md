@@ -66,6 +66,6 @@ Personnages et situations fictifs ; satire des clichés du conseil informatique.
 Avec Node.js :
 
 - `npm test` lance les tests de logique et les invariants de refonte ;
-- `npm run test:e2e` lance les smoke tests Playwright desktop et mobile, dont le parcours canonique complet LCP7 → JUJU → Power UP Tour → RORO → victoire, ainsi que pause/reprise, lecture des tableaux et commandes tactiles.
+- `npm run test:e2e` lance les smoke tests Playwright desktop et mobile, dont le parcours canonique complet LCP7 → JUJU → Power UP Tour → RORO → victoire, ainsi que pause/reprise, lecture des tableaux, commandes tactiles et ouverture hors ligne par `file://`.
 
 Node.js n’est pas nécessaire pour jouer.
