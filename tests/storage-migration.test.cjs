@@ -8,5 +8,5 @@ test('save storage uses canonical key with legacy migration',()=>{
   assert.match(game,/LEGACY_STORAGE='mutine\.kevin\.arcade\.v3'/);
   assert.match(game,/stored\|\|legacy/);
   assert.match(game,/localStorage\.setItem\(STORAGE,legacy\)/);
-  assert.match(index,/game\.js\?v=44/);
+  assert.match(index,/game\.js\?v=45/);
 });
