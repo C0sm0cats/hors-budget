@@ -6,6 +6,7 @@ const readme=fs.readFileSync('README.md','utf8');
 test('public metadata describes the current multi-file game coherently',()=>{
   assert.match(index,/<meta name="description" content="[^"]+">/);
   assert.match(index,/<link rel="canonical" href="https:\/\/c0sm0cats\.github\.io\/hors-budget\/">/);
+  assert.match(index,/<body data-phase="title">/);
   assert.match(readme,/HTML, CSS, JavaScript, assets graphiques/);
   assert.match(readme,/game\.js.*moteur canonique/);
   assert.doesNotMatch(readme,/un seul fichier HTML/);
