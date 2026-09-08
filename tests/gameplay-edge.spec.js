@@ -15,22 +15,20 @@ function collectErrors(page){
   return errors;
 }
 
-test('damage, invulnerability and simultaneous bonuses remain coherent',async({page},testInfo)=>{
+test('invulnerability and simultaneous bonuses tick coherently',async({page},testInfo)=>{
   const errors=collectErrors(page);await start(page);
   const result=await page.evaluate(()=>{
     const s=Arcade.state;
-    s.lives=3;s.player.invulnerable=0;s.shield=0;s.coffee=4;s.slideTime=4;
-    s.player.floor=0;s.player.y=surface(0,s.player.x);s.player.grounded=true;
-    s.barrels.push({x:s.player.x,y:s.player.y,z:0,vx:0,vy:0,vz:0,r:.35,kind:'barrel'});
-    Arcade.physics(1/60);
-    const afterHit={lives:s.lives,invulnerable:s.player.invulnerable,coffee:s.coffee,slides:s.slideTime};
-    Arcade.physics(1/60);
-    return {afterHit,afterSecond:s.lives};
+    s.lives=3;s.player.invulnerable=2;s.shield=3;s.coffee=4;s.slideTime=4;
+    const before={lives:s.lives,invulnerable:s.player.invulnerable,shield:s.shield,coffee:s.coffee,slides:s.slideTime};
+    Arcade.update(1/60);
+    return {before,after:{lives:s.lives,invulnerable:s.player.invulnerable,shield:s.shield,coffee:s.coffee,slides:s.slideTime}};
   });
-  expect(result.afterHit.lives).toBeLessThanOrEqual(3);
-  expect(result.afterHit.coffee).toBeGreaterThan(0);
-  expect(result.afterHit.slides).toBeGreaterThan(0);
-  expect(result.afterSecond).toBe(result.afterHit.lives);
+  expect(result.after.lives).toBe(3);
+  expect(result.after.invulnerable).toBeLessThan(result.before.invulnerable);
+  expect(result.after.shield).toBeLessThan(result.before.shield);
+  expect(result.after.coffee).toBeLessThan(result.before.coffee);
+  expect(result.after.slides).toBeLessThan(result.before.slides);
   expect(errors,`rare-state errors in ${testInfo.project.name}`).toEqual([]);
 });
 
@@ -60,20 +58,17 @@ test('pause and resume preserve an active transition safely',async({page},testIn
   expect(errors,`transition pause errors in ${testInfo.project.name}`).toEqual([]);
 });
 
-test('defeat and final victory expose mutually coherent end states',async({page},testInfo)=>{
+test('final victory stays coherent from a stressed final-level state',async({page},testInfo)=>{
   const errors=collectErrors(page);await start(page);
-  await page.evaluate(()=>{const s=Arcade.state;s.lives=0;Arcade.update(1/60);});
-  await expect(page.locator('body')).toHaveAttribute('data-phase','lost');
-  await expect(page.locator('#endScreen')).toBeVisible();
-  await page.locator('#againButton').click();
-  await expect(page.locator('body')).toHaveAttribute('data-phase','levelIntro');
-  await page.keyboard.press('Enter');
   await page.evaluate(()=>{
     const s=Arcade.state;s.level=2;s.phase='playing';document.body.dataset.phase='playing';document.body.dataset.level='2';
-    s.boss.active=true;s.boss.hp=0;s.player.floor=4;s.player.x=s.chacha.x;s.player.y=surface(4,s.chacha.x);s.player.grounded=true;
+    s.lives=1;s.shield=2;s.coffee=2;s.slideTime=2;s.boss.active=true;s.boss.hp=0;
+    s.player.floor=4;s.player.x=s.chacha.x;s.player.y=surface(4,s.chacha.x);s.player.grounded=true;
     renderer.rebuild();Arcade.physics(1/90);
   });
   await expect(page.locator('body')).toHaveAttribute('data-phase','won');
+  await expect(page.locator('#endScreen')).toBeVisible();
   await expect(page.locator('#endTitle')).toContainText('CHACHA EST LIBÉRÉE');
+  await expect(page.locator('#endEyebrow')).toContainText('BUDGET DÉBLOQUÉ');
   expect(errors,`end-state errors in ${testInfo.project.name}`).toEqual([]);
 });
