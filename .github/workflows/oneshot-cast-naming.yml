@@ -53,9 +53,10 @@ jobs:
           for name in ['tests/cache-version.test.cjs','tests/redesign-invariants.test.cjs','tests/storage-migration.test.cjs']:
               t=Path(name)
               x=t.read_text()
-              if 'game.js?v=44' in x:
-                  x=x.replace('game.js?v=44','game.js?v=45')
-                  t.write_text(x)
+              x=x.replace('game.js?v=44','game.js?v=45')
+              x=x.replace("person(moving,'charline'","person(moving,'chacha'")
+              x=x.replace("person(moving,'kevin'","person(moving,'keke'")
+              t.write_text(x)
           Path('tests/cast-naming.test.cjs').write_text("""const test=require('node:test');\nconst assert=require('node:assert/strict');\nconst fs=require('node:fs');\nconst game=fs.readFileSync('game.js','utf8');\nconst index=fs.readFileSync('index.html','utf8');\ntest('canonical runtime cast keys use KÉKÉ and CHACHA naming',()=>{\n  assert.match(game,/const CAST=\\{keke:/);\n  assert.match(game,/,chacha:\\{/);\n  assert.doesNotMatch(game,/CAST=\\{kevin:/);\n  assert.doesNotMatch(game,/kind==='kevin'/);\n  assert.doesNotMatch(game,/kind==='charline'/);\n  assert.doesNotMatch(game,/charlineIn|charlineX|kevinX/);\n  assert.match(game,/person\\(moving,'keke'/);\n  assert.match(game,/person\\(moving,'chacha'/);\n  assert.match(index,/game\\.js\\?v=45/);\n  assert.match(game,/LEGACY_STORAGE='mutine\\.kevin\\.arcade\\.v3'/);\n});\n""")
           PY
           npm test
