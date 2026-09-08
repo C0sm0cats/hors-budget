@@ -1,0 +1,46 @@
+name: one-shot save key migration
+on:
+  push:
+    branches: [save-key-migration]
+permissions:
+  contents: write
+jobs:
+  migrate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: save-key-migration
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Patch storage key and tests
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          p=Path('game.js')
+          s=p.read_text()
+          old="const STORAGE='mutine.kevin.arcade.v3';"
+          new="const STORAGE='hors-budget.arcade.v1',LEGACY_STORAGE='mutine.kevin.arcade.v3';"
+          assert old in s
+          s=s.replace(old,new,1)
+          old2="try{const saved=JSON.parse(localStorage.getItem(STORAGE)||'null');"
+          new2="try{const stored=localStorage.getItem(STORAGE),legacy=localStorage.getItem(LEGACY_STORAGE),raw=stored||legacy,saved=JSON.parse(raw||'null');if(!stored&&legacy)localStorage.setItem(STORAGE,legacy);"
+          assert old2 in s
+          s=s.replace(old2,new2,1)
+          p.write_text(s)
+          i=Path('index.html')
+          h=i.read_text()
+          assert 'game.js?v=43' in h
+          i.write_text(h.replace('game.js?v=43','game.js?v=44',1))
+          Path('tests/storage-migration.test.cjs').write_text("""const test=require('node:test');\nconst assert=require('node:assert/strict');\nconst fs=require('node:fs');\nconst game=fs.readFileSync('game.js','utf8');\nconst index=fs.readFileSync('index.html','utf8');\ntest('save storage uses canonical key with legacy migration',()=>{\n  assert.match(game,/STORAGE='hors-budget\\.arcade\\.v1'/);\n  assert.match(game,/LEGACY_STORAGE='mutine\\.kevin\\.arcade\\.v3'/);\n  assert.match(game,/stored\\|\\|legacy/);\n  assert.match(game,/localStorage\\.setItem\\(STORAGE,legacy\\)/);\n  assert.match(index,/game\\.js\\?v=44/);\n});\n""")
+          PY
+          npm test
+      - name: Commit migration
+        run: |
+          rm .github/workflows/oneshot-save-key.yml
+          git config user.name github-actions[bot]
+          git config user.email 41898282+github-actions[bot]@users.noreply.github.com
+          git add game.js index.html tests/storage-migration.test.cjs .github/workflows/oneshot-save-key.yml
+          git commit -m "Migrate legacy save storage safely"
+          git push origin HEAD:save-key-migration
