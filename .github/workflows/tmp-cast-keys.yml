@@ -1,0 +1,55 @@
+name: Apply canonical cast key cleanup
+on:
+  push:
+    branches: [canonical-cast-keys]
+permissions:
+  contents: write
+jobs:
+  cleanup:
+    if: github.actor != 'github-actions[bot]'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Rename runtime cast keys
+        shell: bash
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          p=Path('game.js'); s=p.read_text()
+          replacements={
+            'CAST={kevin:':'CAST={keke:',
+            ',charline:{':',chacha:{',
+            "kind==='kevin'":"kind==='keke'",
+            "kind==='charline'":"kind==='chacha'",
+            "person(moving,'kevin'":"person(moving,'keke'",
+            "person(moving,'charline'":"person(moving,'chacha'",
+            'charlineX':'chachaX',
+            'kevinX':'kekeX',
+            'charlineIn':'chachaIn',
+          }
+          for old,new in replacements.items():
+            s=s.replace(old,new)
+          forbidden=["CAST={kevin:",",charline:{","kind==='kevin'","kind==='charline'","person(moving,'kevin'","person(moving,'charline'",'charlineX','kevinX','charlineIn']
+          left=[x for x in forbidden if x in s]
+          if left: raise SystemExit('legacy cast tokens remain: '+repr(left))
+          if 'CAST={keke:' not in s or ',chacha:{' not in s: raise SystemExit('canonical cast keys missing')
+          p.write_text(s)
+          p=Path('index.html'); s=p.read_text()
+          if 'game.js?v=45' not in s: raise SystemExit('game cache version not found')
+          p.write_text(s.replace('game.js?v=45','game.js?v=46',1))
+          for name in ['tests/cache-version.test.cjs','tests/redesign-invariants.test.cjs']:
+            p=Path(name); s=p.read_text(); p.write_text(s.replace('game.js?v=45','game.js?v=46'))
+          Path('tests/canonical-cast-keys.test.cjs').write_text("""const test=require('node:test');\nconst assert=require('node:assert/strict');\nconst fs=require('node:fs');\nconst game=fs.readFileSync('game.js','utf8');\ntest('KÉKÉ and CHACHA use canonical runtime cast keys',()=>{\n  assert.match(game,/CAST=\\{keke:/);\n  assert.match(game,/,chacha:\\{/);\n  assert.doesNotMatch(game,/CAST=\\{kevin:/);\n  assert.doesNotMatch(game,/,charline:\\{/);\n  assert.doesNotMatch(game,/kind==='kevin'|kind==='charline'|charlineIn|charlineX|kevinX/);\n  assert.match(game,/chachaIn/);\n  assert.match(game,/person\\(moving,'keke'/);\n  assert.match(game,/person\\(moving,'chacha'/);\n});\n""")
+          Path('.github/workflows/tmp-cast-keys.yml').unlink()
+          PY
+          npm test
+      - name: Commit canonical cast keys
+        run: |
+          git config user.name github-actions[bot]
+          git config user.email 41898282+github-actions[bot]@users.noreply.github.com
+          git add -A
+          git commit -m "Use canonical KÉKÉ and CHACHA runtime keys"
+          git push
