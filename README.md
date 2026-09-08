@@ -12,7 +12,7 @@ Petit jeu d’arcade satirique en 3D, dans l’univers fictif d’INETUM. **KÉK
 
 Téléchargez le dépôt avec **Code → Download ZIP**, décompressez-le, puis ouvrez **index.html** par double-clic.
 
-Le jeu est autonome : HTML, CSS, JavaScript, graphismes WebGL et sons synthétisés. Aucun serveur, installation, framework, fichier audio ni appel réseau. Navigateur récent avec WebGL recommandé : Chrome, Edge ou Firefox.
+Le jeu est autonome : HTML, CSS, JavaScript, assets graphiques WebGL/PNG et sons synthétisés. Aucun serveur, installation, framework, fichier audio ni appel réseau. Navigateur récent avec WebGL recommandé : Chrome, Edge ou Firefox.
 
 ## Commandes
 
@@ -55,7 +55,7 @@ Scores et palmarès sont stockés uniquement dans le navigateur (`localStorage`)
 
 ## Technique
 
-Le jeu reste volontairement sans framework. `index.html` porte la structure, `style.css` le style principal et **`game.js` est le moteur canonique chargé directement par le navigateur**. Les autres modules JavaScript complètent les décors, personnages, dialogues et finitions visuelles. Il n’y a plus de loader XHR ni de réécriture du moteur par `eval` au démarrage.
+Le jeu reste volontairement sans framework. `index.html` porte la structure, `style.css` et `polish.css` la présentation, et **`game.js` est le moteur canonique chargé directement par le navigateur**. Les modules JavaScript spécialisés complètent les décors, personnages, dialogues et finitions visuelles ; les assets graphiques, dont le poster du bureau de KÉKÉ, restent des fichiers dédiés. Il n’y a plus de loader XHR ni de réécriture du moteur par `eval` au démarrage.
 
 Le rendu adapte automatiquement certains effets aux appareils plus modestes et respecte `prefers-reduced-motion` pour limiter les animations non essentielles.
 
@@ -66,6 +66,6 @@ Personnages et situations fictifs ; satire des clichés du conseil informatique.
 Avec Node.js :
 
 - `npm test` lance les tests de logique et les invariants de refonte ;
-- `npm run test:e2e` lance les smoke tests Playwright desktop et mobile.
+- `npm run test:e2e` lance les smoke tests Playwright desktop et mobile, dont le parcours canonique complet LCP7 → JUJU → Power UP Tour → RORO → victoire, ainsi que pause/reprise, lecture des tableaux et commandes tactiles.
 
 Node.js n’est pas nécessaire pour jouer.
