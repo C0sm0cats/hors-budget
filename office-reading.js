@@ -47,6 +47,14 @@
   },true);
   document.getElementById('world').addEventListener('click',e=>{
     if(Arcade.state.phase!=='playing')return;
+    const player=Arcade.state.player;
+    const cues=boards().filter(b=>b.floor===player.floor&&Math.abs(player.x-b.x)<3).map(b=>({
+      board:b,point:renderer.project(b.x+b.w/2+.16,b.y,b.z+.1)
+    })).filter(({point:p})=>Number.isFinite(p.x)&&Number.isFinite(p.y)&&p.x>=0&&p.x<=innerWidth&&p.y>=0&&p.y<=innerHeight);
+    // A 48 CSS-pixel target around the visible cue also accommodates touch input.
+    const hit=cues.filter(({point:p})=>Math.abs(e.clientX-p.x)<=24&&Math.abs(e.clientY-p.y)<=24)
+      .sort((a,b)=>Math.hypot(e.clientX-a.point.x,e.clientY-a.point.y)-Math.hypot(e.clientX-b.point.x,e.clientY-b.point.y))[0];
+    if(hit){open(hit.board);return;}
     for(const b of boards()){
       const corners=[[-1,-1],[-1,1],[1,-1],[1,1]].map(([dx,dy])=>renderer.project(b.x+dx*b.w/2,b.y+dy*b.h/2,b.z));
       if(e.clientX>=Math.min(...corners.map(p=>p.x))&&e.clientX<=Math.max(...corners.map(p=>p.x))&&e.clientY>=Math.min(...corners.map(p=>p.y))&&e.clientY<=Math.max(...corners.map(p=>p.y))){open(b);break;}
