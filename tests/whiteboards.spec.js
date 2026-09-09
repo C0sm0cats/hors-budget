@@ -6,9 +6,9 @@ test('each character keeps the supplied whiteboard and can read the original PNG
   await page.locator('#startButton').click();await page.keyboard.press('Enter');
   await expect(page.locator('body')).toHaveAttribute('data-phase','playing');
   const expected=[
-    [{name:'KÉKÉ',file:'Whiteboard02.png',floor:1},{name:'CHACHA',file:'Whiteboard01.png',floor:2}],
-    [{name:'JUJU',file:'Whiteboard03.png',floor:1}],
-    [{name:'RORO',file:'Whiteboard04.png',floor:3}]
+    [{name:'DIRECTEUR DE PROJETS',file:'Whiteboard02.png',floor:1},{name:'BUSINESS MANAGER',file:'Whiteboard01.png',floor:2}],
+    [{name:'DIRECTEUR TECHNOLOGIES SERVICES',file:'Whiteboard03.png',floor:1}],
+    [{name:'DIRECTEUR RÉGION GRAND OUEST',file:'Whiteboard04.png',floor:3}]
   ];
   for(let level=0;level<3;level++){
     await page.evaluate(level=>{Arcade.state.level=level;Arcade.state.player.floor=1;renderer.rebuild();},level);
@@ -25,7 +25,7 @@ test('each character keeps the supplied whiteboard and can read the original PNG
       await page.getByRole('button',{name:'AGRANDIR',exact:true}).click();
       expect(await page.locator('.office-reading-image').evaluate(e=>e.scrollWidth>e.clientWidth)).toBe(true);
       await page.getByRole('button',{name:'AJUSTER',exact:true}).click();
-      if(board.name==='CHACHA')expect(await page.evaluate(()=>Arcade.state.comedy.line)).toContain('Au Power UP Tour');
+      if(board.name==='BUSINESS MANAGER')expect(await page.evaluate(()=>Arcade.state.comedy.line)).toContain('Au Power UP Tour');
     }
     await page.getByRole('button',{name:'REPRENDRE',exact:true}).click();
     await expect(page.locator('body')).toHaveAttribute('data-phase','playing');

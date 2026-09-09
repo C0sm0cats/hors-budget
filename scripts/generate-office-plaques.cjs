@@ -5,10 +5,10 @@ const {execFileSync}=require('node:child_process');
 const {resolve}=require('node:path');
 const root=resolve(__dirname,'..');
 const people={
-  keke:{name:'KÉKÉ',role:['DIRECTEUR DE PROJETS']},
-  chacha:{name:'CHACHA',role:['BUSINESS MANAGER']},
-  juju:{name:'JUJU',role:['DIRECTEUR TECHNOLOGIES SERVICES','PAYS DE LA LOIRE']},
-  roro:{name:'RORO',role:['DIRECTEUR RÉGION','GRAND OUEST']}
+  projectDirector:{name:'DIRECTION PROJETS',role:['DIRECTEUR DE PROJETS']},
+  businessManager:{name:'DÉVELOPPEMENT COMMERCIAL',role:['BUSINESS MANAGER']},
+  techServicesDirector:{name:'TECHNOLOGIES & SERVICES',role:['DIRECTEUR TECHNOLOGIES SERVICES','PAYS DE LA LOIRE']},
+  regionalDirector:{name:'DIRECTION RÉGIONALE',role:['DIRECTEUR RÉGION','GRAND OUEST']}
 };
 (async()=>{
   const browser=await chromium.launch();

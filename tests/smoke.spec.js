@@ -13,10 +13,10 @@ async function dismissLevelIntro(page){
   await expect(page.locator('body')).toHaveAttribute('data-phase','playing');
 }
 
-async function completeCurrentLevelAtChacha(page){
+async function completeCurrentLevelAtbusinessManager(page){
   await page.evaluate(()=>{
     const s=Arcade.state;
-    s.player.floor=4;s.player.x=s.chacha.x;s.player.y=surface(4,s.chacha.x);s.player.grounded=true;s.player.climbing=null;s.player.invulnerable=2;
+    s.player.floor=4;s.player.x=s.businessManager.x;s.player.y=surface(4,s.businessManager.x);s.player.grounded=true;s.player.climbing=null;s.player.invulnerable=2;
     Arcade.physics(1/90);
     if(s.phase==='transition'){s.transition=.001;Arcade.update(.02);}
   });
@@ -36,14 +36,14 @@ test('game boots without runtime errors and uses the canonical final-state model
     arcade:typeof Arcade!=='undefined',
     renderer:typeof renderer!=='undefined',
     state:typeof Arcade!=='undefined'&&!!Arcade.state,
-    chacha:typeof Arcade!=='undefined'&&!!Arcade.state?.chacha,
+    businessManager:typeof Arcade!=='undefined'&&!!Arcade.state?.businessManager,
     princess:typeof Arcade!=='undefined'&&Object.prototype.hasOwnProperty.call(Arcade.state||{},'princess'),
     delivery:typeof Arcade!=='undefined'&&Object.prototype.hasOwnProperty.call(Arcade.state?.comedy||{},'delivery')
-  }))).toEqual({arcade:true,renderer:true,state:true,chacha:true,princess:false,delivery:false});
+  }))).toEqual({arcade:true,renderer:true,state:true,businessManager:true,princess:false,delivery:false});
 
   await startAndDismissIntro(page);
   await expect.poll(()=>page.locator('#levelName').textContent()).toContain('OPEN SPACE · LCP7');
-  await expect(page.locator('#banner')).toContainText(/OPEN SPACE|CHACHA|ÉTAGE/);
+  await expect(page.locator('#banner')).toContainText(/OPEN SPACE|BUSINESS MANAGER|ÉTAGE/);
   await page.waitForTimeout(350);
 
   expect(errors,`browser errors in ${testInfo.project.name}`).toEqual([]);
@@ -79,7 +79,7 @@ test('Bon de commande is native and the runtime stays error-free',async({page},t
   expect(errors,`budget runtime errors in ${testInfo.project.name}`).toEqual([]);
 });
 
-test('final level polish uses CHACHA state without legacy runtime errors',async({page},testInfo)=>{
+test('final level polish uses BUSINESS MANAGER state without legacy runtime errors',async({page},testInfo)=>{
   const errors=[];
   page.on('pageerror',error=>errors.push(error.message));
   page.on('console',msg=>{if(msg.type()==='error')errors.push(msg.text());});
@@ -106,34 +106,34 @@ test('final level polish uses CHACHA state without legacy runtime errors',async(
 
   const runtime=await page.evaluate(()=>({
     level:Arcade.state.level,
-    chacha:!!Arcade.state.chacha,
+    businessManager:!!Arcade.state.businessManager,
     princess:Object.prototype.hasOwnProperty.call(Arcade.state,'princess'),
     delivery:Object.prototype.hasOwnProperty.call(Arcade.state.comedy||{},'delivery')
   }));
-  expect(runtime).toEqual({level:2,chacha:true,princess:false,delivery:false});
+  expect(runtime).toEqual({level:2,businessManager:true,princess:false,delivery:false});
   expect(errors,`final-level browser errors in ${testInfo.project.name}`).toEqual([]);
 });
 
-test('canonical journey reaches CHACHA through JUJU and RORO without runtime errors',async({page},testInfo)=>{
+test('canonical journey reaches BUSINESS MANAGER through DIRECTEUR TECHNOLOGIES SERVICES and DIRECTEUR RÉGION GRAND OUEST without runtime errors',async({page},testInfo)=>{
   const errors=[];
   page.on('pageerror',e=>errors.push(e.message));
   page.on('console',m=>{if(m.type()==='error')errors.push(m.text());});
   await page.goto('/');
   await startAndDismissIntro(page);
 
-  await completeCurrentLevelAtChacha(page);
+  await completeCurrentLevelAtbusinessManager(page);
   await expect.poll(()=>page.evaluate(()=>Arcade.state.level)).toBe(1);
   await dismissLevelIntro(page);
   await expect.poll(()=>page.locator('#levelName').textContent()).toContain('DIRECTION TS · PAYS DE LA LOIRE');
 
   await page.evaluate(()=>{
-    const s=Arcade.state,b=JulienBoss.state(s);
+    const s=Arcade.state,b=TechServicesBoss.state(s);
     b.hp=1;
-    s.player.floor=4;s.player.x=JulienBoss.x-1.6;s.player.y=surface(4,s.player.x);s.player.grounded=true;
-    s.hostile.push({x:JulienBoss.x,y:surface(4,JulienBoss.x)+.82,vx:0,life:2,kind:'kpi',julien:true,reflected:true});
+    s.player.floor=4;s.player.x=TechServicesBoss.x-1.6;s.player.y=surface(4,s.player.x);s.player.grounded=true;
+    s.hostile.push({x:TechServicesBoss.x,y:surface(4,TechServicesBoss.x)+.82,vx:0,life:2,kind:'kpi',techServicesDirector:true,reflected:true});
   });
-  await expect.poll(()=>page.evaluate(()=>JulienBoss.state(Arcade.state).hp)).toBe(0);
-  await completeCurrentLevelAtChacha(page);
+  await expect.poll(()=>page.evaluate(()=>TechServicesBoss.state(Arcade.state).hp)).toBe(0);
+  await completeCurrentLevelAtbusinessManager(page);
   await expect.poll(()=>page.evaluate(()=>Arcade.state.level)).toBe(2);
   await dismissLevelIntro(page);
   await expect.poll(()=>page.locator('#levelName').textContent()).toContain('POWER UP TOUR · GRAND OUEST');
@@ -150,11 +150,11 @@ test('canonical journey reaches CHACHA through JUJU and RORO without runtime err
   await page.evaluate(()=>{
     const s=Arcade.state;
     s.boss.hp=0;
-    s.player.floor=4;s.player.x=s.chacha.x;s.player.y=surface(4,s.chacha.x);s.player.grounded=true;
+    s.player.floor=4;s.player.x=s.businessManager.x;s.player.y=surface(4,s.businessManager.x);s.player.grounded=true;
     Arcade.physics(1/90);
   });
   await expect(page.locator('body')).toHaveAttribute('data-phase','won');
-  await expect(page.locator('#endTitle')).toContainText('CHACHA EST LIBÉRÉE');
+  await expect(page.locator('#endTitle')).toContainText('BUSINESS MANAGER EST LIBÉRÉE');
   await expect(page.locator('#endEyebrow')).toContainText('BUDGET DÉBLOQUÉ');
   expect(errors,`journey errors in ${testInfo.project.name}`).toEqual([]);
 });

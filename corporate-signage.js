@@ -89,7 +89,7 @@
   function drawLevel1(mesh,sign){
     band(mesh,1.45,'#453b55');
     panel(mesh,sign,'success',-4.9,1.6,2,2.1,'#526253');
-    // A side-mounted shaft panel stays clear of both the moving cabin and JUJU's board.
+    // A side-mounted shaft panel stays clear of both the moving cabin and DIRECTEUR TECHNOLOGIES SERVICES's board.
     mesh.box(-1.04,1.6,-.92,.18,.09,.12,'#dbc489');
     panel(mesh,sign,'gcomp',-1.9,1.6,1.5,1.875,'#77436a');
     panel(mesh,sign,'academy',4.8,1.6,2,2.1,'#31483f');

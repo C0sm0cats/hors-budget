@@ -2,10 +2,10 @@
 (()=>{
   // Mapping follows the supplied images' headings, not their numerical order in the level.
   const definitions={
-    keke:{name:'KÉKÉ',file:'Whiteboard02.png',level:0,floor:1},
-    chacha:{name:'CHACHA',file:'Whiteboard01.png',level:0,floor:2},
-    juju:{name:'JUJU',file:'Whiteboard03.png',level:1,floor:1},
-    roro:{name:'RORO',file:'Whiteboard04.png',level:2,floor:3}
+    projectDirector:{name:'DIRECTEUR DE PROJETS',file:'Whiteboard02.png',level:0,floor:1},
+    businessManager:{name:'BUSINESS MANAGER',file:'Whiteboard01.png',level:0,floor:2},
+    techServicesDirector:{name:'DIRECTEUR TECHNOLOGIES SERVICES',file:'Whiteboard03.png',level:1,floor:1},
+    regionalDirector:{name:'DIRECTEUR RÉGION GRAND OUEST',file:'Whiteboard04.png',level:2,floor:3}
   };
   const offline=location.protocol==='file:',assets={};
   for(const [key,definition] of Object.entries(definitions)){

@@ -15,7 +15,7 @@ function game() {
   run(source);
   run(`renderer={rebuild(){}};sound=false;Arcade.start();
     Arcade.state.comedy.eligible=false;Arcade.state.enemies=[];Arcade.state.pickups=[];
-    Arcade.state.spawnIn=999;Arcade.state.obstacleIn=999;Arcade.state.charlineIn=999;`);
+    Arcade.state.spawnIn=999;Arcade.state.obstacleIn=999;Arcade.state.businessManagerIn=999;`);
   return { run, step(n) { run(`for(let i=0;i<${n};i++)Arcade.update(1/90);`); } };
 }
 test('three actual misses trigger a reaction; resolved shots do not accumulate', () => {
@@ -42,7 +42,7 @@ test('a normal jump is not a fall; a long drop triggers the mobility line', () =
   g.step(65);
   assert.equal(g.run('Arcade.state.comedy.line'), 'Mobilité interne validée.');
 });
-test('the removed RORO chair scene has no runtime state or helper left', () => {
+test('the removed DIRECTEUR RÉGION GRAND OUEST chair scene has no runtime state or helper left', () => {
   const g = game();
   assert.equal(g.run(`Object.prototype.hasOwnProperty.call(Arcade.state.comedy,'delivery')`), false);
   assert.equal(g.run(`typeof deliveryScene`), 'undefined');
@@ -65,8 +65,8 @@ test('the miracle freezes combat and bonuses, respects pause, resumes and cannot
   assert.equal(g.run('s.comedy.miracle'), 0);
   assert.ok(g.run('s.time') > 0);
   assert.equal(g.run('s.enemies[0].raise'), 3);
-  g.run(`s.enemies=[];s.hostile=[];s.barrels=[];s.player.floor=4;s.player.x=s.chacha.x;
-    s.player.y=s.chacha.y;s.player.grounded=true;s.player.invulnerable=100;`);
+  g.run(`s.enemies=[];s.hostile=[];s.barrels=[];s.player.floor=4;s.player.x=s.businessManager.x;
+    s.player.y=s.businessManager.y;s.player.grounded=true;s.player.invulnerable=100;`);
   g.step(290);
   assert.equal(g.run('Arcade.state.level'), 1);
   assert.equal(g.run('Arcade.state.comedy.miracleSeen'), true);
@@ -105,7 +105,7 @@ test('stun captions vary on subsequent hits and stay stable during the same stun
     previous = caption;
   }
 });
-test('RORO prepares his dossier before the first release and freezes the cue on pause',()=>{
+test('DIRECTEUR RÉGION GRAND OUEST prepares his dossier before the first release and freezes the cue on pause',()=>{
   const g=game();
   g.run(`const s=Arcade.state;s.level=2;s.player.floor=4;s.player.x=0;s.player.y=surface(4,0);s.boss.x=5.5;s.boss.y=surface(4,5.5);`);
   g.step(55);

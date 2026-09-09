@@ -3,7 +3,7 @@ const assert=require('node:assert/strict');
 const {readFileSync}=require('node:fs');
 const vm=require('node:vm');
 const source=readFileSync('game.js','utf8').split('function soundFX')[0];
-const current='hors-budget.arcade.v1',legacy='mutine.kevin.arcade.v3';
+const current='hors-budget.arcade.v1',legacy='mutine.projectDirector.arcade.v3';
 function load(entries,failWrite=false,failRemove=false){
   const data=new Map(Object.entries(entries));
   const ctx=vm.createContext({document:{getElementById:()=>({})},localStorage:{

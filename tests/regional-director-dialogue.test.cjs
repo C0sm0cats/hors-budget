@@ -4,7 +4,7 @@ const {readFileSync}=require('node:fs');
 const {join}=require('node:path');
 const vm=require('node:vm');
 
-test('RORO stops ambient refusals immediately after defeat and resumes on a new run',()=>{
+test('DIRECTEUR RÉGION GRAND OUEST stops ambient refusals immediately after defeat and resumes on a new run',()=>{
   const elements=[],frames=[];
   const element=()=>({hidden:true,style:{removeProperty(key){delete this[key];},setProperty(key,value){this[key]=value;}},dataset:{},className:'',textContent:'',
     classList:{add(){},contains(name){return name==='main-banter';}},append(el){elements.push(el);},
@@ -16,9 +16,9 @@ test('RORO stops ambient refusals immediately after defeat and resumes on a new 
     performance:{now:()=>0},innerWidth:1366,innerHeight:768,Arcade:arcade,
     renderer:{project:(x,y)=>({x:680+x*40,y:600-y*30})},surface:floor=>floor*3,
     requestAnimationFrame:fn=>frames.push(fn)});
-  for(const file of ['banter-fair.js','julien-boss.js'])vm.runInContext(readFileSync(join(__dirname,'..',file),'utf8'),ctx);
+  for(const file of ['banter-fair.js','tech-services-boss.js'])vm.runInContext(readFileSync(join(__dirname,'..',file),'utf8'),ctx);
   const tick=now=>{const pending=frames.splice(0);pending.forEach(fn=>fn(now));};
-  const bubble=elements.find(el=>el.dataset.speaker==='RORO');
+  const bubble=elements.find(el=>el.dataset.speaker==='DIRECTEUR RÉGION GRAND OUEST');
   arcade.state.level=2;tick(0);tick(8000);
   assert.equal(bubble.hidden,false);
   arcade.state.boss.hp=0;tick(8100);
