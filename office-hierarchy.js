@@ -33,8 +33,13 @@
     pen(c,'Business & Développement',42,28,2.3,ink,900);c.strokeStyle=pink;c.lineWidth=4;c.lineCap='round';c.beginPath();c.moveTo(42,88);c.lineTo(918,83);c.stroke();
     const cols=[{x:58,w:275,color:blue,title:'PROSPECTS',value:'12',sub:'pipeline'},{x:365,w:275,color:pink,title:'OPPORTUNITÉS',value:'7',sub:'TJM / CV / STAFFING'},{x:672,w:270,color:green,title:'CLIENTS',value:'4',sub:'suivi / fidélisation'}];
     cols.forEach((col,i)=>{roughRect(c,col.x,126,col.w,190,col.color,i+.7);pen(c,col.title,col.x+18,145,1.48,col.color,col.w-34);pen(c,col.value,col.x+24,198,3.8,col.color,col.w*.55);pen(c,col.sub,col.x+18,278,1.25,col.color,col.w-34);});
-    pen(c,'objectif : transformer les opportunités',55,346,1.4,ink,875);pen(c,'en missions réalisables',55,380,1.4,ink,590);
-    pen(c,'Au Power UP Tour',570,360,1.65,pink,360);pen(c,'retour après le séminaire',555,400,1.25,pink,405);pen(c,'— CHACHA',740,446,2,pink,205);
+    // Reserve separate lower columns for the objective and CHACHA's absence note.
+    pen(c,'objectif : transformer',55,350,1.4,ink,440);
+    pen(c,'les opportunités',55,390,1.4,ink,440);
+    pen(c,'en missions réalisables',55,430,1.4,ink,440);
+    pen(c,'Au Power UP Tour',550,350,1.65,pink,405);
+    pen(c,'retour après le séminaire',550,400,1.25,pink,405);
+    pen(c,'— CHACHA',600,446,2,pink,260);
     c.strokeStyle=pink;c.lineWidth=4;c.beginPath();c.arc(926,459,20,0,Math.PI);c.moveTo(914,442);c.lineTo(914,445);c.moveTo(938,442);c.lineTo(938,445);c.stroke();
   }
 
