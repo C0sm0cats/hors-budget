@@ -9,7 +9,7 @@
   function hitBoss(s,b){
     if(b.hp<=0)return;
     b.hp=Math.max(0,b.hp-1);b.flash=.34;s.score+=500;
-    s.floaters.push({x:X,y:surface(4,X)+2.15,text:b.hp>0?'KPI RETOURNÉ':'DIRECTEUR TECHNOLOGIES SERVICES EN ALIGNEMENT STRATÉGIQUE',life:1.5,color:'#d5f382'});
+    s.floaters.push({x:X,y:surface(4,X)+2.15,text:b.hp>0?'KPI RETOURNÉ':'ACCÈS AU ROOFTOP DÉBLOQUÉ',life:1.5,color:'#d5f382'});
     if(b.hp<=0){s.gate=2.6;s.hostile=s.hostile.filter(h=>h.techServicesDirector!==true);}
   }
 
@@ -36,7 +36,7 @@
 
     if(b.hp>0&&s.player.floor===4&&Math.abs(s.player.x-X)<2.2){
       const banner=document.getElementById('banner');
-      if(banner)banner.textContent='DIRECTEUR TECHNOLOGIES SERVICES BLOQUE L’ACCÈS AU ROOFTOP · RENVOIE SES KPI AVEC X';
+      if(banner)banner.textContent='ACCÈS AU ROOFTOP VERROUILLÉ · RENVOIE LES KPI AVEC X';
     }
     requestAnimationFrame(loop);
   }

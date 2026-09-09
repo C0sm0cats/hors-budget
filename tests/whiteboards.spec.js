@@ -19,7 +19,10 @@ test('each character keeps the supplied whiteboard and can read the original PNG
     await page.getByRole('button',{name:'Lire le tableau du bureau'}).click();
     for(let i=0;i<expected[level].length;i++){
       if(expected[level].length>1)await page.getByRole('combobox',{name:'Choisir un bureau'}).selectOption(String(i));
-      const board=expected[level][i],image=page.getByRole('img',{name:'Tableau du bureau de '+board.name});
+      const board=expected[level][i],image=page.locator('.office-reading img');
+      const titles=[['Bureau du Directeur de Projets','Bureau de la Business Manager'],['Bureau du Directeur Technologies Services Pays de la Loire'],['Bureau du Directeur Région Grand Ouest']];
+      await expect(page.locator('.office-reading h2')).toHaveText(titles[level][i]);
+      await expect(image).toHaveAttribute('alt','Tableau — '+titles[level][i]);
       await expect(image).toHaveAttribute('src',new RegExp('signage/'+board.file+'$'));
       await expect.poll(()=>image.evaluate(img=>img.naturalWidth)).toBe(1448);
       await page.getByRole('button',{name:'AGRANDIR',exact:true}).click();

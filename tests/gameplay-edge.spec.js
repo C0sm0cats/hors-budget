@@ -68,7 +68,7 @@ test('final victory stays coherent from a stressed final-level state',async({pag
   });
   await expect(page.locator('body')).toHaveAttribute('data-phase','won');
   await expect(page.locator('#endScreen')).toBeVisible();
-  await expect(page.locator('#endTitle')).toContainText('BUSINESS MANAGER EST LIBÉRÉE');
+  await expect(page.locator('#endTitle')).toContainText('LA BUSINESS MANAGER EST LIBÉRÉE');
   await expect(page.locator('#endEyebrow')).toContainText('BUDGET DÉBLOQUÉ');
   expect(errors,`end-state errors in ${testInfo.project.name}`).toEqual([]);
 });

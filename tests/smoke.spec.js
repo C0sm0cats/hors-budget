@@ -154,7 +154,7 @@ test('canonical journey reaches BUSINESS MANAGER through DIRECTEUR TECHNOLOGIES 
     Arcade.physics(1/90);
   });
   await expect(page.locator('body')).toHaveAttribute('data-phase','won');
-  await expect(page.locator('#endTitle')).toContainText('BUSINESS MANAGER EST LIBÉRÉE');
+  await expect(page.locator('#endTitle')).toContainText('LA BUSINESS MANAGER EST LIBÉRÉE');
   await expect(page.locator('#endEyebrow')).toContainText('BUDGET DÉBLOQUÉ');
   expect(errors,`journey errors in ${testInfo.project.name}`).toEqual([]);
 });

@@ -47,9 +47,9 @@ Des commandes tactiles sont disponibles sur petit écran.
 - Boss intermédiaire — Directeur Technologies Services Pays de la Loire : renvoyez ses KPI pour débloquer le rooftop.
 - Boss final — Directeur Région Grand Ouest : renvoyez ses dossiers lorsqu’il annonce « Bénéfices records » ; les deux premiers impacts sont des arbitrages, le dernier débloque réellement le budget.
 - Chronos par zone, médailles et défis : Sans PowerPoint, Zéro réunion, Café uniquement, Sans une égratignure.
-- Présentation arcade avec intros de niveaux, barre de vie du boss et finale « BUSINESS MANAGER EST LIBÉRÉE · BUDGET DÉBLOQUÉ ».
+- Présentation arcade avec intros de niveaux, barre de vie du boss et finale « LA BUSINESS MANAGER EST LIBÉRÉE · BUDGET DÉBLOQUÉ ».
 - Rare miracle : une vraie augmentation de 3 %, suivie de deux secondes d’applaudissements, projectiles compris.
-- Dialogues ambiants limités à deux bulles sans chevauchement ; les réactions aux actions sont prioritaires.
+- Dialogues ambiants limités à deux bulles sans chevauchement ; les réactions aux actions sont prioritaires. Les fonctions restent sur les plaques de bureau, sans étiquette au-dessus des personnages.
 
 L’objectif reste le même tout au long de la partie : **retrouver la trace de la Business Manager → ouvrir l’accès au rooftop → débloquer le budget → la rejoindre au séminaire**.
 
