@@ -61,7 +61,7 @@
   const hideTagsFrom=i=>{for(let n=i;n<tags.length;n++)tags[n].hidden=true;};
 
   const levelCopy=[
-    ['NIVEAU 1','OPEN SPACE · LCP7','DIRECTEUR DE PROJETS · BUSINESS MANAGER'],
+    ['NIVEAU 1','OPEN SPACE · LCP7','PREMIERS INDICES SUR LE BUDGET'],
     ['NIVEAU 2','DIRECTION TECHNOLOGIES SERVICES','DIRECTEUR TECHNOLOGIES SERVICES PAYS DE LA LOIRE'],
     ['NIVEAU 3','POWER UP TOUR · GRAND OUEST','DIRECTEUR RÉGION GRAND OUEST']
   ];
@@ -175,7 +175,7 @@
 
     if(s.phase==='won'&&!finaleSeen){
       finaleSeen=true;
-      cinematic('finale','LA BUSINESS MANAGER EST LIBÉRÉE','BUDGET DÉBLOQUÉ','POUR TOUS LES EMPLOYÉS',reduced?700:1550,false,false);
+      cinematic('finale','MISSION ACCOMPLIE','BUDGET DÉBLOQUÉ','POUR TOUS LES EMPLOYÉS',reduced?700:1550,false,false);
     }
 
     let i=0;
