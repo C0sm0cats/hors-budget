@@ -48,8 +48,8 @@
     const board={level:0,floor,name:'CHACHA',x:-2.45,y:fy+1.7,z:-.95,w:4.55,h:1.55};mesh.box(board.x,board.y,board.z-.07,board.w+.18,board.h+.17,.09,'#776b75');mesh.box(board.x,board.y,board.z-.025,board.w+.05,board.h+.04,.04,'#c7c7c0');
     const item=card(sign,board.x,board.y,board.z,board.w,board.h,businessBoard);globalThis.OfficeBoards=globalThis.OfficeBoards||[];globalThis.OfficeBoards.push({...board,canvas:item.surface});
     const plaqueX=2.35,plaqueY=fy+1.82;mesh.box(plaqueX,plaqueY,-1.02,3.1,.82,.08,'#c6a052');card(sign,plaqueX,plaqueY,-.96,2.98,.73,(c,W,H)=>{c.fillStyle='#313844';c.fillRect(0,0,W,H);c.strokeStyle='#c6a052';c.lineWidth=7;c.strokeRect(4,4,W-8,H-8);c.textAlign='center';c.textBaseline='middle';c.fillStyle='#f2e7c7';c.font='900 '+H*.27+'px system-ui';c.fillText('CHACHA',W*.5,H*.34,W*.82);c.fillStyle='#d7b9cf';c.font='800 '+H*.145+'px system-ui';c.fillText('BUSINESS MANAGER',W*.5,H*.69,W*.88);});
-    const deskX=1.8,dy=surface(floor,deskX),z=-.55;mesh.box(deskX,dy+.55,z,3.8,.16,.86,'#8a684e');for(const dx of [-1.35,1.35])mesh.box(deskX+dx,dy+.25,z,.18,.52,.66,'#624b3b');mesh.box(deskX-.25,dy+1.05,z+.12,1.38,.82,.13,'#263843');mesh.box(deskX-.25,dy+1.05,z+.20,1.20,.66,.025,'#d6e8df');
-    card(sign,deskX-.25,dy+1.05,z+.225,1.14,.60,(c,W,H)=>{c.fillStyle='#21323a';c.fillRect(0,0,W,H);c.fillStyle='#d7f095';c.font='900 '+H*.12+'px system-ui';c.fillText('PIPELINE',W*.06,H*.16,W*.75);const vals=[.34,.62,.82,.48];vals.forEach((v,i)=>{c.fillStyle=['#6e9cab','#bc6993','#d2b15f','#6b956d'][i];c.fillRect(W*(.08+i*.21),H*(.84-v*.55),W*.12,H*v*.55);});});
+    const deskX=1.8,dy=surface(floor,deskX),z=-.55;mesh.box(deskX,dy+.55,z,3.8,.16,.86,'#8a684e');for(const dx of [-1.35,1.35])mesh.box(deskX+dx,dy+.25,z,.18,.52,.66,'#624b3b');mesh.box(deskX-.25,dy+1.05,z+.12,1.38,.82,.13,'#263843');mesh.box(deskX-.25,dy+1.05,z+.20,1.20,.66,.035,'#2d414b');
+    mesh.box(deskX-.21,dy+.79,z+.26,.25,.46,.13,'#4f646d');
     mesh.box(deskX+.78,dy+.43,.02,.68,.18,.65,'#855f79');mesh.box(deskX+.78,dy+.89,-.20,.68,.82,.15,'#855f79');for(const sx of [-.25,.25])mesh.cylinder(deskX+.78+sx,dy+.12,.02,.065,.24,'#263843',8);
   }
 
@@ -69,10 +69,11 @@
     const board={level:2,floor,name:'RORO',x:-2.0,y:fy+1.70,z:-.96,w:4.9,h:1.55};mesh.box(board.x,board.y,board.z-.07,board.w+.18,board.h+.17,.09,'#66777c');mesh.box(board.x,board.y,board.z-.025,board.w+.05,board.h+.04,.04,'#c7ccc7');
     const item=card(sign,board.x,board.y,board.z,board.w,board.h,regionalBoard);globalThis.OfficeBoards.push({...board,canvas:item.surface});globalThis.OfficeBoard=globalThis.OfficeBoards[0];
     const plaqueX=3.25,plaqueY=fy+1.82;mesh.box(plaqueX,plaqueY,-1.03,3.35,.72,.08,'#c6a052');card(sign,plaqueX,plaqueY,-.97,3.23,.63,(c,W,H)=>{c.fillStyle='#223c49';c.fillRect(0,0,W,H);c.strokeStyle='#c6a052';c.lineWidth=7;c.strokeRect(4,4,W-8,H-8);c.textAlign='center';c.textBaseline='middle';c.fillStyle='#f4e7c3';c.font='900 '+H*.28+'px system-ui';c.fillText('RORO',W*.5,H*.31,W*.86);c.fillStyle='#acd0db';c.font='800 '+H*.14+'px system-ui';c.fillText('DIRECTEUR RÉGION GRAND OUEST',W*.5,H*.69,W*.9);});
-    // Table d'arbitrage, écran budget et mobilier premium : une zone de direction dans le séminaire,
+    // Table d'arbitrage, dos du moniteur et mobilier premium : une zone de direction dans le séminaire,
     // pas un ancien bureau privé déplacé depuis un autre étage.
     const tx=2.2,ty=surface(floor,tx);mesh.box(tx,ty+.55,-.48,3.5,.16,.92,'#8d6a4c');for(const dx of [-1.25,1.25])mesh.box(tx+dx,ty+.25,-.48,.18,.52,.72,'#5d493a');mesh.box(tx-.15,ty+1.08,-.26,1.45,.88,.14,'#263943');
-    card(sign,tx-.15,ty+1.08,-.17,1.28,.70,(c,W,H)=>{c.fillStyle='#1c3340';c.fillRect(0,0,W,H);c.fillStyle='#d5f382';c.textAlign='center';c.textBaseline='middle';c.font='900 '+H*.16+'px system-ui';c.fillText('BUDGET',W*.5,H*.26,W*.8);c.fillStyle='#8fb8c4';for(let i=0;i<4;i++)c.fillRect(W*(.12+i*.2),H*(.76-i*.1),W*.11,H*(.12+i*.08));});
+    mesh.box(tx-.15,ty+1.08,-.18,1.28,.73,.035,'#2d414b');
+    mesh.box(tx-.11,ty+.79,-.12,.25,.46,.13,'#4f646d');
     mesh.box(6.2,ty+.34,-.50,1.85,.46,.75,'#61566a');mesh.box(6.2,ty+.74,-.70,1.85,.64,.18,'#77697d');mesh.cylinder(5.0,ty+.25,-.55,.28,.50,'#d7d1bd',8,.22);for(const [dx,a] of [[-.22,-.45],[0,0],[.22,.45]])mesh.box(5.0+dx,ty+.86,-.55,.16,.92,.07,'#4f854d',a);
   }
 
