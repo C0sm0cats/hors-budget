@@ -2,9 +2,9 @@
 
 **Un Directeur de Projets. Une quête épique. Un budget Excel.**
 
-Petit jeu d’arcade satirique en 3D, dans l’univers fictif d’INETUM. Tu incarnes le **Directeur de Projets**. La **Business Manager** est coincée au Power UP Tour, où le prochain atelier dure six heures. Les salariés attendent une augmentation : à toi de retrouver sa trace, de traverser la direction et de débloquer le budget pour tout le monde.
+Petit jeu d’arcade satirique en 3D, dans l’univers fictif d’INETUM. Tu incarnes le **Directeur de Projets**. Le budget s’est perdu quelque part entre l’open space et le Power UP Tour, où le prochain atelier dure six heures. Les salariés attendent une augmentation : à toi de remonter sa piste, de traverser la direction et de débloquer le budget pour tout le monde.
 
-Le parcours suit trois étapes : son bureau vide dans l’open space LCP7, l’accès au rooftop gardé par le **Directeur Technologies Services Pays de la Loire**, puis le budget détenu par le **Directeur Région Grand Ouest** au séminaire.
+Le parcours suit trois étapes : les premiers indices dans l’open space LCP7, l’accès au rooftop gardé par le **Directeur Technologies Services Pays de la Loire**, puis le budget détenu par le **Directeur Région Grand Ouest** au séminaire.
 ## Jouer directement
 
 **[Lancer Hors Budget dans le navigateur](https://c0sm0cats.github.io/hors-budget/)** — aucun téléchargement ni installation.
@@ -29,9 +29,9 @@ Des commandes tactiles sont disponibles sur petit écran.
 
 ## Les trois zones
 
-- **Open Space · LCP7** : retrouve la trace de la Business Manager parmi les consultants, les commerciaux et les outils du quotidien.
+- **Open Space · LCP7** : retrouve les premiers indices sur le budget parmi les consultants, les commerciaux et les outils du quotidien.
 - **Direction TS · Pays de la Loire** : renvoie les KPI du Directeur Technologies Services Pays de la Loire pour ouvrir l’accès au rooftop.
-- **Power UP Tour · Grand Ouest** : affronte le Directeur Région Grand Ouest, débloque le budget et rejoins la Business Manager au séminaire.
+- **Power UP Tour · Grand Ouest** : affronte le Directeur Région Grand Ouest et débloque le budget pour tous les salariés.
 
 ## Au programme
 
@@ -41,17 +41,17 @@ Des commandes tactiles sont disponibles sur petit écran.
 - Imprimante à CRA, KPI, ascenseur du COMEX et petits fours volants selon les niveaux.
 - Photocopieurs et buffet rebondissants pour prendre des raccourcis.
 - Café accélérateur, **Bon de commande** protecteur et pluie de slides.
-- Lire le tableau de la Business Manager révèle sa destination et déclenche une réaction du Directeur de Projets, une fois par partie.
+- Lire le tableau commercial révèle la prochaine étape et déclenche une réaction du Directeur de Projets, une fois par partie.
 - Des repères discrets signalent les tableaux et raccourcis utilisables à proximité ; ils restent fixes avec les animations réduites.
 - Les deux boss préparent visiblement leurs projectiles avant de tirer.
 - Boss intermédiaire — Directeur Technologies Services Pays de la Loire : renvoyez ses KPI pour débloquer le rooftop.
 - Boss final — Directeur Région Grand Ouest : renvoyez ses dossiers lorsqu’il annonce « Bénéfices records » ; les deux premiers impacts sont des arbitrages, le dernier débloque réellement le budget.
 - Chronos par zone, médailles et défis : Sans PowerPoint, Zéro réunion, Café uniquement, Sans une égratignure.
-- Présentation arcade avec intros de niveaux, barre de vie du boss et finale « LA BUSINESS MANAGER EST LIBÉRÉE · BUDGET DÉBLOQUÉ ».
+- Présentation arcade avec intros de niveaux, barre de vie du boss et finale « MISSION ACCOMPLIE · BUDGET DÉBLOQUÉ ».
 - Rare miracle : une vraie augmentation de 3 %, suivie de deux secondes d’applaudissements, projectiles compris.
 - Dialogues ambiants limités à deux bulles sans chevauchement ; les réactions aux actions sont prioritaires. Les fonctions restent sur les plaques de bureau, sans étiquette au-dessus des personnages.
 
-L’objectif reste le même tout au long de la partie : **retrouver la trace de la Business Manager → ouvrir l’accès au rooftop → débloquer le budget → la rejoindre au séminaire**.
+L’objectif reste le même tout au long de la partie : **remonter la piste du budget → ouvrir l’accès au rooftop → débloquer le budget pour tous**.
 
 > **TOUT EST SOUS CONTRÔLE. MÊME LE BUDGET.**
 
