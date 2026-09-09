@@ -25,13 +25,30 @@
     summer:'signage/summer-party.png?v=3'
   };
   const aspects={site:4/3,mission:3/4,swile:3/4,purchase:3/4,concur:3/4,peopleDoc:3/4,chronotime:3/4,support:4/3,success:3/4,gcomp:1122/1402,academy:1122/1402,powerUp:4/3,connect:1122/1402,genAi:1122/1402,charity:1122/1402,summer:1122/1402};
-  const images={};
+  const images={},pending=[];
+  const offline=location.protocol==='file:';
   Object.entries(sources).forEach(([key,src])=>{
     const image=new Image();
     image.decoding='async';
-    image.src=src;
+    pending.push(new Promise((resolve,reject)=>{
+      image.addEventListener('load',resolve,{once:true});
+      image.addEventListener('error',()=>reject(new Error('Affiche introuvable : '+src)),{once:true});
+    }));
     images[key]=image;
+    if(!offline)image.src=src;
   });
+  const sourceReady=offline?new Promise((resolve,reject)=>{
+    // Local PNG URLs taint canvases. Load a self-contained bundle only in file:// mode.
+    const script=document.createElement('script');
+    script.src='signage-offline.js?v=1';
+    script.onload=()=>{
+      for(const [key,src] of Object.entries(sources))images[key].src=globalThis.OfficeSignageOffline[src.split('?')[0]];
+      resolve();
+    };
+    script.onerror=()=>reject(new Error('Affiches hors ligne introuvables'));
+    document.head.append(script);
+  }):Promise.resolve();
+  globalThis.OfficeSignageReady=Promise.all([sourceReady,...pending]).then(()=>true);
 
   // A restrained wall strip groups the signs without turning the decor into large dark panels.
   const band=(mesh,y,color,h=2.42)=>mesh.box(0,y,-1.15,20.7,h,.12,color);

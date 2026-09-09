@@ -5,8 +5,8 @@ const vm=require('node:vm');
 const levels=[['inetum-lcp7','ordre-mission','swile','bon-commande','sap-concur','mypeopledoc','chronotime-2','global-service-center'],['success-factors','gcomp','learning-academy','power-up','lets-connect-france','gen-ai'],['charity-day','summer-party']];
 function scene(level){
   const panels=[],boxes=[];
-  class Image{set src(src){this.path=src.split('?')[0];const png=readFileSync(this.path);this.naturalWidth=png.readUInt32BE(16);this.naturalHeight=png.readUInt32BE(20);this.complete=true;}}
-  const context=vm.createContext({Image,OfficeDecor:{draw(){}}});
+  class Image{addEventListener(){} set src(src){this.path=src.split('?')[0];const png=readFileSync(this.path);this.naturalWidth=png.readUInt32BE(16);this.naturalHeight=png.readUInt32BE(20);this.complete=true;}}
+  const context=vm.createContext({Image,location:{protocol:'https:'},OfficeDecor:{draw(){}}});
   vm.runInContext(readFileSync('corporate-signage.js','utf8'),context);
   const mesh={box(...args){boxes.push(args);}};
   context.OfficeDecor.draw(mesh,(x,y,z,w,h,paint)=>{
