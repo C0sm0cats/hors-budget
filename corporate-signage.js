@@ -67,7 +67,7 @@
     panel(mesh,sign,'concur',-3.85,10.65,2,2.0);
     panel(mesh,sign,'peopleDoc',-1.9,10.65,2,2.0);
     panel(mesh,sign,'chronotime',.6,10.65,2,2.0);
-    panel(mesh,sign,'support',5.35,10.7,2.1,1.6);
+    panel(mesh,sign,'support',7.9,10.65,2.1,1.6);
   }
   function drawLevel1(mesh,sign){
     band(mesh,1.45,'#453b55');
