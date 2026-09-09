@@ -11,7 +11,7 @@
     :new URL('celine-dion-poster.png?v=4',document.baseURI).href;
 
   function poster(mesh,sign){
-    // Keep the poster in DIRECTEUR DE PROJETS's free wall space without covering the office signage.
+    // Keep the poster in KÉKÉ's free wall space without covering the office signage.
     const x=3.32,y=4.43,z=-1.20,h=1.24,w=h*(314/354);
     mesh.box(x,y,z-.06,w+.08,h+.08,.08,'#17232b');
     let item;
