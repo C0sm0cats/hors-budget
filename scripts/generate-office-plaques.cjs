@@ -5,10 +5,10 @@ const {execFileSync}=require('node:child_process');
 const {resolve}=require('node:path');
 const root=resolve(__dirname,'..');
 const people={
-  projectDirector:{name:'DIRECTION PROJETS',role:['DIRECTEUR DE PROJETS']},
-  businessManager:{name:'DÉVELOPPEMENT COMMERCIAL',role:['BUSINESS MANAGER']},
-  techServicesDirector:{name:'TECHNOLOGIES & SERVICES',role:['DIRECTEUR TECHNOLOGIES SERVICES','PAYS DE LA LOIRE']},
-  regionalDirector:{name:'DIRECTION RÉGIONALE',role:['DIRECTEUR RÉGION','GRAND OUEST']}
+  projectDirector:{role:['DIRECTEUR DE PROJETS']},
+  businessManager:{role:['BUSINESS MANAGER']},
+  techServicesDirector:{role:['DIRECTEUR TECHNOLOGIES SERVICES','PAYS DE LA LOIRE']},
+  regionalDirector:{role:['DIRECTEUR RÉGION','GRAND OUEST']}
 };
 (async()=>{
   const browser=await chromium.launch();
@@ -18,11 +18,11 @@ const people={
       const output={};
       for(const [key,person] of Object.entries(people)){
         const canvas=document.createElement('canvas'),c=canvas.getContext('2d');
-        const fonts=['700 36px Arial',...person.role.map(()=> '700 18px Arial')];
-        const lines=[person.name,...person.role];
+        const lines=person.role;
+        const fonts=lines.map(()=> '700 18px Arial');
         // Measure the visible glyphs, including accents; never squeeze text with maxWidth.
         const metrics=lines.map((text,i)=>{c.font=fonts[i];const m=c.measureText(text);return {left:m.actualBoundingBoxLeft,right:m.actualBoundingBoxRight,ascent:m.actualBoundingBoxAscent,descent:m.actualBoundingBoxDescent};});
-        const padding=22,gaps=lines.map((_,i)=>i===0?0:i===1?13:8);
+        const padding=22,gaps=lines.map((_,i)=>i===0?0:8);
         const width=Math.ceil(Math.max(...metrics.map(m=>m.left+m.right))+padding*2);
         const height=Math.ceil(metrics.reduce((sum,m,i)=>sum+m.ascent+m.descent+gaps[i],padding*2));
         // 2x export keeps the in-game texture crisp without oversized source images.
