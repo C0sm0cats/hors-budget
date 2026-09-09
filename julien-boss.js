@@ -2,7 +2,7 @@
 (()=>{
   const states=new WeakMap();
   const X=5.35;
-  function state(s){let b=states.get(s);if(!b){b={hp:3,flash:0,nextAttack:(s.levelTime||0)+1.8,lastNow:s.levelTime||0};states.set(s,b);}return b;}
+  function state(s){let b=states.get(s);if(!b){b={hp:3,flash:0,preparing:false,nextAttack:(s.levelTime||0)+1.8,lastNow:s.levelTime||0};states.set(s,b);}return b;}
   const defeated=s=>state(s).hp<=0;
   globalThis.JulienBoss={x:X,state,defeated};
 
@@ -20,6 +20,8 @@
     for(const h of s.hostile){
       if(h.julien&&h.reflected&&h.life>0&&h.x>=X-.45){h.life=0;hitBoss(s,b);}
     }
+    if(s.player.floor<3)b.nextAttack=Math.max(b.nextAttack,now+.6);
+    b.preparing=b.hp>0&&s.player.floor>=3&&now>=b.nextAttack-.6&&now<b.nextAttack;
     if(b.hp>0&&now>=b.nextAttack&&s.phase==='playing'&&s.player.floor>=3){
       b.nextAttack=now+1.9+Math.random()*.85;
       s.hostile.push({x:X-.48,y:y+.82,vx:-3.5,life:5,kind:'kpi',julien:true,reflected:false});

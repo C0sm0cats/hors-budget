@@ -12,11 +12,18 @@
   const choose=document.createElement('select');choose.setAttribute('aria-label','Choisir un bureau');
   dialog.append(title,choose,picture,close);document.body.append(dialog);
   let readingState=null;
+  const discovered=new WeakSet();
   const boards=()=> (globalThis.OfficeBoards||[]).filter(b=>b.level===Arcade.state.level);
   function show(data){
     title.textContent='Bureau de '+data.name;
     picture.alt='Tableau du bureau de '+data.name;
     picture.src=data.canvas.toDataURL();
+    const s=Arcade.state;
+    if(data.level===0&&data.name==='CHACHA'&&!discovered.has(s)){
+      discovered.add(s);
+      s.comedy.line='Au Power UP Tour… Bien sûr. Il faut passer par la direction pour la rejoindre.';
+      s.comedy.lineTime=6;s.comedy.cooldown=8;
+    }
   }
   function open(data){
     const available=boards();

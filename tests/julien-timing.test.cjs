@@ -27,3 +27,14 @@ for(const freeze of ['miracle','hitStop'])test(`JUJU does not attack or take dam
   s.comedy.miracle=0;s.hitStop=0;tick(10001,.01);
   assert.equal(boss.hp,2);assert.equal(s.hostile.length,1);
 });
+test('JUJU telegraphs before releasing a KPI and preserves the warning during pause',()=>{
+  const {s,tick,boss}=setup();tick(1300,1.3);
+  assert.equal(boss.preparing,true);assert.equal(s.hostile.length,0);
+  s.phase='paused';tick(9000);assert.equal(boss.preparing,true);
+  s.phase='playing';tick(9500,1.81);assert.equal(boss.preparing,false);assert.equal(s.hostile.length,1);
+});
+test('approaching JUJU after waiting below still gives a warning window',()=>{
+  const {s,tick,boss}=setup();s.player.floor=0;tick(10000,10);
+  s.player.floor=3;tick(10010,10.01);assert.equal(boss.preparing,true);assert.equal(s.hostile.length,0);
+  tick(10620,10.62);assert.equal(s.hostile.length,1);
+});

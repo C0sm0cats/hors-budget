@@ -105,3 +105,14 @@ test('stun captions vary on subsequent hits and stay stable during the same stun
     previous = caption;
   }
 });
+test('RORO prepares his dossier before the first release and freezes the cue on pause',()=>{
+  const g=game();
+  g.run(`const s=Arcade.state;s.level=2;s.player.floor=4;s.player.x=0;s.player.y=surface(4,0);s.boss.x=5.5;s.boss.y=surface(4,5.5);`);
+  g.step(55);
+  assert.equal(g.run('s.boss.preparing'),true);
+  assert.equal(g.run("s.hostile.filter(h=>h.kind==='boss').length"),0);
+  g.run('Arcade.pause()');g.step(100);assert.equal(g.run('s.boss.preparing'),true);
+  g.run('Arcade.pause()');g.step(50);
+  assert.equal(g.run('s.boss.preparing'),false);
+  assert.equal(g.run("s.hostile.filter(h=>h.kind==='boss').length"),1);
+});
