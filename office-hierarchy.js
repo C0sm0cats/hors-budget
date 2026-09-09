@@ -47,7 +47,7 @@
     const floor=2,fy=surface(floor,0),wallY=fy+1.35;mesh.box(0,wallY,-1.17,14.4,2.72,.13,'#493b4c');for(const x of [-7.12,7.12])mesh.box(x,wallY,-1.02,.16,2.72,.18,'#c5a260');
     const board={level:0,floor,name:'CHACHA',x:-2.45,y:fy+1.7,z:-.95,w:4.55,h:1.55};mesh.box(board.x,board.y,board.z-.07,board.w+.18,board.h+.17,.09,'#776b75');mesh.box(board.x,board.y,board.z-.025,board.w+.05,board.h+.04,.04,'#c7c7c0');
     const item=card(sign,board.x,board.y,board.z,board.w,board.h,businessBoard);globalThis.OfficeBoards=globalThis.OfficeBoards||[];globalThis.OfficeBoards.push({...board,canvas:item.surface});
-    const plaqueX=2.35,plaqueY=fy+1.82;mesh.box(plaqueX,plaqueY,-1.02,3.1,.82,.08,'#c6a052');card(sign,plaqueX,plaqueY,-.96,2.98,.73,(c,W,H)=>{c.fillStyle='#313844';c.fillRect(0,0,W,H);c.strokeStyle='#c6a052';c.lineWidth=7;c.strokeRect(4,4,W-8,H-8);c.textAlign='center';c.textBaseline='middle';c.fillStyle='#f2e7c7';c.font='900 '+H*.27+'px system-ui';c.fillText('CHACHA',W*.5,H*.34,W*.82);c.fillStyle='#d7b9cf';c.font='800 '+H*.145+'px system-ui';c.fillText('BUSINESS MANAGER',W*.5,H*.69,W*.88);});
+    globalThis.OfficePlaques.draw(mesh,sign,'chacha',2.35,fy+1.95,-.96);
     const deskX=1.8,dy=surface(floor,deskX),z=-.55;mesh.box(deskX,dy+.55,z,3.8,.16,.86,'#8a684e');for(const dx of [-1.35,1.35])mesh.box(deskX+dx,dy+.25,z,.18,.52,.66,'#624b3b');mesh.box(deskX-.25,dy+1.05,z+.12,1.38,.82,.13,'#263843');mesh.box(deskX-.25,dy+1.05,z+.20,1.20,.66,.035,'#2d414b');
     mesh.box(deskX-.21,dy+.79,z+.26,.25,.46,.13,'#4f646d');
     mesh.box(deskX+.78,dy+.43,.02,.68,.18,.65,'#855f79');mesh.box(deskX+.78,dy+.89,-.20,.68,.82,.15,'#855f79');for(const sx of [-.25,.25])mesh.cylinder(deskX+.78+sx,dy+.12,.02,.065,.24,'#263843',8);
@@ -68,7 +68,7 @@
     const floor=3,fy=surface(floor,0),wallY=fy+1.35;mesh.box(0,wallY,-1.18,14.4,2.72,.13,'#284653');for(const x of [-7.12,7.12])mesh.box(x,wallY,-1.02,.16,2.72,.18,'#c5a260');
     const board={level:2,floor,name:'RORO',x:-2.0,y:fy+1.70,z:-.96,w:4.9,h:1.55};mesh.box(board.x,board.y,board.z-.07,board.w+.18,board.h+.17,.09,'#66777c');mesh.box(board.x,board.y,board.z-.025,board.w+.05,board.h+.04,.04,'#c7ccc7');
     const item=card(sign,board.x,board.y,board.z,board.w,board.h,regionalBoard);globalThis.OfficeBoards.push({...board,canvas:item.surface});globalThis.OfficeBoard=globalThis.OfficeBoards[0];
-    const plaqueX=3.25,plaqueY=fy+1.82;mesh.box(plaqueX,plaqueY,-1.03,3.35,.72,.08,'#c6a052');card(sign,plaqueX,plaqueY,-.97,3.23,.63,(c,W,H)=>{c.fillStyle='#223c49';c.fillRect(0,0,W,H);c.strokeStyle='#c6a052';c.lineWidth=7;c.strokeRect(4,4,W-8,H-8);c.textAlign='center';c.textBaseline='middle';c.fillStyle='#f4e7c3';c.font='900 '+H*.28+'px system-ui';c.fillText('RORO',W*.5,H*.31,W*.86);c.fillStyle='#acd0db';c.font='800 '+H*.14+'px system-ui';c.fillText('DIRECTEUR RÉGION GRAND OUEST',W*.5,H*.69,W*.9);});
+    globalThis.OfficePlaques.draw(mesh,sign,'roro',3.85,fy+1.84,-.97);
     // Table d'arbitrage, dos du moniteur et mobilier premium : une zone de direction dans le séminaire,
     // pas un ancien bureau privé déplacé depuis un autre étage.
     const tx=2.2,ty=surface(floor,tx);mesh.box(tx,ty+.55,-.48,3.5,.16,.92,'#8d6a4c');for(const dx of [-1.25,1.25])mesh.box(tx+dx,ty+.25,-.48,.18,.52,.72,'#5d493a');mesh.box(tx-.15,ty+1.08,-.26,1.45,.88,.14,'#263943');
