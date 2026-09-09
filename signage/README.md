@@ -8,15 +8,15 @@ Après leur remplacement, exécuter `python3 scripts/generate-offline-signage.py
 
 Les fichiers fournis sont conservés sans modification :
 
-- `Whiteboard01.png` : CHACHA — Business & Développement, niveau 1, étage 2.
-- `Whiteboard02.png` : KÉKÉ — Projets & Delivery, niveau 1, étage 1.
-- `Whiteboard03.png` : JUJU — Technologies & Services, niveau 2, étage 1.
-- `Whiteboard04.png` : RORO — Région Grand Ouest, niveau 3, étage 3.
+- `Whiteboard01.png` : BUSINESS MANAGER — Business & Développement, niveau 1, étage 2.
+- `Whiteboard02.png` : DIRECTEUR DE PROJETS — Projets & Delivery, niveau 1, étage 1.
+- `Whiteboard03.png` : DIRECTEUR TECHNOLOGIES SERVICES — Technologies & Services, niveau 2, étage 1.
+- `Whiteboard04.png` : DIRECTEUR RÉGION GRAND OUEST — Région Grand Ouest, niveau 3, étage 3.
 
 Après leur remplacement, exécuter `python3 scripts/generate-offline-whiteboards.py` pour actualiser `whiteboards-offline.js`. Ce bundle conserve la résolution native et la transparence pour le mode hors ligne. Le mode lecture utilise l'image complète et propose un agrandissement à taille native.
 
 ## Panneaux spéciaux
 
-`cooptation.png` remplace la cooptation près de KÉKÉ au niveau 1. `POWER_UP_TOUR.png` et `espace_VIP.png` remplacent les deux enseignes du séminaire au niveau 3, aux étages 1 et 2 respectivement. Les fichiers sont conservés intacts ; `special-signage.js` utilise les limites du dessin visible pour ne pas dimensionner les panneaux à partir des marges transparentes.
+`cooptation.png` remplace la cooptation près de DIRECTEUR DE PROJETS au niveau 1. `POWER_UP_TOUR.png` et `espace_VIP.png` remplacent les deux enseignes du séminaire au niveau 3, aux étages 1 et 2 respectivement. Les fichiers sont conservés intacts ; `special-signage.js` utilise les limites du dessin visible pour ne pas dimensionner les panneaux à partir des marges transparentes.
 
 Après remplacement de ces sources, vérifier leurs limites visibles dans `special-signage.js` et exécuter `python3 scripts/generate-offline-special-signage.py` pour actualiser le bundle hors ligne.

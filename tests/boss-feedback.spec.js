@@ -6,7 +6,7 @@ async function start(page){
   await page.evaluate(()=>{const s=Arcade.state;s.level=1;s.player.floor=4;s.player.x=4;s.player.y=surface(4,4);s.player.invulnerable=999;s.comedy.eligible=false;renderer.rebuild();});
   await expect(page.locator('body')).toHaveAttribute('data-phase','levelIntro');await page.keyboard.press('Enter');
 }
-test('JUJU blocks the rooftop until three returned KPI, with visible progress',async({page})=>{
+test('DIRECTEUR TECHNOLOGIES SERVICES blocks the rooftop until three returned KPI, with visible progress',async({page})=>{
   const errors=[];page.on('pageerror',e=>errors.push(e.message));await start(page);
   await expect(page.locator('#bossHpText')).toHaveText('3 / 3 KPI');
   for(const airborne of [false,true]){
@@ -14,7 +14,7 @@ test('JUJU blocks the rooftop until three returned KPI, with visible progress',a
     expect(x).toBeLessThanOrEqual(4.5);
   }
   for(const hp of [2,1,0]){
-    await page.evaluate(()=>{const s=Arcade.state;s.hitStop=0;s.hostile.push({julien:true,reflected:true,life:2,x:5.35,y:13,vx:0});});
+    await page.evaluate(()=>{const s=Arcade.state;s.hitStop=0;s.hostile.push({techServicesDirector:true,reflected:true,life:2,x:5.35,y:13,vx:0});});
     await expect(page.locator('#bossHpText')).toHaveText(`${hp} / 3 KPI`);
   }
   await expect(page.locator('.boss-hud-title')).toContainText('ACCÈS ROOFTOP OUVERT');
@@ -34,6 +34,6 @@ test('dialogues keep two non-overlapping bubbles and prioritize player reactions
     for(const a of boxes)expect(a.left<hud.x+hud.width&&a.right>hud.x&&a.top<hud.y+hud.height&&a.bottom>hud.y).toBe(false);
     expect(boxes.some(b=>b.text==='RÉACTION PRIORITAIRE')).toBe(true);
     if(boxes.length===2){const [a,b]=boxes;expect(a.left<b.right&&a.right>b.left&&a.top<b.bottom&&a.bottom>b.top).toBe(false);}
-    await expect(page.locator('.main-banter.kevin:visible')).toHaveCount(0);
+    await expect(page.locator('.main-banter.projectDirector:visible')).toHaveCount(0);
   }
 });

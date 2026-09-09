@@ -63,12 +63,12 @@ test('final victory stays coherent from a stressed final-level state',async({pag
   await page.evaluate(()=>{
     const s=Arcade.state;s.level=2;s.phase='playing';document.body.dataset.phase='playing';document.body.dataset.level='2';
     s.lives=1;s.shield=2;s.coffee=2;s.slideTime=2;s.boss.active=true;s.boss.hp=0;
-    s.player.floor=4;s.player.x=s.chacha.x;s.player.y=surface(4,s.chacha.x);s.player.grounded=true;
+    s.player.floor=4;s.player.x=s.businessManager.x;s.player.y=surface(4,s.businessManager.x);s.player.grounded=true;
     renderer.rebuild();Arcade.physics(1/90);
   });
   await expect(page.locator('body')).toHaveAttribute('data-phase','won');
   await expect(page.locator('#endScreen')).toBeVisible();
-  await expect(page.locator('#endTitle')).toContainText('CHACHA EST LIBÉRÉE');
+  await expect(page.locator('#endTitle')).toContainText('BUSINESS MANAGER EST LIBÉRÉE');
   await expect(page.locator('#endEyebrow')).toContainText('BUDGET DÉBLOQUÉ');
   expect(errors,`end-state errors in ${testInfo.project.name}`).toEqual([]);
 });

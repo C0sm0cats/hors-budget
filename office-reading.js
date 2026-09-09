@@ -25,7 +25,7 @@
     shownBoard=data;setZoom(false);picture.removeAttribute('src');
     Promise.resolve(data.ready).then(()=>{if(shownBoard===data)picture.src=data.image?.src||data.canvas.toDataURL();});
     const s=Arcade.state;
-    if(data.level===0&&data.name==='CHACHA'&&!discovered.has(s)){
+    if(data.level===0&&data.name==='BUSINESS MANAGER'&&!discovered.has(s)){
       discovered.add(s);
       s.comedy.line='Au Power UP Tour… Bien sûr. Il faut passer par la direction pour la rejoindre.';
       s.comedy.lineTime=6;s.comedy.cooldown=8;

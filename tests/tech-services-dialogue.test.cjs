@@ -4,7 +4,7 @@ const {readFileSync}=require('node:fs');
 const {join}=require('node:path');
 const vm=require('node:vm');
 
-test('JUJU uses the visible main dialogue channel only while alive on level two',()=>{
+test('DIRECTEUR TECHNOLOGIES SERVICES uses the visible main dialogue channel only while alive on level two',()=>{
   const elements=[],frames=[];
   const element=()=>({hidden:true,style:{removeProperty(key){delete this[key];},setProperty(key,value){this[key]=value;}},dataset:{},className:'',textContent:'',
     classList:{add(){},contains(name){return name==='main-banter';}},append(el){elements.push(el);},
@@ -16,11 +16,11 @@ test('JUJU uses the visible main dialogue channel only while alive on level two'
     performance:{now:()=>0},innerWidth:1366,innerHeight:768,Arcade:arcade,
     renderer:{project:(x,y)=>({x:680+x*40,y:600-y*30})},surface:floor=>floor*3,
     requestAnimationFrame:fn=>frames.push(fn)});
-  for(const file of ['banter-fair.js','julien-boss.js'])vm.runInContext(readFileSync(join(__dirname,'..',file),'utf8'),ctx);
+  for(const file of ['banter-fair.js','tech-services-boss.js'])vm.runInContext(readFileSync(join(__dirname,'..',file),'utf8'),ctx);
   const tick=now=>{const pending=frames.splice(0);pending.forEach(fn=>fn(now));};
-  const bubble=elements.find(el=>el.className.split(' ').includes('julien'));
+  const bubble=elements.find(el=>el.className.split(' ').includes('techServicesDirector'));
   assert.ok(bubble.className.includes('fair-bubble'),'must pass the CSS visibility filter');
-  assert.equal(bubble.dataset.speaker,'JUJU');
+  assert.equal(bubble.dataset.speaker,'DIRECTEUR TECHNOLOGIES SERVICES');
   tick(0);tick(1400);assert.equal(bubble.hidden,true);
   arcade.state=state();arcade.state.level=1;tick(1500);tick(2800);
   assert.equal(bubble.hidden,false);assert.ok(bubble.textContent.length>15);
@@ -28,7 +28,7 @@ test('JUJU uses the visible main dialogue channel only while alive on level two'
   arcade.state.phase='paused';tick(3000);assert.equal(bubble.hidden,true);
   arcade.state.phase='playing';tick(3100);assert.equal(bubble.hidden,false);
   tick(30000);assert.notEqual(bubble.textContent,first);
-  ctx.JulienBoss.state(arcade.state).hp=0;tick(30100);assert.equal(bubble.hidden,true);
+  ctx.TechServicesBoss.state(arcade.state).hp=0;tick(30100);assert.equal(bubble.hidden,true);
   arcade.state=state();arcade.state.level=1;tick(31000);tick(32300);assert.equal(bubble.hidden,false);
   arcade.state.level=2;tick(32400);assert.equal(bubble.hidden,true);
 });
