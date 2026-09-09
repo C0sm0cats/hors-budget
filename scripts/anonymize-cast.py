@@ -60,12 +60,10 @@ def anonymize_text(text: str) -> str:
     for old, new in SPECIAL_REPLACEMENTS.items():
         text = text.replace(old, new)
 
-    # Lower-case ASCII occurrences are implementation identifiers, including camelCase prefixes.
     for group in GROUPS:
         for old in group['ascii']:
             text = text.replace(old, group['runtime'])
 
-    # Any remaining case/accent spelling is human-facing and becomes a role label.
     for group in GROUPS:
         variants = [*group['ascii'], *group['accented']]
         pattern = re.compile(r'(?<![\w])(?:' + '|'.join(re.escape(v) for v in variants) + r')(?![\w])', re.IGNORECASE)
@@ -170,7 +168,6 @@ def regenerate_plaques():
 
 
 def write_guard_test():
-    # Numeric code points avoid embedding the forbidden identities in the repository itself.
     forbidden_codes = [
         [107, 101, 118, 105, 110],
         [107, 101, 107, 101],
@@ -181,29 +178,29 @@ def write_guard_test():
         [114, 111, 100, 111, 108, 112, 104, 101],
         [114, 111, 114, 111],
     ]
-    test = f"""const test=require('node:test');
+    test = """const test=require('node:test');
 const assert=require('node:assert/strict');
 const fs=require('node:fs');
 const path=require('node:path');
 const root=path.resolve(__dirname,'..');
-const blocked={forbidden_codes!r}.map(code=>String.fromCodePoint(...code));
+const blocked=__BLOCKED__.map(code=>String.fromCodePoint(...code));
 const normalize=s=>s.normalize('NFD').replace(/[\\u0300-\\u036f]/g,'').toLowerCase();
 const textExt=new Set(['.js','.cjs','.mjs','.html','.css','.md','.json','.yml','.yaml','.txt','.xml']);
 function walk(dir,out=[]){
-  for(const entry of fs.readdirSync(dir,{{withFileTypes:true}})){{
+  for(const entry of fs.readdirSync(dir,{withFileTypes:true})){
     if(entry.name==='.git'||entry.name==='node_modules')continue;
     const full=path.join(dir,entry.name),rel=path.relative(root,full);
     out.push(rel);
     if(entry.isDirectory())walk(full,out);
     else if(textExt.has(path.extname(entry.name).toLowerCase()))out.push(fs.readFileSync(full,'utf8'));
-  }}
+  }
   return out;
-}}
-test('repository contains no personal cast identities in paths or text',()=>{{
+}
+test('repository contains no personal cast identities in paths or text',()=>{
   const corpus=normalize(walk(root).join('\\n'));
   for(const word of blocked)assert.equal(corpus.includes(word),false,'forbidden cast identity found');
-}});
-"""
+});
+""".replace('__BLOCKED__', json.dumps(forbidden_codes))
     (ROOT / 'tests/anonymized-cast.test.cjs').write_text(test, encoding='utf-8')
 
 
