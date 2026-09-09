@@ -6,16 +6,17 @@
   if(!decor?.draw)throw new Error('OfficeDecor indisponible');
   const originalDraw=decor.draw;
 
+  const ASSET_VERSION='2';
   const atlases=[
-    {src:'signage-level0.png',image:new Image(),sprites:{
+    {src:'signage-level0.png?v='+ASSET_VERSION,image:new Image(),sprites:{
       site:[7,85,261,78],mission:[282,72,261,104],swile:[557,65,261,118],purchase:[863,7,199,234],
       concur:[7,322,261,99],peopleDoc:[282,322,261,99],chronotime:[557,322,261,99],support:[832,331,261,80]
     }},
-    {src:'signage-level1.png',image:new Image(),sprites:{
+    {src:'signage-level1.png?v='+ASSET_VERSION,image:new Image(),sprites:{
       success:[6,63,268,107],gcomp:[286,63,268,107],academy:[566,67,268,99],
       powerUp:[6,312,268,76],connect:[286,302,268,97],genAi:[566,302,268,97]
     }},
-    {src:'signage-level2.png',image:new Image(),sprites:{
+    {src:'signage-level2.png?v='+ASSET_VERSION,image:new Image(),sprites:{
       charity:[10,97,580,225],summer:[610,111,580,197]
     }}
   ];
