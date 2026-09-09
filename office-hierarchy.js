@@ -30,11 +30,12 @@
   }
 
   function seminarDecor(mesh,sign,surface){
-    const floor1=surface(1,0),floor2=surface(2,0);card(sign,0,floor1+1.55,-1.12,8.9,1.05,(c,W,H)=>{const g=c.createLinearGradient(0,0,W,0);g.addColorStop(0,'#173247');g.addColorStop(.55,'#31556b');g.addColorStop(1,'#684158');c.fillStyle=g;c.fillRect(0,0,W,H);c.fillStyle='#d9f18a';c.font='900 '+H*.26+'px system-ui';c.textAlign='center';c.textBaseline='middle';c.fillText('POWER UP TOUR',W/2,H*.43,W*.9);c.fillStyle='#f4e9d1';c.font='800 '+H*.095+'px system-ui';c.fillText('RÉGION GRAND OUEST · LEADERSHIP · CROISSANCE · ALIGNEMENT',W/2,H*.76,W*.9);});
+    const floor1=surface(1,0),floor2=surface(2,0);
+    globalThis.OfficeSpecialSignage.draw(sign,'powerUpTour',0,floor1+1.85,-1.12,5.6);
     mesh.box(0,floor1+.18,-.45,4.3,.35,1.45,'#634557');mesh.box(0,floor1+.62,-.55,1.05,.88,.75,'#2d4754');card(sign,0,floor1+.88,-.12,.82,.42,(c,W,H)=>{c.fillStyle='#203b48';c.fillRect(0,0,W,H);c.fillStyle='#d9f18a';c.font='900 '+H*.34+'px system-ui';c.textAlign='center';c.textBaseline='middle';c.fillText('POWER UP',W/2,H*.52,W*.9);});
     for(const x of [-5.3,4.8]){mesh.box(x,floor2+.37,-.52,2.3,.50,.82,'#745d72');mesh.box(x,floor2+.78,-.78,2.3,.70,.18,'#8d7087');for(const sx of [-.9,.9])mesh.box(x+sx,floor2+.18,-.52,.16,.38,.7,'#4b3e49');}
     mesh.box(0,floor2+.34,-.52,2,.25,.9,'#b98f66');for(let i=0;i<5;i++)mesh.cylinder(-.7+i*.35,floor2+.56,-.52,.10,.09,i%2?'#e0c384':'#dca3b4',8);
-    card(sign,0,floor2+1.55,-1.08,4.6,.82,(c,W,H)=>{c.fillStyle='#263c49';c.fillRect(0,0,W,H);c.fillStyle='#f1d38a';c.font='900 '+H*.21+'px system-ui';c.textAlign='center';c.textBaseline='middle';c.fillText('ESPACE VIP · DIRECTION RÉGION GRAND OUEST',W/2,H*.48,W*.92);c.fillStyle='#a9d2df';c.font='800 '+H*.095+'px system-ui';c.fillText('BUFFET · RÉSULTATS · ARBITRAGES',W/2,H*.76,W*.9);});
+    globalThis.OfficeSpecialSignage.draw(sign,'vip',0,floor2+1.65,-1.08,6.8);
   }
 
   decor.draw=(mesh,sign,level,surface)=>{
