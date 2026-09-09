@@ -155,15 +155,7 @@ const glyphs={
     const item=sign(x,y,z+.02,w,h,julien?julienBoard:kevinBoard);
     globalThis.OfficeBoard={level,...board,floor:1,name:julien?'JUJU':'KÉKÉ',z:z+.02,canvas:item.surface};
     globalThis.OfficeBoards.push(globalThis.OfficeBoard);
-    const plaqueX=julien?3.45:1.45,plaqueY=julien?4.98:4.87,plaqueW=julien?3.5:2.12,plaqueH=julien?.75:.59;
-    mesh.box(plaqueX,plaqueY,-1.27,plaqueW+.07,plaqueH+.06,.07,'#c6a052');
-    sign(plaqueX,plaqueY,-1.22,plaqueW,plaqueH,(c,W,H)=>{
-      c.fillStyle='#293f49';c.fillRect(0,0,W,H);c.strokeStyle='#c6a052';c.lineWidth=8;c.strokeRect(4,4,W-8,H-8);
-      c.fillStyle='#ede2c0';c.textBaseline='middle';c.font='bold '+H*.28+'px system-ui';c.fillText(julien?'JUJU':'KÉKÉ',W*.09,H*(julien?.25:.35));
-      c.fillStyle='#acd0db';c.font='bold '+H*.17+'px system-ui';
-      if(julien){c.fillText('Directeur Technologies Services',W*.09,H*.56,W*.84);c.fillText('Pays de la Loire',W*.09,H*.82,W*.84);}
-      else c.fillText('DIRECTEUR DE PROJETS',W*.09,H*.70,W*.84);
-    });
+    globalThis.OfficePlaques.draw(mesh,sign,julien?'juju':'keke',julien?3.55:1.45,julien?4.98:4.99,-1.22);
     const deskX=julien?2.25:.85;
     desk(mesh,deskX,surface(1,deskX),-.65,julien);
     if(!julien){

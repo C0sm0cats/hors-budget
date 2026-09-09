@@ -9,7 +9,7 @@ test('base office decor owns only KÉKÉ and JUJU boards',()=>{
   const mesh=new Proxy({box(...args){boxes.push(args);}},{get:(t,k)=>t[k]||noop});
   const canvas=new Proxy({createLinearGradient:()=>({addColorStop:noop})},{get:(t,k)=>k in t?t[k]:noop,set:(t,k,v)=>(t[k]=v,true)});
   const source=readFileSync(join(__dirname,'../office-decor.js'),'utf8');
-  const ctx=vm.createContext({Path2D:class{constructor(path){assert.equal(typeof path,'string','missing handwritten character');assert.ok(path.length);}}});
+  const ctx=vm.createContext({OfficePlaques:{draw(){}},Path2D:class{constructor(path){assert.equal(typeof path,'string','missing handwritten character');assert.ok(path.length);}}});
   vm.runInContext(source,ctx);
 
   for(const [level,expected] of [[0,'KÉKÉ'],[1,'JUJU']]){
