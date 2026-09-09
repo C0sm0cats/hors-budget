@@ -29,19 +29,7 @@
     globalThis.OfficePlaques.draw(mesh,sign,julien?'juju':'keke',julien?3.55:1.45,julien?4.98:4.99,-1.22);
     const deskX=julien?2.25:.85;
     desk(mesh,deskX,surface(1,deskX),-.65,julien);
-    if(!julien){
-      const poster=(x,y,w,h,paint)=>{mesh.box(x,y,-1.26,w+.14,h+.14,.08,'#566970');sign(x,y,-1.20,w,h,paint);};
-      poster(-4.7,4.56,1.55,1.24,(c,W,H)=>{
-        c.fillStyle='#353445';c.fillRect(0,0,W,H);c.fillStyle='#252f3d';c.fillRect(0,0,W,H*.22);
-        c.fillStyle='#e5dadd';c.font='bold '+H*.12+'px system-ui';c.textAlign='center';c.fillText('COOPTATION',W/2,H*.16,W*.9);
-        // Font-independent handshake icon.
-        c.save();c.translate(W*.5,H*.41);c.scale(W*.30,H*.18);
-        c.strokeStyle='#df9aba';c.fillStyle='#353445';c.lineWidth=.09;c.lineJoin='round';c.lineCap='round';
-        c.beginPath();c.moveTo(-1,-.35);c.lineTo(-.55,-.72);c.lineTo(-.12,-.52);c.lineTo(.2,-.62);c.lineTo(.62,-.32);c.lineTo(1,-.5);c.lineTo(1,.25);c.lineTo(.68,.42);c.lineTo(.25,.82);c.lineTo(-.12,.7);c.lineTo(-.62,.24);c.lineTo(-1,.38);c.closePath();c.fill();c.stroke();
-        c.beginPath();c.moveTo(.2,-.62);c.lineTo(-.22,-.08);c.quadraticCurveTo(-.02,.2,.2,-.02);c.lineTo(.36,-.18);c.lineTo(.68,.42);c.moveTo(-.46,.22);c.lineTo(-.12,.7);c.moveTo(-.2,.08);c.lineTo(.2,.62);c.moveTo(-.72,-.54);c.lineTo(-.62,.24);c.moveTo(.78,-.4);c.lineTo(.68,.42);c.stroke();c.restore();
-        c.fillStyle='#df9aba';c.font='bold '+H*.12+'px system-ui';c.fillText('1 TALENT =',W/2,H*.71,W*.9);c.fillText('1 PRIME',W/2,H*.88,W*.9);
-      });
-    }
+    if(!julien)globalThis.OfficeSpecialSignage.draw(sign,'cooptation',-4.7,4.56,-1.20,1.85);
   }
   globalThis.OfficeDecor={draw};
 })();
