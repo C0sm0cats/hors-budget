@@ -5,7 +5,7 @@ test('reading BUSINESS MANAGER clue triggers one reaction per run without an ext
   const read=page.getByRole('button',{name:'Lire le tableau du bureau'});
   await read.click();
   await page.getByRole('combobox',{name:'Choisir un bureau'}).selectOption({label:'BUSINESS MANAGER'});
-  await expect(page.locator('.office-reading h2')).toHaveText('Bureau de BUSINESS MANAGER');
+  await expect(page.locator('.office-reading h2')).toHaveText('Bureau de la Business Manager');
   expect(await page.evaluate(()=>Arcade.state.comedy.line)).toContain('Au Power UP Tour');
   await page.getByRole('button',{name:'REPRENDRE',exact:true}).click();
   await expect(page.locator('body')).toHaveAttribute('data-phase','playing');
@@ -24,7 +24,7 @@ test('visible board cue opens its own board with a forgiving touch target',async
     // Click outside the board itself, but inside the cue's 48px target.
     if(isMobile)await page.touchscreen.tap(point.x+18,point.y);
     else await page.mouse.click(point.x+18,point.y);
-    await expect(page.locator('.office-reading h2')).toHaveText('Bureau de '+name);
+    await expect(page.locator('.office-reading h2')).toHaveText(name==='BUSINESS MANAGER'?'Bureau de la Business Manager':'Bureau du Directeur de Projets');
     await expect(page.locator('body')).toHaveAttribute('data-phase','paused');
     await page.getByRole('button',{name:'REPRENDRE',exact:true}).click();
     await expect(page.locator('body')).toHaveAttribute('data-phase','playing');

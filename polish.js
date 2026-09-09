@@ -7,7 +7,7 @@
   const bossHud=document.createElement('div');
   bossHud.className='boss-hud';
   bossHud.hidden=true;
-  bossHud.innerHTML='<div class="boss-hud-title"><span>DIRECTEUR RÉGION GRAND OUEST · DIRECTEUR RÉGION GRAND OUEST</span><span id="bossHpText">3 / 3</span></div><div class="boss-track"><div class="boss-fill" id="bossFill"></div></div>';
+  bossHud.innerHTML='<div class="boss-hud-title"><span>DIRECTEUR RÉGION GRAND OUEST</span><span id="bossHpText">3 / 3</span></div><div class="boss-track"><div class="boss-fill" id="bossFill"></div></div>';
   document.body.append(bossHud);
   const bossFill=bossHud.querySelector('#bossFill'),bossHpText=bossHud.querySelector('#bossHpText');
 
@@ -22,10 +22,7 @@
   regionalDirectorGlasses.className='regionalDirector-glasses';
   regionalDirectorGlasses.innerHTML='<i></i><b></b><i></i>';
   document.body.append(regionalDirectorGlasses);
-  const regionalDirectorName=document.createElement('div');
-  regionalDirectorName.className='regionalDirector-name-fix';
-  regionalDirectorName.textContent='DIRECTEUR RÉGION GRAND OUEST';
-  document.body.append(regionalDirectorName);
+
 
   const safeStyle=document.createElement('style');
   safeStyle.textContent='.regionalDirector-safe{position:fixed;z-index:4;width:62px;height:70px;transform:translate(-50%,-50%);pointer-events:none;border:3px solid #1e2b34;border-radius:7px;background:linear-gradient(145deg,#71818a,#35444d 58%,#202b32);box-shadow:inset 0 0 0 3px #93a2a8,inset 0 0 18px #111a,0 8px 16px #07162588}.regionalDirector-safe::before{content:"";position:absolute;inset:8px;border:2px solid #aeb8bc;border-radius:4px;box-shadow:inset 0 0 0 2px #28353c}.regionalDirector-safe span{position:absolute;left:50%;top:9px;transform:translateX(-50%);font:900 7px/1 system-ui;letter-spacing:1px;color:#d6f382;text-shadow:0 1px 2px #000}.regionalDirector-safe i{position:absolute;left:17px;top:31px;width:17px;height:17px;border:3px solid #c6d0d3;border-radius:50%;box-sizing:border-box}.regionalDirector-safe i::before,.regionalDirector-safe i::after{content:"";position:absolute;left:5px;top:-3px;width:2px;height:17px;background:#c6d0d3}.regionalDirector-safe i::after{transform:rotate(90deg)}.regionalDirector-safe b{position:absolute;right:11px;top:31px;width:4px;height:18px;border-radius:3px;background:#c6d0d3;box-shadow:0 0 0 1px #1c262c}';
@@ -54,9 +51,9 @@
   const hideTagsFrom=i=>{for(let n=i;n<tags.length;n++)tags[n].hidden=true;};
 
   const levelCopy=[
-    ['NIVEAU 1','OPEN SPACE · LCP7','DIRECTEUR DE PROJETS · DIRECTEUR DE PROJETS · BUSINESS MANAGER · BUSINESS MANAGER'],
-    ['NIVEAU 2','DIRECTION TECHNOLOGIES SERVICES','DIRECTEUR TECHNOLOGIES SERVICES · DIRECTEUR TECHNOLOGIES SERVICES PAYS DE LA LOIRE'],
-    ['NIVEAU 3','POWER UP TOUR · GRAND OUEST','DIRECTEUR RÉGION GRAND OUEST · DIRECTEUR RÉGION GRAND OUEST']
+    ['NIVEAU 1','OPEN SPACE · LCP7','DIRECTEUR DE PROJETS · BUSINESS MANAGER'],
+    ['NIVEAU 2','DIRECTION TECHNOLOGIES SERVICES','DIRECTEUR TECHNOLOGIES SERVICES PAYS DE LA LOIRE'],
+    ['NIVEAU 3','POWER UP TOUR · GRAND OUEST','DIRECTEUR RÉGION GRAND OUEST']
   ];
 
   let lastState=null,cinemaVersion=0,lastLevel=-1,bossIntroSeen=false,cinemaTimer=null,finaleSeen=false,waitingIntro=false,introState=null;
@@ -104,21 +101,19 @@
   document.addEventListener('pointerdown',dismissIntro,true);
 
   function positionregionalDirector(s){
-    const visible=s.level===2&&s.boss.hp>0&&!['help','records','paused','won','lost'].includes(s.phase),showName=visible&&s.phase!=='title';
-    regionalDirectorGlasses.hidden=!visible;regionalDirectorName.hidden=!showName;regionalDirectorSafe.hidden=!visible;if(!visible)return;
+    const visible=s.level===2&&s.boss.hp>0&&!['help','records','paused','won','lost'].includes(s.phase);
+    regionalDirectorGlasses.hidden=!visible;regionalDirectorSafe.hidden=!visible;if(!visible)return;
     const rowing=!(s.comedy?.miracle>0)&&!s.boss.active&&Math.floor(s.visual/6)%2===1;
     const bossX=s.boss.x-(s.boss.recoil>0?.24*(s.boss.recoil/.28):0),drawX=bossX+(rowing?Math.sin(s.visual*6)*.18:0),bounce=rowing&&!reduced?Math.abs(Math.sin(s.visual*7))*.48:0;
     const scale=1.27,eyeY=s.boss.y+.32+bounce+1.16*scale,eyeZ=.15+.19*scale,eyeHalf=.105*scale;
     const face=renderer.project(drawX,eyeY,eyeZ),leftEye=renderer.project(drawX-eyeHalf,eyeY,eyeZ),rightEye=renderer.project(drawX+eyeHalf,eyeY,eyeZ);
     const projectedEyeGap=Math.hypot(rightEye.x-leftEye.x,rightEye.y-leftEye.y),glassesScale=Math.max(.28,Math.min(2.4,projectedEyeGap/19));
     regionalDirectorGlasses.style.left=face.x+'px';regionalDirectorGlasses.style.top=face.y+'px';regionalDirectorGlasses.style.setProperty('transform','translate(-50%,-50%) scale('+glassesScale+')','important');
-    if(showName){const np=renderer.project(drawX,s.boss.y+.32+bounce+2.12,.45);regionalDirectorName.style.left=np.x+'px';regionalDirectorName.style.top=np.y+'px';}
     const sx=-7.35,sy=surface(4,sx)+.72,sz=.36,sp=renderer.project(sx,sy,sz),sl=renderer.project(sx-.45,sy,sz),sr=renderer.project(sx+.45,sy,sz);
     if(sp&&Number.isFinite(sp.x)&&sp.x>=-80&&sp.x<=innerWidth+80&&sp.y>=-80&&sp.y<=innerHeight+80){
       const safeScale=Math.max(.55,Math.min(1.45,Math.abs(sr.x-sl.x)/55));
       regionalDirectorSafe.style.left=sp.x+'px';regionalDirectorSafe.style.top=sp.y+'px';regionalDirectorSafe.style.transform='translate(-50%,-50%) scale('+safeScale+')';regionalDirectorSafe.hidden=false;
     }else regionalDirectorSafe.hidden=true;
-    const overlay=document.getElementById('overlay');if(overlay){const ctx=overlay.getContext('2d'),ratio=Math.min(devicePixelRatio||1,1.5),legacy=renderer.project(s.boss.x,s.boss.y+2.05,.65);ctx.save();ctx.setTransform(ratio,0,0,ratio,0,0);ctx.clearRect(legacy.x-64,legacy.y-16,128,32);ctx.restore();}
   }
 
   function resetPresentation(s){
@@ -156,20 +151,20 @@
       bossFill.style.width=(hp/3*100)+'%';
       bossHud.classList.toggle('vulnerable',hp===0);
     }else if(s.level===2&&s.boss.active&&s.boss.hp>0){
-      bossHud.querySelector('.boss-hud-title span').textContent='DIRECTEUR RÉGION GRAND OUEST · DIRECTEUR RÉGION GRAND OUEST';
+      bossHud.querySelector('.boss-hud-title span').textContent='DIRECTEUR RÉGION GRAND OUEST';
       bossHud.hidden=false;
       bossFill.style.width=(s.boss.hp/3*100)+'%';
       bossHpText.textContent=s.boss.hp+' / 3';
       bossHud.classList.toggle('vulnerable',!!s.boss.open);
       if(!bossIntroSeen&&s.phase==='playing'){
         bossIntroSeen=true;
-        cinematic('bossIntro','BOSS FINAL','DIRECTEUR RÉGION GRAND OUEST','DIRECTEUR RÉGION GRAND OUEST · GARDIEN DU BUDGET',0,true,true);
+        cinematic('bossIntro','BOSS FINAL','DIRECTEUR RÉGION GRAND OUEST','DÉBLOQUE LE BUDGET POUR TOUS',0,true,true);
       }
     }else bossHud.hidden=true;
 
     if(s.phase==='won'&&!finaleSeen){
       finaleSeen=true;
-      cinematic('finale','BUSINESS MANAGER EST LIBÉRÉE','BUDGET DÉBLOQUÉ','POUR TOUS LES EMPLOYÉS',reduced?700:1550,false,false);
+      cinematic('finale','LA BUSINESS MANAGER EST LIBÉRÉE','BUDGET DÉBLOQUÉ','POUR TOUS LES EMPLOYÉS',reduced?700:1550,false,false);
     }
 
     let i=0;
