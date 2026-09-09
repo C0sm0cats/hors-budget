@@ -1,9 +1,8 @@
 from __future__ import annotations
 
-import os
+import base64
+import json
 import re
-import shutil
-import unicodedata
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -17,28 +16,24 @@ GROUPS = [
         'accented': ('kévin', 'kéké'),
         'runtime': 'projectDirector',
         'display': 'DIRECTEUR DE PROJETS',
-        'slug': 'project-director',
     },
     {
         'ascii': ('charline', 'chacha'),
         'accented': (),
         'runtime': 'businessManager',
         'display': 'BUSINESS MANAGER',
-        'slug': 'business-manager',
     },
     {
         'ascii': ('julien', 'juju'),
         'accented': (),
         'runtime': 'techServicesDirector',
         'display': 'DIRECTEUR TECHNOLOGIES SERVICES',
-        'slug': 'tech-services-director',
     },
     {
         'ascii': ('rodolphe', 'roro'),
         'accented': (),
         'runtime': 'regionalDirector',
         'display': 'DIRECTEUR RÉGION GRAND OUEST',
-        'slug': 'regional-director',
     },
 ]
 
@@ -121,6 +116,59 @@ def rewrite_files():
             path.write_text(updated, encoding='utf-8')
 
 
+def regenerate_plaques():
+    from PIL import Image, ImageDraw, ImageFont
+
+    definitions = {
+        'projectDirector': ('DIRECTION PROJETS', ['DIRECTEUR DE PROJETS']),
+        'businessManager': ('DÉVELOPPEMENT COMMERCIAL', ['BUSINESS MANAGER']),
+        'techServicesDirector': ('TECHNOLOGIES & SERVICES', ['DIRECTEUR TECHNOLOGIES SERVICES', 'PAYS DE LA LOIRE']),
+        'regionalDirector': ('DIRECTION RÉGIONALE', ['DIRECTEUR RÉGION', 'GRAND OUEST']),
+    }
+    font_path = '/usr/share/fonts/truetype/dejavu/DejaVuSans-Bold.ttf'
+    plaques_dir = ROOT / 'plaques'
+    plaques_dir.mkdir(exist_ok=True)
+    output = {}
+
+    for key, (title, roles) in definitions.items():
+        width, height = 720, 260
+        image = Image.new('RGB', (width, height), '#d8c69a')
+        draw = ImageDraw.Draw(image)
+        draw.rounded_rectangle((12, 12, width - 12, height - 12), radius=18, fill='#162832', outline='#806b45', width=5)
+        draw.rounded_rectangle((24, 24, width - 24, height - 24), radius=12, outline='#e8d7a9', width=2)
+        try:
+            title_font = ImageFont.truetype(font_path, 42)
+            role_font = ImageFont.truetype(font_path, 25)
+        except OSError:
+            title_font = role_font = ImageFont.load_default()
+
+        lines = [(title, title_font, '#f4e3b6')]
+        lines += [(role, role_font, '#eef2ee') for role in roles]
+        boxes = [draw.textbbox((0, 0), text, font=font) for text, font, _ in lines]
+        heights = [box[3] - box[1] for box in boxes]
+        total = sum(heights) + 18 * (len(lines) - 1)
+        y = (height - total) / 2
+        for (text, font, color), box, line_h in zip(lines, boxes, heights):
+            line_w = box[2] - box[0]
+            draw.text(((width - line_w) / 2, y - box[1]), text, font=font, fill=color)
+            y += line_h + 18
+
+        path = plaques_dir / f'{key}.png'
+        image.save(path, optimize=True)
+        payload = base64.b64encode(path.read_bytes()).decode('ascii')
+        output[key] = {
+            'name': title,
+            'role': roles,
+            'width': width,
+            'height': height,
+            'padding': 48,
+            'png': 'data:image/png;base64,' + payload,
+        }
+
+    data = "'use strict';\n// Role-based office plaques; no personal identities are embedded in runtime data.\nglobalThis.OfficePlaqueAssets=" + json.dumps(output, ensure_ascii=False, separators=(',', ':')) + ';\n'
+    (ROOT / 'office-plaques-data.js').write_text(data, encoding='utf-8')
+
+
 def write_guard_test():
     # Numeric code points avoid embedding the forbidden identities in the repository itself.
     forbidden_codes = [
@@ -162,6 +210,7 @@ test('repository contains no personal cast identities in paths or text',()=>{{
 def main():
     rename_known_paths()
     rewrite_files()
+    regenerate_plaques()
     write_guard_test()
 
 
