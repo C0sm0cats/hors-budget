@@ -10,6 +10,16 @@
   bossHud.innerHTML='<div class="boss-hud-title"><span>DIRECTEUR RÉGION GRAND OUEST</span><span id="bossHpText">3 / 3</span></div><div class="boss-track"><div class="boss-fill" id="bossFill"></div></div>';
   document.body.append(bossHud);
   const bossFill=bossHud.querySelector('#bossFill'),bossHpText=bossHud.querySelector('#bossHpText');
+  const header=document.querySelector('.hud');
+  // Shared presentation boundary; the renderer keeps the grounded hero below it.
+  const bossLayout=globalThis.BossHudLayout={bottom:0};
+  function positionBossHud(){
+    if(bossHud.hidden){bossLayout.bottom=0;return;}
+    const top=Math.ceil(header.getBoundingClientRect().bottom+12);
+    const value=top+'px';if(bossHud.style.top!==value)bossHud.style.top=value;
+    bossLayout.bottom=top+bossHud.offsetHeight;
+  }
+
 
   const cinema=document.createElement('div');
   cinema.className='cinematic-card';
@@ -161,6 +171,7 @@
         cinematic('bossIntro','BOSS FINAL','DIRECTEUR RÉGION GRAND OUEST','DÉBLOQUE LE BUDGET POUR TOUS',0,true,true);
       }
     }else bossHud.hidden=true;
+    positionBossHud();
 
     if(s.phase==='won'&&!finaleSeen){
       finaleSeen=true;
