@@ -7,6 +7,7 @@ const current='hors-budget.arcade.v1',legacy='mutine.projectDirector.arcade.v3';
 function load(entries,failWrite=false,failRemove=false){
   const data=new Map(Object.entries(entries));
   const ctx=vm.createContext({document:{getElementById:()=>({})},localStorage:{
+    get length(){return data.size;},key:index=>[...data.keys()][index]??null,
     getItem:key=>data.get(key)??null,
     setItem(key,value){if(failWrite)throw Error('quota');data.set(key,value);},
     removeItem(key){if(failRemove)throw Error('blocked');data.delete(key);}
