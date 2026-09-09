@@ -12,6 +12,6 @@ test('enhanced contrast is the native permanent theme and has no mode marker or 
   assert.doesNotMatch(polish,/contrastButton|high-contrast/);
   assert.doesNotMatch(css,/\.high-contrast/);
   assert.match(css,/body\{filter:contrast\(1\.18\) saturate\(1\.08\)\}/);
-  assert.match(index,/polish\.css\?v=22/);
+  assert.match(index,/polish\.css\?v=23/);
   assert.match(index,/banter-fair\.js\?v=26/);
 });
