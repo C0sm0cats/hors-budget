@@ -7,7 +7,7 @@
   const bossHud=document.createElement('div');
   bossHud.className='boss-hud';
   bossHud.hidden=true;
-  bossHud.innerHTML='<div class="boss-hud-title"><span>DIRECTEUR RÉGION GRAND OUEST · DIRECTEUR RÉGION GRAND OUEST</span><span id="bossHpText">3 / 3</span></div><div class="boss-track"><div class="boss-fill" id="bossFill"></div></div>';
+  bossHud.innerHTML='<div class="boss-hud-title"><span>DIRECTEUR RÉGION GRAND OUEST</span><span id="bossHpText">3 / 3</span></div><div class="boss-track"><div class="boss-fill" id="bossFill"></div></div>';
   document.body.append(bossHud);
   const bossFill=bossHud.querySelector('#bossFill'),bossHpText=bossHud.querySelector('#bossHpText');
 
@@ -54,9 +54,9 @@
   const hideTagsFrom=i=>{for(let n=i;n<tags.length;n++)tags[n].hidden=true;};
 
   const levelCopy=[
-    ['NIVEAU 1','OPEN SPACE · LCP7','DIRECTEUR DE PROJETS · DIRECTEUR DE PROJETS · BUSINESS MANAGER · BUSINESS MANAGER'],
-    ['NIVEAU 2','DIRECTION TECHNOLOGIES SERVICES','DIRECTEUR TECHNOLOGIES SERVICES · DIRECTEUR TECHNOLOGIES SERVICES PAYS DE LA LOIRE'],
-    ['NIVEAU 3','POWER UP TOUR · GRAND OUEST','DIRECTEUR RÉGION GRAND OUEST · DIRECTEUR RÉGION GRAND OUEST']
+    ['NIVEAU 1','OPEN SPACE · LCP7','DIRECTEUR DE PROJETS · BUSINESS MANAGER'],
+    ['NIVEAU 2','DIRECTION TECHNOLOGIES SERVICES','DIRECTEUR TECHNOLOGIES SERVICES PAYS DE LA LOIRE'],
+    ['NIVEAU 3','POWER UP TOUR · GRAND OUEST','DIRECTEUR RÉGION GRAND OUEST']
   ];
 
   let lastState=null,cinemaVersion=0,lastLevel=-1,bossIntroSeen=false,cinemaTimer=null,finaleSeen=false,waitingIntro=false,introState=null;
@@ -156,14 +156,14 @@
       bossFill.style.width=(hp/3*100)+'%';
       bossHud.classList.toggle('vulnerable',hp===0);
     }else if(s.level===2&&s.boss.active&&s.boss.hp>0){
-      bossHud.querySelector('.boss-hud-title span').textContent='DIRECTEUR RÉGION GRAND OUEST · DIRECTEUR RÉGION GRAND OUEST';
+      bossHud.querySelector('.boss-hud-title span').textContent='DIRECTEUR RÉGION GRAND OUEST';
       bossHud.hidden=false;
       bossFill.style.width=(s.boss.hp/3*100)+'%';
       bossHpText.textContent=s.boss.hp+' / 3';
       bossHud.classList.toggle('vulnerable',!!s.boss.open);
       if(!bossIntroSeen&&s.phase==='playing'){
         bossIntroSeen=true;
-        cinematic('bossIntro','BOSS FINAL','DIRECTEUR RÉGION GRAND OUEST','DIRECTEUR RÉGION GRAND OUEST · GARDIEN DU BUDGET',0,true,true);
+        cinematic('bossIntro','BOSS FINAL','DIRECTEUR RÉGION GRAND OUEST','DÉBLOQUE LE BUDGET POUR TOUS',0,true,true);
       }
     }else bossHud.hidden=true;
 
