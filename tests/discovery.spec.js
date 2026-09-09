@@ -7,7 +7,7 @@ test('reading CHACHA clue triggers one reaction per run without an extra pause',
   await page.getByRole('combobox',{name:'Choisir un bureau'}).selectOption({label:'CHACHA'});
   await expect(page.locator('.office-reading h2')).toHaveText('Bureau de CHACHA');
   expect(await page.evaluate(()=>Arcade.state.comedy.line)).toContain('Au Power UP Tour');
-  await page.locator('.office-reading button').click();
+  await page.getByRole('button',{name:'REPRENDRE',exact:true}).click();
   await expect(page.locator('body')).toHaveAttribute('data-phase','playing');
   await page.evaluate(()=>{Arcade.state.comedy.lineTime=0;Arcade.state.comedy.line='';});
   await read.click();await page.getByRole('combobox').selectOption({label:'CHACHA'});
@@ -26,7 +26,7 @@ test('visible board cue opens its own board with a forgiving touch target',async
     else await page.mouse.click(point.x+18,point.y);
     await expect(page.locator('.office-reading h2')).toHaveText('Bureau de '+name);
     await expect(page.locator('body')).toHaveAttribute('data-phase','paused');
-    await page.locator('.office-reading button').click();
+    await page.getByRole('button',{name:'REPRENDRE',exact:true}).click();
     await expect(page.locator('body')).toHaveAttribute('data-phase','playing');
   }
 });

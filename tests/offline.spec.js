@@ -13,7 +13,7 @@ test('double-click offline launch renders all three levels and PNGs without WebG
   await expect(page.locator('body')).toHaveAttribute('data-phase','levelIntro');
   await page.keyboard.press('Enter');
   await expect(page.locator('body')).toHaveAttribute('data-phase','playing');
-  await page.evaluate(()=>OfficeSignageReady);
+  await page.evaluate(()=>Promise.all([OfficeSignageReady,OfficeWhiteboards.ready]));
   // Exercise the actual WebGL texture uploads, including images outside the first level.
   for(let level=0;level<3;level++){
     await page.evaluate(level=>{Arcade.state.level=level;renderer.rebuild();},level);

@@ -4,10 +4,13 @@ from PIL import Image
 import base64
 import io
 import json
+import re
 
 root = Path(__file__).resolve().parent.parent
 assets = {}
-for path in sorted((root / 'signage').glob('*.png')):
+sources = re.findall(r"'(signage/[^'?]+\.png)(?:\?[^']*)?'", (root / 'corporate-signage.js').read_text())
+for source in sorted(set(sources)):
+    path = root / source
     with Image.open(path) as original:
         # Half-size source is still several times larger than the in-game panels.
         image = original.convert('RGB').resize((original.width // 2, original.height // 2), Image.Resampling.LANCZOS)

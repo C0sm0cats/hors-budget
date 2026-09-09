@@ -10,14 +10,20 @@
   title.id='office-reading-title';dialog.setAttribute('aria-labelledby',title.id);
   close.className='primary';close.textContent='REPRENDRE';
   const choose=document.createElement('select');choose.setAttribute('aria-label','Choisir un bureau');
-  dialog.append(title,choose,picture,close);document.body.append(dialog);
+  const viewport=document.createElement('div');viewport.className='office-reading-image';viewport.append(picture);
+  const zoom=document.createElement('button');zoom.className='tool';zoom.textContent='AGRANDIR';zoom.setAttribute('aria-pressed','false');
+  dialog.append(title,choose,viewport,zoom,close);document.body.append(dialog);
+  function setZoom(value){dialog.dataset.zoom=String(value);zoom.setAttribute('aria-pressed',String(value));zoom.textContent=value?'AJUSTER':'AGRANDIR';viewport.scrollTo(0,0);}
+  zoom.addEventListener('click',()=>setZoom(dialog.dataset.zoom!=='true'));
+  let shownBoard=null;
   let readingState=null;
   const discovered=new WeakSet();
   const boards=()=> (globalThis.OfficeBoards||[]).filter(b=>b.level===Arcade.state.level);
   function show(data){
     title.textContent='Bureau de '+data.name;
     picture.alt='Tableau du bureau de '+data.name;
-    picture.src=data.canvas.toDataURL();
+    shownBoard=data;setZoom(false);picture.removeAttribute('src');
+    Promise.resolve(data.ready).then(()=>{if(shownBoard===data)picture.src=data.image?.src||data.canvas.toDataURL();});
     const s=Arcade.state;
     if(data.level===0&&data.name==='CHACHA'&&!discovered.has(s)){
       discovered.add(s);
