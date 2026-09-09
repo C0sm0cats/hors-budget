@@ -9,32 +9,11 @@ ROOT = Path(__file__).resolve().parents[1]
 TEXT_SUFFIXES = {'.js', '.cjs', '.mjs', '.html', '.css', '.md', '.json', '.yml', '.yaml', '.txt', '.xml'}
 SKIP_DIRS = {'.git', 'node_modules'}
 
-# Technical runtime identifiers are role-based. Display labels contain functions only.
 GROUPS = [
-    {
-        'ascii': ('kevin', 'keke'),
-        'accented': ('kévin', 'kéké'),
-        'runtime': 'projectDirector',
-        'display': 'DIRECTEUR DE PROJETS',
-    },
-    {
-        'ascii': ('charline', 'chacha'),
-        'accented': (),
-        'runtime': 'businessManager',
-        'display': 'BUSINESS MANAGER',
-    },
-    {
-        'ascii': ('julien', 'juju'),
-        'accented': (),
-        'runtime': 'techServicesDirector',
-        'display': 'DIRECTEUR TECHNOLOGIES SERVICES',
-    },
-    {
-        'ascii': ('rodolphe', 'roro'),
-        'accented': (),
-        'runtime': 'regionalDirector',
-        'display': 'DIRECTEUR RÉGION GRAND OUEST',
-    },
+    {'ascii': ('kevin', 'keke'), 'accented': ('kévin', 'kéké'), 'runtime': 'projectDirector', 'display': 'DIRECTEUR DE PROJETS'},
+    {'ascii': ('charline', 'chacha'), 'accented': (), 'runtime': 'businessManager', 'display': 'BUSINESS MANAGER'},
+    {'ascii': ('julien', 'juju'), 'accented': (), 'runtime': 'techServicesDirector', 'display': 'DIRECTEUR TECHNOLOGIES SERVICES'},
+    {'ascii': ('rodolphe', 'roro'), 'accented': (), 'runtime': 'regionalDirector', 'display': 'DIRECTEUR RÉGION GRAND OUEST'},
 ]
 
 SPECIAL_REPLACEMENTS = {
@@ -59,11 +38,9 @@ KNOWN_RENAMES = {
 def anonymize_text(text: str) -> str:
     for old, new in SPECIAL_REPLACEMENTS.items():
         text = text.replace(old, new)
-
     for group in GROUPS:
         for old in group['ascii']:
             text = text.replace(old, group['runtime'])
-
     for group in GROUPS:
         variants = [*group['ascii'], *group['accented']]
         pattern = re.compile(r'(?<![\w])(?:' + '|'.join(re.escape(v) for v in variants) + r')(?![\w])', re.IGNORECASE)
@@ -114,6 +91,31 @@ def rewrite_files():
             path.write_text(updated, encoding='utf-8')
 
 
+def rewrite_role_tests():
+    canonical = """const test=require('node:test');
+const assert=require('node:assert/strict');
+const fs=require('node:fs');
+const game=fs.readFileSync('game.js','utf8');
+test('main cast uses role-based runtime keys',()=>{
+  assert.match(game,/CAST=\\{projectDirector:/);
+  assert.match(game,/,businessManager:\\{/);
+  assert.match(game,/CAST\\.techServicesDirector=\\{/);
+  assert.match(game,/,regionalDirector:\\{/);
+  assert.match(game,/person\\(moving,'projectDirector'/);
+  assert.match(game,/person\\(moving,'businessManager'/);
+  assert.match(game,/person\\(moving,'techServicesDirector'/);
+  assert.match(game,/person\\(moving,'regionalDirector'/);
+});
+"""
+    (ROOT / 'tests/canonical-cast-keys.test.cjs').write_text(canonical, encoding='utf-8')
+
+    invariants = ROOT / 'tests/redesign-invariants.test.cjs'
+    if invariants.exists():
+        text = invariants.read_text(encoding='utf-8')
+        text = text.replace('Le pipeline est vert. Les signatures sont plus nuancées.', 'Le pipeline est vert. Les signatures utilisent une palette plus prudente.')
+        invariants.write_text(text, encoding='utf-8')
+
+
 def regenerate_plaques():
     from PIL import Image, ImageDraw, ImageFont
 
@@ -127,7 +129,6 @@ def regenerate_plaques():
     plaques_dir = ROOT / 'plaques'
     plaques_dir.mkdir(exist_ok=True)
     output = {}
-
     for key, (title, roles) in definitions.items():
         width, height = 720, 260
         image = Image.new('RGB', (width, height), '#d8c69a')
@@ -139,9 +140,7 @@ def regenerate_plaques():
             role_font = ImageFont.truetype(font_path, 25)
         except OSError:
             title_font = role_font = ImageFont.load_default()
-
-        lines = [(title, title_font, '#f4e3b6')]
-        lines += [(role, role_font, '#eef2ee') for role in roles]
+        lines = [(title, title_font, '#f4e3b6')] + [(role, role_font, '#eef2ee') for role in roles]
         boxes = [draw.textbbox((0, 0), text, font=font) for text, font, _ in lines]
         heights = [box[3] - box[1] for box in boxes]
         total = sum(heights) + 18 * (len(lines) - 1)
@@ -150,18 +149,10 @@ def regenerate_plaques():
             line_w = box[2] - box[0]
             draw.text(((width - line_w) / 2, y - box[1]), text, font=font, fill=color)
             y += line_h + 18
-
         path = plaques_dir / f'{key}.png'
         image.save(path, optimize=True)
         payload = base64.b64encode(path.read_bytes()).decode('ascii')
-        output[key] = {
-            'name': title,
-            'role': roles,
-            'width': width,
-            'height': height,
-            'padding': 48,
-            'png': 'data:image/png;base64,' + payload,
-        }
+        output[key] = {'name': title, 'role': roles, 'width': width, 'height': height, 'padding': 48, 'png': 'data:image/png;base64,' + payload}
 
     data = "'use strict';\n// Role-based office plaques; no personal identities are embedded in runtime data.\nglobalThis.OfficePlaqueAssets=" + json.dumps(output, ensure_ascii=False, separators=(',', ':')) + ';\n'
     (ROOT / 'office-plaques-data.js').write_text(data, encoding='utf-8')
@@ -169,14 +160,10 @@ def regenerate_plaques():
 
 def write_guard_test():
     forbidden_codes = [
-        [107, 101, 118, 105, 110],
-        [107, 101, 107, 101],
-        [99, 104, 97, 114, 108, 105, 110, 101],
-        [99, 104, 97, 99, 104, 97],
-        [106, 117, 108, 105, 101, 110],
-        [106, 117, 106, 117],
-        [114, 111, 100, 111, 108, 112, 104, 101],
-        [114, 111, 114, 111],
+        [107, 101, 118, 105, 110], [107, 101, 107, 101],
+        [99, 104, 97, 114, 108, 105, 110, 101], [99, 104, 97, 99, 104, 97],
+        [106, 117, 108, 105, 101, 110], [106, 117, 106, 117],
+        [114, 111, 100, 111, 108, 112, 104, 101], [114, 111, 114, 111],
     ]
     test = """const test=require('node:test');
 const assert=require('node:assert/strict');
@@ -186,20 +173,20 @@ const root=path.resolve(__dirname,'..');
 const blocked=__BLOCKED__.map(code=>String.fromCodePoint(...code));
 const normalize=s=>s.normalize('NFD').replace(/[\\u0300-\\u036f]/g,'').toLowerCase();
 const textExt=new Set(['.js','.cjs','.mjs','.html','.css','.md','.json','.yml','.yaml','.txt','.xml']);
-function walk(dir,out=[]){
+function inspect(dir){
   for(const entry of fs.readdirSync(dir,{withFileTypes:true})){
     if(entry.name==='.git'||entry.name==='node_modules')continue;
     const full=path.join(dir,entry.name),rel=path.relative(root,full);
-    out.push(rel);
-    if(entry.isDirectory())walk(full,out);
-    else if(textExt.has(path.extname(entry.name).toLowerCase()))out.push(fs.readFileSync(full,'utf8'));
+    const pathText=normalize(rel);
+    for(const word of blocked)assert.equal(pathText.includes(word),false,'forbidden cast identity in path: '+rel);
+    if(entry.isDirectory())inspect(full);
+    else if(textExt.has(path.extname(entry.name).toLowerCase())){
+      const content=normalize(fs.readFileSync(full,'utf8'));
+      for(const word of blocked)assert.equal(content.includes(word),false,'forbidden cast identity in file: '+rel);
+    }
   }
-  return out;
 }
-test('repository contains no personal cast identities in paths or text',()=>{
-  const corpus=normalize(walk(root).join('\\n'));
-  for(const word of blocked)assert.equal(corpus.includes(word),false,'forbidden cast identity found');
-});
+test('repository contains no personal cast identities in paths or text',()=>inspect(root));
 """.replace('__BLOCKED__', json.dumps(forbidden_codes))
     (ROOT / 'tests/anonymized-cast.test.cjs').write_text(test, encoding='utf-8')
 
@@ -207,6 +194,7 @@ test('repository contains no personal cast identities in paths or text',()=>{
 def main():
     rename_known_paths()
     rewrite_files()
+    rewrite_role_tests()
     regenerate_plaques()
     write_guard_test()
 
