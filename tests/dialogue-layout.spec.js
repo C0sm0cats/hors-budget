@@ -77,22 +77,33 @@ test('boss and Business Manager dialogue follows their animated heads',async({pa
     for(const item of items){expect(item.bottom+8).toBeLessThanOrEqual(item.top-7);seen.add(item.kind);}
   };
 
+  // Give the Tech Services Director an isolated placement opportunity. The
+  // player stays away from the top-floor boss so another main bubble cannot
+  // compete for the same geometry.
   await page.evaluate(()=>{
-    const s=Arcade.state;s.level=1;s.player.floor=4;s.player.x=3;s.player.y=surface(4,3);s.player.invulnerable=999;
-    s.comedy.eligible=false;s.comedy.lineTime=0;s.boss.x=5.5;s.boss.y=surface(4,5.5);s.boss.hp=3;s.boss.active=false;
+    const s=Arcade.state;s.level=1;s.player.floor=0;s.player.x=-8;s.player.y=surface(0,-8);s.player.invulnerable=999;
+    s.comedy.eligible=false;s.comedy.lineTime=0;s.boss.hp=3;s.boss.active=false;
     renderer.rebuild();Arcade.hud();
   });
-  await collect(0);      // reset deterministic dialogue schedules on the fresh state
-  await collect(1500);   // Tech Services Director
+  await collect(0);
+  await collect(1500);
 
+  // Start a fresh state so DialoguePresentation resets its schedule. Trigger the
+  // Project Director once, let that bubble expire, then trigger the two level-2
+  // roles together. updateMain only places two main bubbles at a time, so this
+  // avoids the previous three-speaker contention that made the assertion depend
+  // on incidental expiry/order details.
+  await page.evaluate(()=>Arcade.start());
   await page.evaluate(()=>{
-    const s=Arcade.state;s.level=2;s.player.floor=4;s.player.x=3;s.player.y=surface(4,3);s.player.invulnerable=999;
-    s.comedy.eligible=false;s.comedy.lineTime=0;s.boss.x=5.5;s.boss.y=surface(4,5.5);s.boss.hp=3;s.boss.active=true;
+    const s=Arcade.state;s.level=2;s.player.floor=0;s.player.x=0;s.player.y=surface(0,0);s.player.invulnerable=999;
+    s.comedy.eligible=false;s.comedy.lineTime=0;
+    s.businessManager.x=8.4;s.businessManager.y=surface(4,8.4);
+    s.boss.x=-5.5;s.boss.y=surface(4,-5.5);s.boss.hp=3;s.boss.active=true;
     renderer.rebuild();Arcade.hud();
   });
-  await collect(5900);   // Business Manager enters her scheduled window
-  await collect(8100);   // Regional Director starts his window
-  await collect(16000);  // Earlier bubbles expire, leaving Regional Director visible
+  await collect(0);
+  await collect(3500);   // Project Director starts and will expire at 13.5 s
+  await collect(13501);  // Business Manager + Regional Director get the two slots
 
   for(const kind of ['techServicesDirector','regionalDirector','businessManager'])expect(seen.has(kind),kind+' should have a visible dialogue').toBe(true);
 });
