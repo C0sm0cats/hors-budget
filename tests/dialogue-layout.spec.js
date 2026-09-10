@@ -27,6 +27,10 @@ async function renderDialogue(page,now){
 }
 
 test('dialogue bodies and tails stay above animated actors and clear every sprite',async({page})=>{
+  // Ten explicit full WebGL renders are still intentionally exercised here.
+  // SwiftShader on the CI runner can take longer than Playwright's 30 s default
+  // even though the old thousands-of-RAF-frames workload has been removed.
+  test.setTimeout(90000);
   await bootStaticScene(page);
   // Establish the schedule origin once. All geometry variants are then checked
   // at the same deterministic instant while Project Director dialogue is active.
