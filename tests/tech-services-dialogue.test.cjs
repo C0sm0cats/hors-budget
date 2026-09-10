@@ -14,10 +14,10 @@ test('DIRECTEUR TECHNOLOGIES SERVICES uses the visible main dialogue channel onl
   const ctx=vm.createContext({document:{body:element(),head:element(),createElement:element,
     querySelector(){return {getBoundingClientRect(){return {bottom:80};}};},getElementById:element},
     performance:{now:()=>0},innerWidth:1366,innerHeight:768,Arcade:arcade,
-    renderer:{project:(x,y)=>({x:680+x*40,y:600-y*30})},surface:floor=>floor*3,
+    renderer:{actorBounds:new Map([['techServicesDirector',{left:880,right:920,top:240,bottom:300}],['regionalDirector',{left:340,right:380,top:240,bottom:300}],['projectDirector',{left:660,right:700,top:540,bottom:600}]]),project:(x,y)=>({x:680+x*40,y:600-y*30})},surface:floor=>floor*3,
     requestAnimationFrame:fn=>frames.push(fn)});
   for(const file of ['banter-fair.js','tech-services-boss.js'])vm.runInContext(readFileSync(join(__dirname,'..',file),'utf8'),ctx);
-  const tick=now=>{const pending=frames.splice(0);pending.forEach(fn=>fn(now));};
+  const tick=now=>{ctx.DialoguePresentation.update(now);const pending=frames.splice(0);pending.forEach(fn=>fn(now));};
   const bubble=elements.find(el=>el.className.split(' ').includes('techServicesDirector'));
   assert.ok(bubble.className.includes('fair-bubble'),'must pass the CSS visibility filter');
   assert.equal(bubble.dataset.speaker,'DIRECTEUR TECHNOLOGIES SERVICES');
