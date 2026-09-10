@@ -33,7 +33,7 @@ test('onboarding separates the three levels and remains usable on small screens'
   const levels=page.locator('#helpScreen .help-levels li');
   await expect(levels).toHaveCount(3);
   await expect(levels.locator('strong')).toHaveText(['Niveau 1 · Open Space — LCP7','Niveau 2 · Direction TS — Pays de la Loire','Niveau 3 · Power UP Tour — Grand Ouest']);
-  await expect(levels.nth(0)).toContainText('Business Manager');
+  await expect(levels.nth(0)).toContainText('premiers indices sur le budget');
   await expect(levels.nth(1)).toContainText('KPI');
   await expect(levels.nth(2)).toContainText('débloque le budget');
   await page.getByRole('button',{name:'COMPRIS !'}).click();

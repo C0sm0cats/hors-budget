@@ -1,11 +1,11 @@
 const {test,expect}=require('@playwright/test');
 
-test('roles appear once in introductions and never as floating character labels',async({page})=>{
+test('level introductions match the story without floating character labels',async({page})=>{
   const errors=[];page.on('pageerror',error=>errors.push(error.message));
   await page.goto('/');await page.evaluate(()=>OfficeWhiteboards.ready);
   await page.locator('#startButton').click();
   const introductions=[
-    'DIRECTEUR DE PROJETS · BUSINESS MANAGER',
+    'PREMIERS INDICES SUR LE BUDGET',
     'DIRECTEUR TECHNOLOGIES SERVICES PAYS DE LA LOIRE',
     'DIRECTEUR RÉGION GRAND OUEST'
   ];
