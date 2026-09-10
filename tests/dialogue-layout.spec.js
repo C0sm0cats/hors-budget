@@ -26,29 +26,30 @@ async function renderDialogue(page,now){
   },now);
 }
 
-test('dialogue bodies and tails stay above animated actors and clear every sprite',async({page})=>{
-  // Ten explicit full WebGL renders are still intentionally exercised here.
-  // SwiftShader on the CI runner can take longer than Playwright's 30 s default
-  // even though the old thousands-of-RAF-frames workload has been removed.
-  test.setTimeout(90000);
-  await bootStaticScene(page);
-  // Establish the schedule origin once. All geometry variants are then checked
-  // at the same deterministic instant while Project Director dialogue is active.
-  await renderDialogue(page,0);
-  const seen=new Set();
-  let scene=0;
-  for(const size of [{width:1440,height:900},{width:393,height:851},{width:667,height:375}]){
-    await page.setViewportSize(size);
-    for(const level of [0,1,2]){
-      await page.evaluate(({level,scene})=>{
+const geometryScenes=[
+  {name:'desktop',size:{width:1440,height:900}},
+  {name:'portrait',size:{width:393,height:851}},
+  {name:'landscape',size:{width:667,height:375}}
+];
+
+for(const {name,size} of geometryScenes){
+  for(const level of [0,1,2]){
+    test(`dialogue bodies and tails stay above sprites · ${name} · level ${level+1}`,async({page})=>{
+      await page.setViewportSize(size);
+      await bootStaticScene(page);
+      // Reset DialoguePresentation against the fresh Arcade state, then render
+      // exactly one deterministic geometry scene. Keeping each WebGL scene in
+      // its own test prevents nine SwiftShader renders from sharing one timeout.
+      await renderDialogue(page,0);
+      await page.evaluate(level=>{
         const s=Arcade.state;s.level=level;s.player.invulnerable=999;s.comedy.eligible=false;
         s.enemies.forEach((e,i)=>{e.kind=[['hugo','nora','hugo2','lea'],['nora2','basile','basile2','lea2'],['sarah','mehdi','elodie','antoine']][level][i];});
-        s.player.floor=2;s.player.x=0;s.player.y=surface(2,0)+(scene%2?.8:0);s.player.vx=scene%2?3:0;s.player.grounded=scene%2===0;
-        s.boss.x=5.5;s.boss.y=surface(4,5.5);s.boss.hp=3;s.visual=scene*.2;
+        s.player.floor=2;s.player.x=0;s.player.y=surface(2,0)+(level%2?.8:0);s.player.vx=level%2?3:0;s.player.grounded=level%2===0;
+        s.boss.x=5.5;s.boss.y=surface(4,5.5);s.boss.hp=3;s.visual=level*.2;
         s.comedy.lineTime=10;
         s.comedy.line='Une réplique beaucoup plus longue pour vérifier que les bulles sur plusieurs lignes restent au-dessus de la tête, quelle que soit leur hauteur.';
         renderer.rebuild();Arcade.hud();
-      },{level,scene:scene++});
+      },level);
       await renderDialogue(page,3500);
       const result=await page.evaluate(()=>{
         const rects=Array.from(renderer.actorBounds.values()),failures=[],visible=[];
@@ -61,11 +62,12 @@ test('dialogue bodies and tails stay above animated actors and clear every sprit
         }
         return {failures,visible};
       });
-      expect(result.failures).toEqual([]);result.visible.forEach(kind=>seen.add(kind));
-    }
+      expect(result.failures).toEqual([]);
+      // The forced Project Director line is the anchor exercised in every scene.
+      expect(result.visible).toContain('projectDirector');
+    });
   }
-  expect(seen.has('projectDirector')).toBe(true);
-});
+}
 
 test('boss and Business Manager dialogue follows their animated heads',async({page})=>{
   await page.setViewportSize({width:1440,height:900});
