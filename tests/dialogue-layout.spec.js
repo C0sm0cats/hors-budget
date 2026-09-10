@@ -24,8 +24,11 @@ async function renderDialogue(page,now){
 
 test('dialogue bodies and tails stay above animated actors and clear every sprite',async({page})=>{
   await bootStaticScene(page);
+  // Establish the schedule origin once. All geometry variants are then checked
+  // at the same deterministic instant while Project Director dialogue is active.
+  await renderDialogue(page,0);
   const seen=new Set();
-  let now=10000,scene=0;
+  let scene=0;
   for(const size of [{width:1440,height:900},{width:393,height:851},{width:667,height:375}]){
     await page.setViewportSize(size);
     for(const level of [0,1,2]){
@@ -38,7 +41,7 @@ test('dialogue bodies and tails stay above animated actors and clear every sprit
         s.comedy.line='Une réplique beaucoup plus longue pour vérifier que les bulles sur plusieurs lignes restent au-dessus de la tête, quelle que soit leur hauteur.';
         renderer.rebuild();Arcade.hud();
       },{level,scene:scene++});
-      await renderDialogue(page,now+=100);
+      await renderDialogue(page,3500);
       const result=await page.evaluate(()=>{
         const rects=Array.from(renderer.actorBounds.values()),failures=[],visible=[];
         for(const el of document.querySelectorAll('.fair-bubble:not([hidden])')){
