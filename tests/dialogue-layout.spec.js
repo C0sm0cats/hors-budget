@@ -9,6 +9,10 @@ async function bootStaticScene(page){
   // new game frames and drive rendering explicitly below.
   await page.evaluate(()=>{globalThis.requestAnimationFrame=()=>0;});
   await page.waitForTimeout(25);
+  // The first game state may already have been observed by DialoguePresentation
+  // during the frames needed for the click. Start a fresh state after RAF has
+  // stopped so the first explicit update below always resets its schedules.
+  await page.evaluate(()=>Arcade.start());
 }
 
 async function renderDialogue(page,now){
@@ -21,36 +25,32 @@ async function renderDialogue(page,now){
 test('dialogue bodies and tails stay above animated actors and clear every sprite',async({page})=>{
   await bootStaticScene(page);
   const seen=new Set();
-  let now=10000;
+  let now=10000,scene=0;
   for(const size of [{width:1440,height:900},{width:393,height:851},{width:667,height:375}]){
     await page.setViewportSize(size);
     for(const level of [0,1,2]){
-      await page.evaluate(level=>{
+      await page.evaluate(({level,scene})=>{
         const s=Arcade.state;s.level=level;s.player.invulnerable=999;s.comedy.eligible=false;
         s.enemies.forEach((e,i)=>{e.kind=[['hugo','nora','hugo2','lea'],['nora2','basile','basile2','lea2'],['sarah','mehdi','elodie','antoine']][level][i];});
-        s.player.floor=2;s.player.x=0;s.player.y=surface(2,0);s.boss.x=5.5;s.boss.y=surface(4,5.5);s.boss.hp=3;
+        s.player.floor=2;s.player.x=0;s.player.y=surface(2,0)+(scene%2?.8:0);s.player.vx=scene%2?3:0;s.player.grounded=scene%2===0;
+        s.boss.x=5.5;s.boss.y=surface(4,5.5);s.boss.hp=3;s.visual=scene*.2;
+        s.comedy.lineTime=10;
+        s.comedy.line='Une réplique beaucoup plus longue pour vérifier que les bulles sur plusieurs lignes restent au-dessus de la tête, quelle que soit leur hauteur.';
         renderer.rebuild();Arcade.hud();
-      },level);
-      for(let sample=0;sample<3;sample++){
-        await page.evaluate(sample=>{
-          const s=Arcade.state;s.comedy.lineTime=10;
-          s.comedy.line=sample%2?'Une courte réplique.':'Une réplique beaucoup plus longue pour vérifier que les bulles sur plusieurs lignes restent au-dessus de la tête, quelle que soit leur hauteur.';
-          s.player.vx=sample%2?3:0;s.player.grounded=sample%2===0;s.player.y=surface(2,s.player.x)+(sample%2?.8:0);s.visual=sample*.2;
-        },sample);
-        await renderDialogue(page,now+=100);
-        const result=await page.evaluate(()=>{
-          const rects=Array.from(renderer.actorBounds.values()),failures=[],visible=[];
-          for(const el of document.querySelectorAll('.fair-bubble:not([hidden])')){
-            const r=el.getBoundingClientRect(),actor=renderer.actorBounds.get(el.dataset.actor);
-            visible.push(el.dataset.actor);
-            if(!actor||r.bottom+8>actor.top-7)failures.push('head clearance: '+el.dataset.actor);
-            for(const other of rects)if(r.left<other.right&&r.right>other.left&&r.top<other.bottom&&r.bottom+8>other.top)failures.push('sprite overlap');
-            if(r.top<7||r.left<7||r.right>innerWidth-7)failures.push('viewport overflow');
-          }
-          return {failures,visible};
-        });
-        expect(result.failures).toEqual([]);result.visible.forEach(kind=>seen.add(kind));
-      }
+      },{level,scene:scene++});
+      await renderDialogue(page,now+=100);
+      const result=await page.evaluate(()=>{
+        const rects=Array.from(renderer.actorBounds.values()),failures=[],visible=[];
+        for(const el of document.querySelectorAll('.fair-bubble:not([hidden])')){
+          const r=el.getBoundingClientRect(),actor=renderer.actorBounds.get(el.dataset.actor);
+          visible.push(el.dataset.actor);
+          if(!actor||r.bottom+8>actor.top-7)failures.push('head clearance: '+el.dataset.actor);
+          for(const other of rects)if(r.left<other.right&&r.right>other.left&&r.top<other.bottom&&r.bottom+8>other.top)failures.push('sprite overlap');
+          if(r.top<7||r.left<7||r.right>innerWidth-7)failures.push('viewport overflow');
+        }
+        return {failures,visible};
+      });
+      expect(result.failures).toEqual([]);result.visible.forEach(kind=>seen.add(kind));
     }
   }
   expect(seen.has('projectDirector')).toBe(true);
@@ -71,7 +71,7 @@ test('boss and Business Manager dialogue follows their animated heads',async({pa
     s.comedy.eligible=false;s.comedy.lineTime=0;s.boss.x=5.5;s.boss.y=surface(4,5.5);s.boss.hp=3;s.boss.active=false;
     renderer.rebuild();Arcade.hud();
   });
-  await collect(0);      // reset deterministic dialogue schedules
+  await collect(0);      // reset deterministic dialogue schedules on the fresh state
   await collect(1500);   // Tech Services Director
 
   await page.evaluate(()=>{
