@@ -97,7 +97,7 @@
     panel(mesh,sign,'powerUp',0,7.6,3.0,2.25,'#1a3143');
     band(mesh,10.42,'#453b55');
     panel(mesh,sign,'connect',-1.7,10.6,2,2.05,'#5b4856');
-    panel(mesh,sign,'genAi',5.0,10.6,2,2.05,'#263b55');
+    panel(mesh,sign,'genAi',5.0,10.38,2,2.05,'#263b55');
   }
   function drawLevel2(mesh,sign){
     band(mesh,1.72,'#344d60');
