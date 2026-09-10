@@ -64,12 +64,3 @@ Le jeu reste volontairement sans framework. `index.html` porte la structure, `st
 Le rendu adapte automatiquement certains effets aux appareils plus modestes et respecte `prefers-reduced-motion` pour limiter les animations non essentielles.
 
 Personnages et situations fictifs ; satire des clichés du conseil informatique.
-
-### Tests de développement
-
-Avec Node.js :
-
-- `npm test` lance les tests de logique et les invariants de refonte ;
-- `npm run test:e2e` lance les smoke tests Playwright desktop et mobile, dont le parcours canonique complet open space → direction → séminaire → budget débloqué, ainsi que pause/reprise, lecture des tableaux, commandes tactiles et ouverture hors ligne par `file://`.
-
-Node.js n’est pas nécessaire pour jouer.
