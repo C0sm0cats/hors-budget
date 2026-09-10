@@ -88,7 +88,7 @@
   }
   function drawLevel1(mesh,sign){
     band(mesh,1.45,'#453b55');
-    panel(mesh,sign,'success',-4.9,1.6,2,2.1,'#526253');
+    panel(mesh,sign,'success',-8.5,1.35,2,2.1,'#526253');
     // A side-mounted shaft panel stays clear of both the moving cabin and DIRECTEUR TECHNOLOGIES SERVICES's board.
     mesh.box(-1.04,1.6,-.92,.18,.09,.12,'#dbc489');
     panel(mesh,sign,'gcomp',-1.9,1.6,1.5,1.875,'#77436a');
@@ -101,7 +101,7 @@
   }
   function drawLevel2(mesh,sign){
     band(mesh,1.72,'#344d60');
-    panel(mesh,sign,'charity',-4.7,1.65,2,2.15,'#486252');
+    panel(mesh,sign,'charity',-6.55,1.35,2,2.15,'#486252');
     panel(mesh,sign,'summer',2.4,1.65,2,2.15,'#68475b');
   }
   decor.draw=(mesh,sign,level,surface)=>{
