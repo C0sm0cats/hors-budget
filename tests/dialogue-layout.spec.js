@@ -17,7 +17,11 @@ async function bootStaticScene(page){
 
 async function renderDialogue(page,now){
   await page.evaluate(now=>{
-    renderer.draw(0);
+    // Use a non-zero render delta so the renderer settles the camera on the
+    // current viewport/player position before actorBounds are measured. A zero
+    // delta freezes the previous camera and makes geometry assertions depend on
+    // whichever scene happened to render immediately before this one.
+    renderer.draw(1);
     DialoguePresentation.update(now);
   },now);
 }
