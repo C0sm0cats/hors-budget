@@ -11,9 +11,7 @@
     const floor=2,fy=surface(floor,0),wallY=fy+1.35;mesh.box(0,wallY,-1.17,14.4,2.72,.13,'#493b4c');for(const x of [-7.12,7.12])mesh.box(x,wallY,-1.02,.16,2.72,.18,'#c5a260');
     globalThis.OfficeWhiteboards.draw(sign,'businessManager',-2.45,fy+1.5,-.95);
     globalThis.OfficePlaques.draw(mesh,sign,'businessManager',2.35,fy+1.95,-.96);
-    const deskX=1.8,dy=surface(floor,deskX),z=-.55;mesh.box(deskX,dy+.55,z,3.8,.16,.86,'#8a684e');for(const dx of [-1.35,1.35])mesh.box(deskX+dx,dy+.25,z,.18,.52,.66,'#624b3b');mesh.box(deskX-.25,dy+1.05,z+.12,1.38,.82,.13,'#263843');mesh.box(deskX-.25,dy+1.05,z+.20,1.20,.66,.035,'#2d414b');
-    mesh.box(deskX-.21,dy+.79,z+.26,.25,.46,.13,'#4f646d');
-    mesh.box(deskX+.78,dy+.43,.02,.68,.18,.65,'#855f79');mesh.box(deskX+.78,dy+.89,-.20,.68,.82,.15,'#855f79');for(const sx of [-.25,.25])mesh.cylinder(deskX+.78+sx,dy+.12,.02,.065,.24,'#263843',8);
+    const deskX=1.8;globalThis.OfficeDesks.draw(sign,'businessManager',deskX,surface(floor,deskX),-.55,3.8);
   }
 
   function addRegionalDirectionZone(mesh,sign,surface){
@@ -21,11 +19,7 @@
     const floor=3,fy=surface(floor,0),wallY=fy+1.35;mesh.box(0,wallY,-1.18,14.4,2.72,.13,'#284653');for(const x of [-7.12,7.12])mesh.box(x,wallY,-1.02,.16,2.72,.18,'#c5a260');
     globalThis.OfficeBoard=globalThis.OfficeWhiteboards.draw(sign,'regionalDirector',-3.25,fy+1.5,-.96);
     globalThis.OfficePlaques.draw(mesh,sign,'regionalDirector',3.85,fy+1.84,-.97);
-    // Table d'arbitrage, dos du moniteur et mobilier premium : une zone de direction dans le séminaire,
-    // pas un ancien bureau privé déplacé depuis un autre étage.
-    const tx=2.2,ty=surface(floor,tx);mesh.box(tx,ty+.55,-.48,3.5,.16,.92,'#8d6a4c');for(const dx of [-1.25,1.25])mesh.box(tx+dx,ty+.25,-.48,.18,.52,.72,'#5d493a');mesh.box(tx-.15,ty+1.08,-.26,1.45,.88,.14,'#263943');
-    mesh.box(tx-.15,ty+1.08,-.18,1.28,.73,.035,'#2d414b');
-    mesh.box(tx-.11,ty+.79,-.12,.25,.46,.13,'#4f646d');
+    const tx=2.2,ty=surface(floor,tx);globalThis.OfficeDesks.draw(sign,'regionalDirector',tx,ty,-.48,3.5);
     mesh.box(6.2,ty+.34,-.50,1.85,.46,.75,'#61566a');mesh.box(6.2,ty+.74,-.70,1.85,.64,.18,'#77697d');mesh.cylinder(5.0,ty+.25,-.55,.28,.50,'#d7d1bd',8,.22);for(const [dx,a] of [[-.22,-.45],[0,0],[.22,.45]])mesh.box(5.0+dx,ty+.86,-.55,.16,.92,.07,'#4f854d',a);
   }
 
