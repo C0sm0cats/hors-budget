@@ -1,15 +1,14 @@
 const {test,expect}=require('@playwright/test');
 
 async function bootStaticScene(page){
-  await page.addInitScript(()=>{
-    Math.random=()=>.5;
-    // Dialogue layout tests drive rendering explicitly. Keeping the game's
-    // continuous RAF loop disabled avoids simulating thousands of WebGL
-    // frames when Playwright advances time on CI's SwiftShader renderer.
-    globalThis.requestAnimationFrame=()=>0;
-  });
+  await page.addInitScript(()=>{Math.random=()=>.5;});
   await page.goto('/');
   await page.locator('#startButton').click();
+  // Keep RAF available while Playwright performs the click: its actionability
+  // checks need animation frames. Once the game is running, stop scheduling
+  // new game frames and drive rendering explicitly below.
+  await page.evaluate(()=>{globalThis.requestAnimationFrame=()=>0;});
+  await page.waitForTimeout(25);
 }
 
 async function renderDialogue(page,now){
