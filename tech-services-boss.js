@@ -8,7 +8,7 @@
 
   function hitBoss(s,b){
     if(b.hp<=0)return;
-    b.hp=Math.max(0,b.hp-1);b.flash=.34;s.score+=500;
+    b.hp=Math.max(0,b.hp-1);s.bossReaction={speaker:'techServicesDirector',text:['Le reporting ne reflète pas le terrain.','On va revoir la méthode de calcul.','Ce chiffre est sorti de son contexte.'][b.hp],until:s.levelTime+3.5};b.flash=.34;s.score+=500;
     s.floaters.push({x:X,y:surface(4,X)+2.15,text:b.hp>0?'KPI RETOURNÉ':'ACCÈS AU ROOFTOP DÉBLOQUÉ',life:1.5,color:'#d5f382'});
     if(b.hp<=0){s.gate=2.6;s.hostile=s.hostile.filter(h=>h.techServicesDirector!==true);}
   }

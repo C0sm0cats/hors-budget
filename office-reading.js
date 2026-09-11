@@ -27,7 +27,7 @@
     const s=Arcade.state;
     if(data.level===0&&data.key==='businessManager'&&!discovered.has(s)){
       discovered.add(s);
-      s.comedy.line='Au Power UP Tour… Bien sûr. Il faut passer par la direction pour la rejoindre.';
+      s.comedy.line='Le budget est au Power UP Tour. Prochaine étape : passer la direction.';
       s.comedy.lineTime=6;s.comedy.cooldown=8;
     }
   }
