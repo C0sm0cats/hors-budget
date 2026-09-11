@@ -85,7 +85,7 @@
     cinemaSmall.textContent=small;
     cinemaStrong.textContent=strong;
     cinemaEm.textContent=em;
-    cinemaHint.textContent=waitForInput?'APPUYEZ SUR UNE TOUCHE OU CLIQUEZ POUR CONTINUER':'';
+    cinemaHint.textContent=waitForInput?'APPUIE SUR UNE TOUCHE OU TOUCHE L’ÉCRAN':'';
     cinema.hidden=false;
     if(!reduced)requestAnimationFrame(()=>cinema.classList.add('show'));else cinema.classList.add('show');
     if(!waitForInput)cinemaTimer=setTimeout(closeCinema,reduced?Math.min(duration,650):duration);
