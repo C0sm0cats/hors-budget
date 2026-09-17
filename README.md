@@ -38,21 +38,12 @@ Des commandes tactiles sont disponibles sur petit écran.
 
 ## Au programme
 
-- Deux populations lisibles visuellement : consultants plutôt casual (jean, baskets, tenues variées) et internes/business plus formels (vestes, costumes, tailleurs), avec plusieurs variantes de personnages.
-- Punchlines adaptées aux métiers : mission, CRA et salaire côté consultants ; TJM, pipeline, CV et staffing côté business ; planning/COPIL pour le Directeur de Projets ; KPI/intercontrat pour le Directeur Technologies Services Pays de la Loire ; budget/région pour le Directeur Région Grand Ouest.
-- Signalétique différenciée : Ordre de mission, Swile, Chronotime, SAP Concur, MyPeopleDoc, Success Factors, GComp, Learning Academy, Power UP, Charity Day, Summer Party et autres références internes fictives.
-- Imprimante à CRA, KPI, ascenseur du COMEX et petits fours volants selon les niveaux.
-- Photocopieurs et buffet rebondissants pour prendre des raccourcis.
-- Café accélérateur, **Bon de commande** protecteur et pluie de slides.
-- Lire le tableau commercial révèle la prochaine étape et déclenche une réaction du Directeur de Projets, une fois par partie.
-- Des repères discrets signalent les tableaux et raccourcis utilisables à proximité ; ils restent fixes avec les animations réduites.
-- Les deux boss préparent visiblement leurs projectiles avant de tirer.
-- Boss intermédiaire — Directeur Technologies Services Pays de la Loire : renvoie ses KPI pour débloquer le rooftop.
-- Boss final — Directeur Région Grand Ouest : renvoie ses dossiers lorsqu’il annonce « Bénéfices records » ; les deux premiers impacts sont des arbitrages, le dernier débloque réellement le budget.
-- Chronos par zone, médailles et défis : Sans PowerPoint, Zéro réunion, Café uniquement, Sans une égratignure.
-- Présentation arcade avec intros de niveaux, barre de vie du boss et finale « MISSION ACCOMPLIE · BUDGET DÉBLOQUÉ ».
-- Rare miracle : une vraie augmentation de 3 %, suivie de deux secondes d’applaudissements, projectiles compris.
-- Dialogues ambiants limités à deux bulles sans chevauchement ; les réactions aux actions sont prioritaires. Les fonctions restent sur les plaques de bureau, sans étiquette au-dessus des personnages.
+- Des consultants et des équipes business, avec leurs tenues et leurs répliques.
+- Des bureaux remplis de références et de tableaux à découvrir.
+- Des échelles, photocopieurs, buffets et un ascenseur pour trouver des raccourcis.
+- Des comptes rendus à lancer, des projectiles à renvoyer et deux boss.
+- Café, bon de commande et PowerPoint comme bonus.
+- Chronos, médailles et défis à débloquer.
 
 L’objectif reste le même tout au long de la partie : **remonter la piste du budget → ouvrir l’accès au rooftop → débloquer le budget pour tous**.
 
