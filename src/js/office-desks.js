@@ -10,10 +10,10 @@
       image.addEventListener('error',()=>reject(new Error('Bureau introuvable : '+definition.file)),{once:true});
     });
     assets[key]={...definition,image,ready};
-    if(!offline)image.src='signage/'+definition.file;
+    if(!offline)image.src='assets/signage/'+definition.file;
   }
   const sourceReady=offline?new Promise((resolve,reject)=>{
-    const script=document.createElement('script');script.src='office-desks-offline.js?v=1';
+    const script=document.createElement('script');script.src='src/js/office-desks-offline.js?v=1';
     script.onload=()=>{for(const a of Object.values(assets))a.image.src=OfficeDesksOffline[a.file];resolve();};
     script.onerror=()=>reject(new Error('Bureaux hors ligne introuvables'));document.head.append(script);
   }):Promise.resolve();

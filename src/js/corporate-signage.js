@@ -7,22 +7,22 @@
   const originalDraw=decor.draw;
 
   const sources={
-    site:'signage/inetum-lcp7.png?v=3',
-    mission:'signage/ordre-mission.png?v=3',
-    swile:'signage/swile.png?v=3',
-    purchase:'signage/bon-commande.png?v=3',
-    concur:'signage/sap-concur.png?v=3',
-    peopleDoc:'signage/mypeopledoc.png?v=3',
-    chronotime:'signage/chronotime-2.png?v=3',
-    support:'signage/global-service-center.png?v=3',
-    success:'signage/success-factors.png?v=3',
-    gcomp:'signage/gcomp.png?v=3',
-    academy:'signage/learning-academy.png?v=3',
-    powerUp:'signage/power-up.png?v=3',
-    connect:'signage/lets-connect-france.png?v=3',
-    genAi:'signage/gen-ai.png?v=3',
-    charity:'signage/charity-day.png?v=3',
-    summer:'signage/summer-party.png?v=3'
+    site:'assets/signage/inetum-lcp7.png?v=3',
+    mission:'assets/signage/ordre-mission.png?v=3',
+    swile:'assets/signage/swile.png?v=3',
+    purchase:'assets/signage/bon-commande.png?v=3',
+    concur:'assets/signage/sap-concur.png?v=3',
+    peopleDoc:'assets/signage/mypeopledoc.png?v=3',
+    chronotime:'assets/signage/chronotime-2.png?v=3',
+    support:'assets/signage/global-service-center.png?v=3',
+    success:'assets/signage/success-factors.png?v=3',
+    gcomp:'assets/signage/gcomp.png?v=3',
+    academy:'assets/signage/learning-academy.png?v=3',
+    powerUp:'assets/signage/power-up.png?v=3',
+    connect:'assets/signage/lets-connect-france.png?v=3',
+    genAi:'assets/signage/gen-ai.png?v=3',
+    charity:'assets/signage/charity-day.png?v=3',
+    summer:'assets/signage/summer-party.png?v=3'
   };
   const aspects={site:4/3,mission:3/4,swile:3/4,purchase:3/4,concur:3/4,peopleDoc:3/4,chronotime:3/4,support:4/3,success:3/4,gcomp:1122/1402,academy:1122/1402,powerUp:4/3,connect:1122/1402,genAi:1122/1402,charity:1122/1402,summer:1122/1402};
   const images={},pending=[];
@@ -40,7 +40,7 @@
   const sourceReady=offline?new Promise((resolve,reject)=>{
     // Local PNG URLs taint canvases. Load a self-contained bundle only in file:// mode.
     const script=document.createElement('script');
-    script.src='signage-offline.js?v=1';
+    script.src='src/js/signage-offline.js?v=1';
     script.onload=()=>{
       for(const [key,src] of Object.entries(sources))images[key].src=globalThis.OfficeSignageOffline[src.split('?')[0]];
       resolve();

@@ -3,7 +3,7 @@ const assert=require('node:assert/strict');
 const vm=require('node:vm');
 const fs=require('node:fs');
 const path=require('node:path');
-const source=name=>fs.readFileSync(path.join(__dirname,'..',name),'utf8');
+const source=name=>fs.readFileSync(path.join(__dirname,'..','src','js',name),'utf8');
 
 test('KPI impacts produce successive replies and pause does not consume them',()=>{
   let frame;
