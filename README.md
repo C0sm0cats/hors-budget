@@ -53,7 +53,7 @@ Scores et palmarès sont stockés uniquement dans le navigateur (`localStorage`)
 
 ## Technique
 
-Le jeu est écrit sans framework. `index.html` charge directement `game.js` et les modules des décors, personnages et dialogues. Les styles se trouvent dans `style.css` et `polish.css`.
+Le jeu est écrit sans framework. `index.html` charge directement `src/js/game.js` et les modules des décors, personnages et dialogues. Les styles se trouvent dans `src/css/style.css` et `src/css/polish.css`.
 
 Le rendu adapte automatiquement certains effets aux appareils plus modestes et respecte `prefers-reduced-motion` pour limiter les animations non essentielles.
 

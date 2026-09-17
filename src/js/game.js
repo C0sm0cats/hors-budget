@@ -116,9 +116,9 @@ function createRenderer(){
  const budgetChestImage=new Image();
  budgetChestImage.onload=()=>{for(const item of signs)if(item.budgetChest)item.update();};
  if(location.protocol==='file:'){
-  const script=document.createElement('script');script.src='coffre-offline.js?v=1';
+  const script=document.createElement('script');script.src='src/js/coffre-offline.js?v=1';
   script.onload=()=>{budgetChestImage.src=globalThis.BudgetChestOffline;};document.head.append(script);
- }else budgetChestImage.src='coffre.png?v=1';
+ }else budgetChestImage.src='assets/coffre.png?v=1';
  function ortho(l,r,b,t,n,f){return new Float32Array([2/(r-l),0,0,0,0,2/(t-b),0,0,0,0,-2/(f-n),0,-(r+l)/(r-l),-(t+b)/(t-b),-(f+n)/(f-n),1]);}
  function line(mesh,x1,y1,x2,y2,z,w,color){const length=Math.hypot(x2-x1,y2-y1),dx=-(y2-y1)/length*w/2,dy=(x2-x1)/length*w/2;mesh.quad([x1+dx,y1+dy,z],[x1-dx,y1-dy,z],[x2-dx,y2-dy,z],[x2+dx,y2+dy,z],[0,0,1],rgb(color));}
  function ramp(f){const x=f.left,X=f.right,y=surface(f.id,x),Y=surface(f.id,X),d=1.02,h=.3,c=rgb(Arcade.state.level===2?'#677685':Arcade.state.level===1?'#99723e':f.id%2?'#bd6573':'#3f938c');world.quad([x,y,-d],[x,y,d],[X,Y,d],[X,Y,-d],V.norm([-f.slope,1,0]),rgb(Arcade.state.level===2?'#aba4a0':Arcade.state.level===1?'#e1ba76':'#80b4a1'));world.quad([x,y,d],[x,y-h,d],[X,Y-h,d],[X,Y,d],[0,0,1],c);world.quad([x,y-h,-d],[x,y,-d],[X,Y,-d],[X,Y-h,-d],[0,0,-1],c);world.quad([x,y,-d],[x,y-h,-d],[x,y-h,d],[x,y,d],[-1,0,0],c);world.quad([X,Y,d],[X,Y-h,d],[X,Y-h,-d],[X,Y,-d],[1,0,0],c);for(let xx=-9.8;xx<9.8;xx+=.85){const yy=surface(f.id,xx);line(world,xx,yy-.06,xx+.4,yy-.24,1.035,.045,'#e6ac78');line(world,xx+.4,yy-.24,xx+.8,yy-.04,1.035,.045,'#e6ac78');}for(const xx of [-9.95,9.95])world.box(xx,surface(f.id,xx)+.21,-.85,.08,.42,.1,'#e5be7e');}

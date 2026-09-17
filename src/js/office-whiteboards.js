@@ -15,10 +15,10 @@
       image.addEventListener('error',()=>reject(new Error('Tableau introuvable : '+definition.file)),{once:true});
     }).then(()=>true);
     assets[key]={key,...definition,image,ready};
-    if(!offline)image.src='signage/'+definition.file;
+    if(!offline)image.src='assets/signage/'+definition.file;
   }
   const sourceReady=offline?new Promise((resolve,reject)=>{
-    const script=document.createElement('script');script.src='whiteboards-offline.js?v=1';
+    const script=document.createElement('script');script.src='src/js/whiteboards-offline.js?v=1';
     script.onload=()=>{for(const asset of Object.values(assets))asset.image.src=OfficeWhiteboardOffline[asset.file];resolve();};
     script.onerror=()=>reject(new Error('Tableaux hors ligne introuvables'));
     document.head.append(script);
