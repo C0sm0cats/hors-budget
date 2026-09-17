@@ -2,7 +2,7 @@
 
 **Un Directeur de Projets. Une quête épique. Un budget Excel.**
 
-Petit jeu d’arcade satirique en vue de côté, dans l’univers fictif d’INETUM. Tu incarnes le **Directeur de Projets**. Le budget s’est perdu quelque part entre l’open space et le Power UP Tour, où le prochain atelier dure six heures. Les salariés attendent une augmentation : à toi de remonter sa piste, de traverser la direction et de débloquer le budget pour tout le monde.
+Petit jeu d’arcade en vue de côté, dans une version satirique d’INETUM. Tu incarnes le **Directeur de Projets**. Le budget s’est perdu quelque part entre l’open space et le Power UP Tour, où le prochain atelier dure six heures. Les salariés attendent une augmentation : à toi de remonter sa piste, de traverser la direction et de débloquer le budget pour tout le monde.
 
 Le parcours suit trois étapes : les premiers indices dans l’open space LCP7, l’accès au rooftop gardé par le **Directeur Technologies Services Pays de la Loire**, puis le budget détenu par le **Directeur Région Grand Ouest** au séminaire.
 
@@ -14,9 +14,9 @@ Le parcours suit trois étapes : les premiers indices dans l’open space LCP7, 
 
 ## Jouer hors ligne
 
-Téléchargez le dépôt avec **Code → Download ZIP**, décompressez-le, puis ouvrez **index.html** par double-clic.
+Télécharge le dépôt avec **Code → Download ZIP**, décompresse-le, puis ouvre **index.html** par double-clic.
 
-Le jeu est autonome : HTML, CSS, JavaScript, assets graphiques WebGL/PNG et sons synthétisés. Aucun serveur, installation, framework, fichier audio ni appel réseau. Navigateur récent avec WebGL recommandé : Chrome, Edge ou Firefox.
+Le jeu est autonome : HTML, CSS, JavaScript, rendu WebGL, images PNG et sons synthétisés. Aucun serveur, installation, framework, fichier audio ni appel réseau. Utilise un navigateur récent avec WebGL activé (Chrome, Edge ou Firefox).
 
 ## Commandes
 
@@ -47,8 +47,8 @@ Des commandes tactiles sont disponibles sur petit écran.
 - Lire le tableau commercial révèle la prochaine étape et déclenche une réaction du Directeur de Projets, une fois par partie.
 - Des repères discrets signalent les tableaux et raccourcis utilisables à proximité ; ils restent fixes avec les animations réduites.
 - Les deux boss préparent visiblement leurs projectiles avant de tirer.
-- Boss intermédiaire — Directeur Technologies Services Pays de la Loire : renvoyez ses KPI pour débloquer le rooftop.
-- Boss final — Directeur Région Grand Ouest : renvoyez ses dossiers lorsqu’il annonce « Bénéfices records » ; les deux premiers impacts sont des arbitrages, le dernier débloque réellement le budget.
+- Boss intermédiaire — Directeur Technologies Services Pays de la Loire : renvoie ses KPI pour débloquer le rooftop.
+- Boss final — Directeur Région Grand Ouest : renvoie ses dossiers lorsqu’il annonce « Bénéfices records » ; les deux premiers impacts sont des arbitrages, le dernier débloque réellement le budget.
 - Chronos par zone, médailles et défis : Sans PowerPoint, Zéro réunion, Café uniquement, Sans une égratignure.
 - Présentation arcade avec intros de niveaux, barre de vie du boss et finale « MISSION ACCOMPLIE · BUDGET DÉBLOQUÉ ».
 - Rare miracle : une vraie augmentation de 3 %, suivie de deux secondes d’applaudissements, projectiles compris.
@@ -62,7 +62,7 @@ Scores et palmarès sont stockés uniquement dans le navigateur (`localStorage`)
 
 ## Technique
 
-Le jeu reste volontairement sans framework. `index.html` porte la structure, `style.css` et `polish.css` la présentation, et **`game.js` est le moteur canonique chargé directement par le navigateur**. Les modules JavaScript spécialisés complètent les décors, personnages, dialogues et finitions visuelles ; les assets graphiques, dont le poster du bureau du Directeur de Projets, restent des fichiers dédiés. Il n’y a plus de loader XHR ni de réécriture du moteur par `eval` au démarrage.
+Le jeu est écrit sans framework. `index.html` charge directement `game.js` et les modules des décors, personnages et dialogues. Les styles se trouvent dans `style.css` et `polish.css`.
 
 Le rendu adapte automatiquement certains effets aux appareils plus modestes et respecte `prefers-reduced-motion` pour limiter les animations non essentielles.
 
