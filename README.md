@@ -2,9 +2,12 @@
 
 **Un Directeur de Projets. Une quête épique. Un budget Excel.**
 
-Petit jeu d’arcade satirique en 3D, dans l’univers fictif d’INETUM. Tu incarnes le **Directeur de Projets**. Le budget s’est perdu quelque part entre l’open space et le Power UP Tour, où le prochain atelier dure six heures. Les salariés attendent une augmentation : à toi de remonter sa piste, de traverser la direction et de débloquer le budget pour tout le monde.
+Petit jeu d’arcade satirique en vue de côté, dans l’univers fictif d’INETUM. Tu incarnes le **Directeur de Projets**. Le budget s’est perdu quelque part entre l’open space et le Power UP Tour, où le prochain atelier dure six heures. Les salariés attendent une augmentation : à toi de remonter sa piste, de traverser la direction et de débloquer le budget pour tout le monde.
 
 Le parcours suit trois étapes : les premiers indices dans l’open space LCP7, l’accès au rooftop gardé par le **Directeur Technologies Services Pays de la Loire**, puis le budget détenu par le **Directeur Région Grand Ouest** au séminaire.
+
+![Capture du niveau Open Space de Hors Budget](docs/hors-budget-gameplay.png)
+
 ## Jouer directement
 
 **[Lancer Hors Budget dans le navigateur](https://c0sm0cats.github.io/hors-budget/)** — aucun téléchargement ni installation.
